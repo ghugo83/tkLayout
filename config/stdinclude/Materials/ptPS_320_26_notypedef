@@ -1,8 +1,6 @@
 // pt-PS module 10x5 for the inner region
 // GBT on the module
 
-Materials module-ptPS_320_40 {
-  type module
 
   // Default sensor:
   ReferenceSensor 1 {
@@ -128,10 +126,10 @@ Materials module-ptPS_320_40 {
       quantity 0.935
       unit g
     }
-    //FEH spacer 4.0 mm
+    //FEH spacer 2.6mm
     Element {
       elementName Al-CF
-      quantity 2.9
+      quantity 1.72
       unit g
     }
     //FEH CFRP support
@@ -146,10 +144,10 @@ Materials module-ptPS_320_40 {
       quantity 1.499
       unit g
     }
-    //FEH glue 4.0 mm
+    //FEH glue 2.6 mm
     Element {
       elementName Epoxy
-      quantity 0.212
+      quantity 0.215
       unit g
     }
   }
@@ -161,20 +159,20 @@ Component {
     service false
     scaleOnSensor 0
     targetVolume 7
-    //4.0mm bridge
+    //2.6mm bridge
     Element {
       elementName Al-CF
-      quantity 2.64
+      quantity 1.86
       unit g
     }
   
-    //Parylene 4.0mm
+    //Parylene 2.6mm
     Element {
       elementName Epoxy
       quantity 0.09
       unit g
     }
-    //Bridges glue 4.0 mm
+    //Bridges glue 2.6 mm
     Element {
       elementName Epoxy
       quantity 0.163
@@ -194,10 +192,10 @@ Component {
       quantity 0.247
       unit g
     }
-    //ROH glue 4.0 mm
+    //ROH glue 2.6 mm
     Element {
       elementName Epoxy
-      quantity 0.057
+      quantity 0.059
       unit g
     }
     //ROH copper
@@ -212,10 +210,10 @@ Component {
       quantity 3.024
       unit g
     }
-    //ROH spacer 4.0 mm
+    //ROH spacer 2.6 mm
     Element {
       elementName Al-CF
-      quantity 0.61
+      quantity 0.450
       unit g
     }
   }
@@ -271,10 +269,11 @@ Component {
     componentName "2S Power lines"
     service true
     scaleOnSensor 1
-    Element {
+     Element {
       elementName Cu_MV
       quantity 2.36
       unit g/m
+     
     }
     Element {
       elementName PE
@@ -305,7 +304,6 @@ Component {
     componentName "PS Support plate"
     service false
     scaleOnSensor 0
-    targetVolume 8
     Element {
       elementName CFRP
       quantity 2.49
@@ -319,6 +317,3 @@ Component {
   }
 
 
-
-  
-}

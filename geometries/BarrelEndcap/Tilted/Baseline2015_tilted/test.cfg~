@@ -97,18 +97,20 @@ Tracker Outer {
 
     Barrel TBPS {
       @includestd Conversions/flangeTBPS
-      @includestd ModuleTypes/baseline2015PtPS_updatedPS
 
       Layer 1 { 
         dsDistance 2.6
         triggerWindow 5 
 	  Ring 1-3 { 
+ 	    @includestd ModuleTypes/baseline2015PtPS_updatedPS
 	    @includestd Materials/TBPS_L1_flat 
 	  }
 	  Ring 4 { 
+ 	    @includestd ModuleTypes/baseline2015PtPS_updatedPS
 	    @includestd Materials/TBPS_L1_central 
 	  }
   	  Ring 5-15 { 
+ 	    @includestd ModuleTypes/baseline2015PtPS_updatedPS
 	    @includestd Materials/TBPS_L1_tilted 
 	  }
       }
@@ -118,12 +120,15 @@ Tracker Outer {
         dsDistance 1.6
         triggerWindow 5
 	  Ring 1-5 { 
+ 	    @includestd ModuleTypes/baseline2015PtPS_updatedPS
 	    @includestd Materials/TBPS_L2_flat 
 	  }
 	  Ring 6 { 
+ 	    @includestd ModuleTypes/baseline2015PtPS_updatedPS
 	    @includestd Materials/TBPS_L2_central 
 	  }
   	  Ring 7-18 { 
+ 	    @includestd ModuleTypes/baseline2015PtPS_updatedPS
 	    @includestd Materials/TBPS_L2_tilted 
 	  }
       }
@@ -132,12 +137,15 @@ Tracker Outer {
         dsDistance 1.6 
         triggerWindow 7 
 	  Ring 1-7 { 
+ 	    @includestd ModuleTypes/baseline2015PtPS_updatedPS
 	    @includestd Materials/TBPS_L3_flat 
 	  }
 	  Ring 8 { 
+ 	    @includestd ModuleTypes/baseline2015PtPS_updatedPS
 	    @includestd Materials/TBPS_L3_central 
 	  }
   	  Ring 9-21 { 
+ 	    @includestd ModuleTypes/baseline2015PtPS_updatedPS
 	    @includestd Materials/TBPS_L3_tilted 
 	  }
       }

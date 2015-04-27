@@ -2,7 +2,7 @@
 @includestd SimParms
 
 Tracker Outer {
-    @include Baseline2015_SupportsTracker.cfg
+    @include ../Baseline2015_SupportsTracker.cfg
 
     // Layout construction parameters
     zError 70
@@ -35,7 +35,7 @@ Tracker Outer {
     }
 
     Barrel TB2S {
-      @include Baseline2015_SupportsBarrelTB2S.cfg
+      @include ../Baseline2015_SupportsBarrelTB2S.cfg
       bigDelta 15.8 // Antti 2015-02-18
       smallDelta 2.25 // Antti 2015-02-18
       numLayers 3
@@ -91,30 +91,30 @@ Tracker Outer {
     }
 
     Barrel TBPS {
-      @includestd ModuleTypes/baseline2015PtPS_updatedPS
-      @includestd Materials/rodPtPS_updatedPS
+      @include ../ModuleTypes/baseline2015PtPS
+      @include ../Materials/rodPtPS
       @includestd Conversions/flangeTBPS
       Layer 1 { 
         triggerWindow 5
         dsDistance 2.6 
-	@includestd Materials/ptPS_320_26_updatedPS 
+	@include ../Materials/ptPS_320_26
       }
       Layer 2 { 
         triggerWindow 5
         dsDistance 1.6 
-	@includestd Materials/ptPS_320_16_updatedPS 
+	@include ../Materials/ptPS_320_16
       }
       Layer 3 { 
         triggerWindow 7
         dsDistance 1.6 
- 	@includestd Materials/ptPS_320_16_updatedPS 
+ 	@include ../Materials/ptPS_320_16
       }
     }
 
     Barrel TB2S {
       @includestd ModuleTypes/baseline2015Pt2S
-      @includestd Materials/pt2S_320_18_updatedPS
-      @includestd Materials/rodPt2S_updatedPS
+      @include ../Materials/pt2S_320_18
+      @include ../Materials/rodPt2S
       @includestd Conversions/flangeTB2S
 
       dsDistance 1.8
@@ -130,18 +130,18 @@ Tracker Outer {
       Disk 1 {
         Ring 1-9 { 
 	  dsDistance 4.0
-     	  @includestd ModuleTypes/baseline2015PtPS_updatedPS
-          @includestd Materials/ptPS_320_40_updatedPS_targetVolume8
+     	  @include ../ModuleTypes/baseline2015PtPS
+          @include ../Materials/ptPS_320_40
         } 
   	Ring 10 { 
 	  dsDistance 4.0
           @includestd ModuleTypes/baseline2015Pt2S 
-          @includestd Materials/pt2S_320_40_updatedPS
+          @include ../Materials/pt2S_320_40
 	}
     	Ring 11-15 {
           dsDistance 1.8
           @includestd ModuleTypes/baseline2015Pt2S
-          @includestd Materials/pt2S_320_18_updatedPS
+          @include ../Materials/pt2S_320_18
     	}
     	Ring 1 { triggerWindow 2 }
  	Ring 2 { triggerWindow 2 }
@@ -164,7 +164,7 @@ Tracker Outer {
         Ring 1-9 { 
           dsDistance 4.0
           @includestd ModuleTypes/baseline2015PtPS_updatedPS
-          @includestd Materials/ptPS_320_40_updatedPS_targetVolume8
+          @includestd Materials/ptPS_320_40_updatedPS
         } 
         Ring 10 { 
           dsDistance 4.0
@@ -197,7 +197,7 @@ Tracker Outer {
         Ring 1-9 { 
           dsDistance 4.0
           @includestd ModuleTypes/baseline2015PtPS_updatedPS 
-          @includestd Materials/ptPS_320_40_updatedPS_targetVolume8 
+          @includestd Materials/ptPS_320_40_updatedPS 
         } 
         Ring 10-11 { 
           dsDistance 4.0
@@ -230,7 +230,7 @@ Tracker Outer {
         Ring 1-9 { 
           dsDistance 4.0
           @includestd ModuleTypes/baseline2015PtPS_updatedPS 
-          @includestd Materials/ptPS_320_40_updatedPS_targetVolume8 
+          @includestd Materials/ptPS_320_40_updatedPS 
           } 
         Ring 10-11 { 
           dsDistance 4.0
@@ -263,7 +263,7 @@ Tracker Outer {
         Ring 1-9 { 
           dsDistance 4.0
           @includestd ModuleTypes/baseline2015PtPS_updatedPS 
-          @includestd Materials/ptPS_320_40_updatedPS_targetVolume8 
+          @includestd Materials/ptPS_320_40_updatedPS 
         } 
         Ring 10-12 {
           dsDistance 4.0
@@ -303,6 +303,6 @@ Support {
   midZ 290
 }
 
-@include ./PixelV1.cfg
+@include ../../Pixel/PixelV1.cfg
 
 

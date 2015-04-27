@@ -5,7 +5,7 @@ Materials module-TBPS_L1_flat {
   type module
 
  
-  @includestd Materials/ptPS_320_26_notypedef
-  @includestd Materials/TBPS_moduleservices
+  @include ptPS_320_26_notypedef
+  @include TBPS_moduleservices
  
 }

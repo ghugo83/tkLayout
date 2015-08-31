@@ -232,6 +232,7 @@ void Analyzer::analyzeTaggedTracking(MaterialBudget& mb,
             double transverseMomentum = ptit;  // <SMe> we assign the selected /transverse/ momentum to the track (in GeV) </SMe>
             // parameter is pT in this case
             track.setTransverseMomentum(transverseMomentum);
+            track.pruneHits();
             track.computeErrors();
             TrackCollectionMap &myMap = taggedTrackCollectionMap[tag];
             TrackCollection &myCollection = myMap[parameter];

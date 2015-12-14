@@ -183,19 +183,18 @@ namespace insur {
 	if (pos != -1) {
 	  for (i = 0; i < t.at(pos).partselectors.size(); i++) {
 	    std::string& refstring = t.at(pos).partselectors.at(i);
-
 	    std::string mnumber;
+	    std::string lnumber;
+	    // module number
 	    if (refstring.find(xml_barrel_module) != std::string::npos) {
-	      //mnumber = refstring.substr(xml_barrel_module.size(), xml_barrel_module.size() + firstNumericBlockSize(refstring));
-	      //mnumber = mnumber.substr(0, findNumericPrefixSize(mnumber));
 	      mnumber = firstNumericalBlock(refstring);
 	    }
-	    std::string refstring2 = refstring.substr(xml_barrel_module.size() + mnumber.size());
-	    std::string lnumber;
-	    //lnumber = refstring2.substr(xml_layer.size());
-	    //lnumber = lnumber.substr(0, findNumericPrefixSize(lnumber));
-	    lnumber = firstNumericalBlock(refstring2);
-
+	    // layer number
+	    if (refstring.find(xml_layer) != std::string::npos) {
+	      refstring = refstring.substr(refstring.find(xml_layer));
+	      lnumber = firstNumericalBlock(refstring);
+	    }
+	    // print
 	    if (refstring.find(xml_base_lower) != std::string::npos) {
 	    out << xml_spec_par_selector << xml_barrel_module << mnumber << xml_layer << lnumber << xml_general_endline;
 	    }
@@ -239,19 +238,18 @@ namespace insur {
 	if (pos != -1) {
 	  for (i = 0; i < t.at(pos).partselectors.size(); i++) {
 	    std::string& refstring = t.at(pos).partselectors.at(i);
-
 	    std::string mnumber;
+	    std::string dnumber;
+	    // module number
 	    if (refstring.find(xml_endcap_module) != std::string::npos) {
-	      //mnumber = refstring.substr(xml_endcap_module.size());
-	      //mnumber = mnumber.substr(0, findNumericPrefixSize(mnumber));
 	      mnumber = firstNumericalBlock(refstring);
 	    }
-	    std::string refstring2 = refstring.substr(xml_endcap_module.size() + mnumber.size());
-	    std::string dnumber;
-	    //dnumber = refstring2.substr(xml_disc.size());
-	    //dnumber = dnumber.substr(0, findNumericPrefixSize(dnumber));
-	    dnumber = firstNumericalBlock(refstring2);
-
+	    // disc number
+	    if (refstring.find(xml_disc) != std::string::npos) {
+	      refstring = refstring.substr(refstring.find(xml_disc));
+	      dnumber = firstNumericalBlock(refstring);	 
+	    }
+	    // print
 	    if (refstring.find(xml_base_lower) != std::string::npos) {
 	      out << xml_spec_par_selector << xml_endcap_module << mnumber << xml_disc << dnumber << xml_general_endline;
 	    }
@@ -875,8 +873,7 @@ namespace insur {
       for (unsigned int i = 0; i < specs.at(lindex).partselectors.size(); i++) {
 	std::string& lcurrent = specs.at(lindex).partselectors.at(i);
 
-	std::string lnumber;
-	lnumber = lcurrent.substr(xml_layer.size()); 
+	std::string lnumber = firstNumericalBlock(lcurrent);
 
 	// Looks whether a layer is tilted. If so, finds the number of its first tilted ring.
 	bool isTilted = false;
@@ -884,12 +881,10 @@ namespace insur {
 	int j = 0;
 	while ((isTilted == false) && (j < specs.at(rindex).partselectors.size())) {	     
 	  std::string& rcurrent = specs.at(rindex).partselectors.at(j);
-	  std::string compstr = rcurrent.substr(rcurrent.find(xml_layer) + xml_layer.size());
-	  compstr = compstr.substr(0, numericalPrefix(compstr).size());
+	  std::string compstr = firstNumericalBlock(rcurrent);
 	  if ((lnumber == compstr) && (rcurrent.find(xml_ring) != std::string::npos)) { 
 	    isTilted = true;
-	    firstTiltedRing = rcurrent.substr(xml_ring.size());
-	    firstTiltedRing = firstTiltedRing.substr(0, numericalPrefix(firstTiltedRing).size());
+	    firstTiltedRing = firstNumericalBlock(rcurrent);
 	  }
 	  j++;
 	}
@@ -901,18 +896,17 @@ namespace insur {
 	  std::string compstr;
 	  // rod case
 	  if (rcurrent.find(xml_rod) != std::string::npos) {
-	    compstr = rcurrent.substr(rcurrent.find(xml_rod) + xml_rod.size());
+	    compstr = rcurrent.substr(rcurrent.find(xml_rod));
 	  }
 	  // (if any) tilted ring case
 	  else if ((rcurrent.find(xml_ring) != std::string::npos) && (rcurrent.find(xml_layer) != std::string::npos)) {
-	    rnumber = rcurrent.substr(xml_ring.size());
-	    rnumber = rnumber.substr(0, numericalPrefix(rnumber).size());
-	    compstr = rcurrent.substr(rcurrent.find(xml_layer) + xml_layer.size());
+	    rnumber = firstNumericalBlock(rcurrent);
+	    compstr = rcurrent.substr(rcurrent.find(xml_layer));
 	  }
 	  else { 
 	    std::cerr << "While building paths for trackerRecoMaterial.xml, neither " << xml_rod << " nor " << xml_ring << " can be found in " << rcurrent << "." << std::endl; 
 	  }
-	  compstr = compstr.substr(0, numericalPrefix(compstr).size());
+	  compstr = firstNumericalBlock(compstr);
 
 	  // taking the rod or (if any) tilted ring matching the current layer
 	  if (lnumber == compstr) {
@@ -927,8 +921,7 @@ namespace insur {
 	      std::string mnumber;
 
 	      if (refstring.find(xml_barrel_module) != std::string::npos) {
-		mnumber = refstring.substr(xml_barrel_module.size());
-		mnumber = mnumber.substr(0, numericalPrefix(mnumber).size());
+		mnumber = firstNumericalBlock(refstring);
 		
 		if ((!isTilted) // For untilted layer, takes all modules. e.g. BModule1 to BModule15 for Layer1.
 		    // For tilted layer, in case of rod, takes modules until first tilted ring. e.g. BModule1 to BModule4 for Layer1.
@@ -981,8 +974,8 @@ namespace insur {
 	std::string& dcurrent = specs.at(dindex).partselectors.at(i);
 
 	bool plus = specs.at(dindex).partextras.at(i) == xml_plus; // CUIDADO was : (dcurrent.size() >= xml_plus.size() && (dcurrent.substr(dcurrent.size() - xml_plus.size()).compare(xml_plus) == 0);
-	std::string dnumber, rnumber;
-	dnumber = dcurrent.substr(xml_disc.size()); 
+	std::string dnumber = firstNumericalBlock(dcurrent);
+	std::string rnumber; 
 	//CUIDADO if (plus) dnumber = dnumber.substr(0, dnumber.size() - xml_plus.size());
 	//else dnumber = dnumber.substr(0, dnumber.size() - xml_minus.size());
 	std::ostringstream index;
@@ -1005,8 +998,7 @@ namespace insur {
 
 	  // matching discs
 	  if (dnumber.compare(compstr) == 0) {
-	    rnumber = specs.at(rindex).partselectors.at(j).substr(xml_ring.size());
-	    rnumber = rnumber.substr(0, numericalPrefix(rnumber).size());
+	    rnumber = firstNumericalBlock(specs.at(rindex).partselectors.at(j));
 
 	    postfix = xml_endcap_module + rnumber + xml_disc + dnumber;
 

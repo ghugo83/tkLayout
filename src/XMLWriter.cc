@@ -1088,26 +1088,21 @@ namespace insur {
      * @param s An arbitrary string
      * @return The number of numeric characters that make up the start of the string
      */
-  std::string XMLWriter::numericalPrefix(std::string s) {
-        std::ostringstream st;
-        int number;
-        if (!s.empty()) {
-            number = atoi(s.c_str());
-            if (number == 0) return "";
-            else {
-                st << number;
-                return st.str();
-            }
-        }
-        return "";
-    }
 
   std::string XMLWriter::firstNumericalBlock(std::string s) {
-        while (!s.empty()) {
-	  if (!isdigit(s[0])) s = s.substr(1);
-	  else return numericalPrefix(s);
-        }
-        return "";
+    while (!s.empty()) {
+      if (!isdigit(s[0])) s = s.substr(1);
+      else {
+	int number = atoi(s.c_str());
+	if (number == 0) return "";
+	else {
+	  std::ostringstream st;
+	  st << number;
+	  return st.str();
+	}
+      }
+    }
+    return "";
   }
     
     /**

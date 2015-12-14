@@ -72,7 +72,8 @@ namespace insur {
     private:
         std::vector<PathInfo>& buildPaths(std::vector<SpecParInfo>& specs, std::vector<PathInfo>& blocks, bool wt = false);
         bool endcapsInTopology(std::vector<SpecParInfo>& specs);
-        int findNumericPrefixSize(std::string s);
+	std::string numericalPrefix(std::string s);
+	std::string firstNumericalBlock(std::string s);
         int findEntry(std::vector<SpecParInfo>& specs, std::string name);
         std::vector<PathInfo>::iterator findEntry(std::string name, std::vector<PathInfo>& data);
         std::string extendedHeader_, simpleHeader_; // headers containing generation information which are inserted after the preamble

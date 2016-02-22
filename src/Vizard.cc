@@ -1407,9 +1407,9 @@ namespace insur {
 	      tiltedLayerTable->setContent(15, i+1, l.tiltedRingsGeometryInfo().deltaZOuter()[ringNumber], coordPrecision);
 	      //tiltedLayerTable->setContent(16, 0, "coverage" + subStart + "Inner" + subEnd + " (°)");
 	      //tiltedLayerTable->setContent(16, i+1, l.tiltedRingsGeometryInfo().covInner()[ringNumber] * 180. / M_PI, coordPrecision);
-	      tiltedLayerTable->setContent(16, 0, "zErrorInner");
+	      tiltedLayerTable->setContent(16, 0, "zError" + subStart + "Inner" + subEnd);
 	      tiltedLayerTable->setContent(16, i+1, l.tiltedRingsGeometryInfo().zErrorInner()[ringNumber], coordPrecision);
-	      tiltedLayerTable->setContent(17, 0, "zErrorOuter");
+	      tiltedLayerTable->setContent(17, 0, "zError" + subStart + "Outer" + subEnd);
 	      tiltedLayerTable->setContent(17, i+1, l.tiltedRingsGeometryInfo().zErrorOuter()[ringNumber], coordPrecision);
 	    }
 	  }

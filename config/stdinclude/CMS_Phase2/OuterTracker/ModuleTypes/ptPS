@@ -3,6 +3,7 @@
 moduleType ptPS
 // Active silicon size
 width 96
+//width 100
 length 46.26
 
 sensorLayout pt

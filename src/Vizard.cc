@@ -1254,6 +1254,38 @@ namespace insur {
       void visit(const Module& m) override {
         TagMaker tmak(m);
 
+
+
+
+
+
+ for (int i=0; i<4; i++) {
+	    //if (((m.basePoly().getVertex(i).Z() > 500 && m.basePoly().getVertex(i).Z() < 600) || (m.basePoly().getVertex(i).Z() < -500 && m.basePoly().getVertex(i).Z() > -600)) && (m.uniRef().phi == 1 )) {
+   //if (m.center().Rho() < 100.) { std::cout << m.center().Rho() << std::endl; }
+
+   if ((m.center().Rho() < 300.) && (m.center().Rho() > 200.) && (m.uniRef().phi == 2 )) {
+
+	      std::cout << m.moduleRing() << std::endl;
+	      std::cout << "width = " << m.meanWidth() << std::endl;
+	      std::cout << "length = " << m.length() << std::endl;
+	      std::cout << m.dsDistance() << std::endl;
+	      std::cout << "m.center().Z() = " << m.center().Z() << std::endl;
+	      std::cout << "m.basePoly().getVertex(i).Z() = " << m.basePoly().getVertex(i).Z() << std::endl;
+	      std::cout << "m.basePoly().getVertex(i).X() = " << m.basePoly().getVertex(i).X() << std::endl;
+	      std::cout << "m.basePoly().getVertex(i).Y() = " << m.basePoly().getVertex(i).Y() << std::endl;
+	      
+	    }
+	  }
+
+
+
+
+
+
+
+
+
+
         std::string aSensorTag = tmak.sensorGeoTag;
         tagMapPositions[aSensorTag].insert(tmak.posTag);
         tagMapCount[aSensorTag]++;
@@ -5235,8 +5267,25 @@ namespace insur {
           << m.center().Rho() << ", "
           << m.center().Z() << ", "
           << m.center().Phi() << ", "
-          << m.dsDistance()
-          << std::endl;
+		<< m.dsDistance()
+		<< std::endl;
+
+	  for (int i=0; i<4; i++) {
+	    //if (((m.basePoly().getVertex(i).Z() > 500 && m.basePoly().getVertex(i).Z() < 600) || (m.basePoly().getVertex(i).Z() < -500 && m.basePoly().getVertex(i).Z() > -600)) && (m.uniRef().phi == 1 )) {
+	    
+	    if ((m.center().Rho() == 35) && (m.uniRef().phi == 1 )) {
+
+	      std::cout << m.moduleRing() << std::endl;
+	      std::cout << "m.center().Z() = " << m.center().Z() << std::endl;
+	      std::cout << "m.basePoly().getVertex(i).Z() = " << m.basePoly().getVertex(i).Z() << std::endl;
+	      std::cout << "m.basePoly().getVertex(i).X() = " << m.basePoly().getVertex(i).X() << std::endl;
+	      std::cout << "m.basePoly().getVertex(i).Y() = " << m.basePoly().getVertex(i).Y() << std::endl;
+	      
+	    }
+	  }
+
+
+
       }
 
       std::string output() const { return output_.str(); }

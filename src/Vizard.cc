@@ -1259,23 +1259,24 @@ namespace insur {
 
 
 
- for (int i=0; i<4; i++) {
+	//for (int i=0; i<4; i++) {
 	    //if (((m.basePoly().getVertex(i).Z() > 500 && m.basePoly().getVertex(i).Z() < 600) || (m.basePoly().getVertex(i).Z() < -500 && m.basePoly().getVertex(i).Z() > -600)) && (m.uniRef().phi == 1 )) {
    //if (m.center().Rho() < 100.) { std::cout << m.center().Rho() << std::endl; }
 
-   if ((m.center().Rho() < 300.) && (m.center().Rho() > 200.) && (m.uniRef().phi == 2 )) {
+   /*if ((m.center().R() > 200.) && (m.center().R() < 300.) && (m.uniRef().phi == 1 || m.uniRef().phi == 2   )) {
 
-	      std::cout << m.moduleRing() << std::endl;
-	      std::cout << "width = " << m.meanWidth() << std::endl;
-	      std::cout << "length = " << m.length() << std::endl;
-	      std::cout << m.dsDistance() << std::endl;
+     std::cout << "m.moduleRing() = " << m.moduleRing() << std::endl;
+     //std::cout << "width = " << m.meanWidth() << std::endl;
+     //std::cout << "length = " << m.length() << std::endl;
+     std::cout << " m.dsDistance() = " << m.dsDistance() << std::endl;
+     //std::cout << " m.triggerWindow() = " << m.triggerWindow() << std::endl;
 	      std::cout << "m.center().Z() = " << m.center().Z() << std::endl;
-	      std::cout << "m.basePoly().getVertex(i).Z() = " << m.basePoly().getVertex(i).Z() << std::endl;
-	      std::cout << "m.basePoly().getVertex(i).X() = " << m.basePoly().getVertex(i).X() << std::endl;
-	      std::cout << "m.basePoly().getVertex(i).Y() = " << m.basePoly().getVertex(i).Y() << std::endl;
+	      //std::cout << "m.basePoly().getVertex(i).Z() = " << m.basePoly().getVertex(i).Z() << std::endl;
+	      //std::cout << "m.basePoly().getVertex(i).X() = " << m.basePoly().getVertex(i).X() << std::endl;
+	      //std::cout << "m.basePoly().getVertex(i).Y() = " << m.basePoly().getVertex(i).Y() << std::endl;
 	      
-	    }
-	  }
+	      }*/
+   //}
 
 
 
@@ -5270,19 +5271,21 @@ namespace insur {
 		<< m.dsDistance()
 		<< std::endl;
 
-	  for (int i=0; i<4; i++) {
+	/*for (int i=0; i<4; i++) {
 	    //if (((m.basePoly().getVertex(i).Z() > 500 && m.basePoly().getVertex(i).Z() < 600) || (m.basePoly().getVertex(i).Z() < -500 && m.basePoly().getVertex(i).Z() > -600)) && (m.uniRef().phi == 1 )) {
 	    
-	    if ((m.center().Rho() == 35) && (m.uniRef().phi == 1 )) {
+	    if ((m.center().Rho() > 200) && (m.center().Rho() < 300) && (m.uniRef().phi == 1 )) {
 
 	      std::cout << m.moduleRing() << std::endl;
 	      std::cout << "m.center().Z() = " << m.center().Z() << std::endl;
-	      std::cout << "m.basePoly().getVertex(i).Z() = " << m.basePoly().getVertex(i).Z() << std::endl;
-	      std::cout << "m.basePoly().getVertex(i).X() = " << m.basePoly().getVertex(i).X() << std::endl;
-	      std::cout << "m.basePoly().getVertex(i).Y() = " << m.basePoly().getVertex(i).Y() << std::endl;
+
+	      std::cout << " m.dsDistance() = " << m.dsDistance() << std::endl;
+	      //std::cout << "m.basePoly().getVertex(i).Z() = " << m.basePoly().getVertex(i).Z() << std::endl;
+	      //std::cout << "m.basePoly().getVertex(i).X() = " << m.basePoly().getVertex(i).X() << std::endl;
+	      //std::cout << "m.basePoly().getVertex(i).Y() = " << m.basePoly().getVertex(i).Y() << std::endl;
 	      
 	    }
-	  }
+	    }*/
 
 
 

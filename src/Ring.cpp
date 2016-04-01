@@ -367,7 +367,7 @@ void TiltedRing::buildLeftRight(double lastThetaEnd) {
   thetaEndInner_ = MAX( atan(rH1ppUP / zH1ppUP), atan(rH1ppDOWN / zH1ppDOWN));
 
 
-
+  /*
   // FOR INFO
 
   //phiOverlapDEG_ = atan(width / (2.* rH2pUP)) + atan(width / (2.* rH1pUP)) - 2. * M_PI / numPhi();
@@ -382,7 +382,7 @@ void TiltedRing::buildLeftRight(double lastThetaEnd) {
 
   double s = (-b - sqrt(b*b - 4*a*c))/(2*a);
 
-  phiOverlap_ = width + s;
+  phiOverlap_ = width + s;*/
 
 
 
@@ -442,6 +442,27 @@ void TiltedRing::buildLeftRight(double lastThetaEnd) {
     rEndInner_REAL_ = rH1ppDOWN_REAL; 
     zEndInner_REAL_ = zH1ppDOWN_REAL;
   }
+
+
+
+
+
+// FOR INFO
+
+  //phiOverlapDEG_ = atan(width / (2.* rH2pUP)) + atan(width / (2.* rH1pUP)) - 2. * M_PI / numPhi();
+
+  double T = tan(2.*M_PI / numPhi());
+  double A = 1. / (2. * rH1pUP_REAL);
+  double B = 1. / (2. * rH2pUP_REAL);
+
+  double a = T * A * B;
+  double b = - (A + B);
+  double c = - T;
+
+  double s = (-b - sqrt(b*b - 4*a*c))/(2*a);
+
+  phiOverlap_ = width + s;
+
 
 
 }

@@ -46,7 +46,7 @@ public:
 
   ReadonlyProperty<double, Computable> maxR, minR;
   ReadonlyProperty<double, Computable> maxZ;
-  Property<double, Computable> maxZwithHybrids, minRwithHybrids, maxRwithHybrids;
+  //Property<double, Computable> maxZwithHybrids, minRwithHybrids, maxRwithHybrids;
   ReadonlyProperty<double, Default> etaCut;
   ReadonlyProperty<bool, Default> servicesForcedUp;
   ReadonlyProperty<bool, Default> skipAllServices;
@@ -101,7 +101,7 @@ public:
 
 
 
-      maxRwithHybrids.setup([this]() { 
+      /*maxRwithHybrids.setup([this]() { 
         double max = 0; 
         for (const auto& b : barrels_) max = MAX(max, b.maxRwithHybrids());
         for (const auto& e : endcaps_) max = MAX(max, e.maxRwithHybrids());
@@ -118,9 +118,29 @@ public:
         for (const auto& b : barrels_) max = MAX(max, b.maxZwithHybrids());
         for (const auto& e : endcaps_) max = MAX(max, e.maxZwithHybrids());
         return max;
-     });
+	});*/
 
 
+  }
+
+
+  double maxRwithHybrids() const { 
+    double max = 0; 
+    for (const auto& b : barrels_) max = MAX(max, b.maxRwithHybrids());
+    for (const auto& e : endcaps_) max = MAX(max, e.maxRwithHybrids());
+    return max;
+  }
+  double minRwithHybrids() const {
+    double min = std::numeric_limits<double>::max(); 
+    for (const auto& b : barrels_) min = MIN(min, b.minRwithHybrids());
+    for (const auto& e : endcaps_) min = MIN(min, e.minRwithHybrids());
+    return min;
+  }
+  double maxZwithHybrids() const {
+    double max = 0;
+    for (const auto& b : barrels_) max = MAX(max, b.maxZwithHybrids());
+    for (const auto& e : endcaps_) max = MAX(max, e.maxZwithHybrids());
+    return max;
   }
 
   void build();

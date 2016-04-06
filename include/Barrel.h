@@ -59,11 +59,17 @@ class Barrel : public PropertyObject, public Buildable, public Identifiable<stri
     maxR.setup([this]() { double max = 0;                                  for (const auto& l : layers_) { max = MAX(max, l.maxR()); } return max; });
     minR.setup([this]() { double min = std::numeric_limits<double>::max(); for (const auto& l : layers_) { min = MIN(min, l.minR()); } return min; });
 
-    maxZwithHybrids.setup([this]() { double max = 0;                                  for (const auto& l : layers_) { max = MAX(max, l.maxZwithHybrids()); } return max; });
+    /*maxZwithHybrids.setup([this]() { double max = 0;                                  for (const auto& l : layers_) { max = MAX(max, l.maxZwithHybrids()); } return max; });
     minZwithHybrids.setup([this]() { double min = std::numeric_limits<double>::max(); for (const auto& l : layers_) { min = MIN(min, l.minZwithHybrids()); } return min; });
     maxRwithHybrids.setup([this]() { double max = 0;                                  for (const auto& l : layers_) { max = MAX(max, l.maxRwithHybrids()); } return max; });
-    minRwithHybrids.setup([this]() { double min = std::numeric_limits<double>::max(); for (const auto& l : layers_) { min = MIN(min, l.minRwithHybrids()); } return min; });
+    minRwithHybrids.setup([this]() { double min = std::numeric_limits<double>::max(); for (const auto& l : layers_) { min = MIN(min, l.minRwithHybrids()); } return min; });*/
   }
+
+  double maxZwithHybrids() const { double max = 0;                                  for (const auto& l : layers_) { max = MAX(max, l.maxZwithHybrids()); } return max; }
+  double minZwithHybrids() const { double min = std::numeric_limits<double>::max(); for (const auto& l : layers_) { min = MIN(min, l.minZwithHybrids()); } return min; }
+  double maxRwithHybrids() const { double max = 0;                                  for (const auto& l : layers_) { max = MAX(max, l.maxRwithHybrids()); } return max; }
+  double minRwithHybrids() const { double min = std::numeric_limits<double>::max(); for (const auto& l : layers_) { min = MIN(min, l.minRwithHybrids()); } return min; }
+
   void build(); 
   void cutAtEta(double eta);
   void accept(GeometryVisitor& v) { 
@@ -81,7 +87,7 @@ class Barrel : public PropertyObject, public Buildable, public Identifiable<stri
   Property<        int   , NoDefault>  numLayers;
   ReadonlyProperty<double, Computable> maxZ, minZ;
   ReadonlyProperty<double, Computable> maxR, minR;
-  Property<double, Computable> minZwithHybrids, maxZwithHybrids, minRwithHybrids, maxRwithHybrids;
+  //Property<double, Computable> minZwithHybrids, maxZwithHybrids, minRwithHybrids, maxRwithHybrids;
   ReadonlyProperty<bool  , Default>    skipServices;
 };
 

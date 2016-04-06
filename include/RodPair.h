@@ -39,7 +39,7 @@ private:
 public:
   Property<double, NoDefault> maxZ;
   Property<double, Computable> minZ, maxR, minR;
-  Property<double, Computable> minZwithHybrids, maxZwithHybrids, minRwithHybrids, maxRwithHybrids;
+  //Property<double, Computable> minZwithHybrids, maxZwithHybrids, minRwithHybrids, maxRwithHybrids;
   ReadonlyProperty<double, Computable> maxModuleThickness;
   Property<bool, Default> beamSpotCover;
 
@@ -56,11 +56,17 @@ public:
     maxModuleThickness.setup([&]() { return maxget2(zPlusModules_.begin(), zPlusModules_.end(), &Module::thickness); });
 
 
-    maxZwithHybrids       .setup([&]() { double max = maxget2(zPlusModules_.begin(), zPlusModules_.end(), &Module::maxZwithHybrids); return MAX(maxZ(), max); });
+    /*maxZwithHybrids       .setup([&]() { double max = maxget2(zPlusModules_.begin(), zPlusModules_.end(), &Module::maxZwithHybrids); return MAX(maxZ(), max); });
     minZwithHybrids       .setup([&]() { return minget2(zMinusModules_.begin(), zMinusModules_.end(), &Module::minZwithHybrids); });
     minRwithHybrids       .setup([&]() { return minget2(zPlusModules_.begin(), zPlusModules_.end(), &Module::minRwithHybrids); });
-    maxRwithHybrids       .setup([&]() { return maxget2(zPlusModules_.begin(), zPlusModules_.end(), &Module::maxRwithHybrids); });
+    maxRwithHybrids       .setup([&]() { return maxget2(zPlusModules_.begin(), zPlusModules_.end(), &Module::maxRwithHybrids); });*/
   }
+
+  double maxZwithHybrids() const { double max = maxget2(zPlusModules_.begin(), zPlusModules_.end(), &Module::maxZwithHybrids); return MAX(maxZ(), max); }
+  double minZwithHybrids() const { return minget2(zMinusModules_.begin(), zMinusModules_.end(), &Module::minZwithHybrids); }
+  double minRwithHybrids() const { return minget2(zPlusModules_.begin(), zPlusModules_.end(), &Module::minRwithHybrids); }
+  double maxRwithHybrids() const { return maxget2(zPlusModules_.begin(), zPlusModules_.end(), &Module::maxRwithHybrids); }
+
   
   virtual double thickness() const = 0;
   virtual bool isTilted() const = 0;

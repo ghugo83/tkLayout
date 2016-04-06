@@ -127,7 +127,7 @@ public:
   double maxRwithHybrids() const { 
     double max = 0; 
     for (const auto& b : barrels_) max = MAX(max, b.maxRwithHybrids());
-    for (const auto& e : endcaps_) max = MAX(max, e.maxRwithHybrids());
+      for (const auto& e : endcaps_) max = MAX(max, e.maxRwithHybrids());
     return max;
   }
   double minRwithHybrids() const {
@@ -141,7 +141,7 @@ public:
     for (const auto& b : barrels_) max = MAX(max, b.maxZwithHybrids());
     for (const auto& e : endcaps_) max = MAX(max, e.maxZwithHybrids());
     return max;
-  }
+    }
 
   void build();
 

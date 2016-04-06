@@ -48,11 +48,17 @@ class Endcap : public PropertyObject, public Buildable, public Identifiable<std:
     maxZ.setup([&]() { double max = 0;                                  for (const auto& d : disks_) { if(d.maxZ() > 0 ) max = MAX(max, d.maxZ()); } return max; });
     minZ.setup([&]() { double min = std::numeric_limits<double>::max(); for (const auto& d : disks_) { if(d.minZ() > 0 ) min = MIN(min, d.minZ()); } return min; });
 
-    maxRwithHybrids.setup([&]() { double max = 0;                                  for (const auto& d : disks_) { max = MAX(max, d.maxRwithHybrids()); } return max; });
+    /*maxRwithHybrids.setup([&]() { double max = 0;                                  for (const auto& d : disks_) { max = MAX(max, d.maxRwithHybrids()); } return max; });
     minRwithHybrids.setup([&]() { double min = std::numeric_limits<double>::max(); for (const auto& d : disks_) { min = MIN(min, d.minRwithHybrids()); } return min; });
     maxZwithHybrids.setup([&]() { double max = 0;                                  for (const auto& d : disks_) { if(d.maxZ() > 0 ) max = MAX(max, d.maxZwithHybrids()); } return max; });
-    minZwithHybrids.setup([&]() { double min = std::numeric_limits<double>::max(); for (const auto& d : disks_) { if(d.minZ() > 0 ) min = MIN(min, d.minZwithHybrids()); } return min; });
+    minZwithHybrids.setup([&]() { double min = std::numeric_limits<double>::max(); for (const auto& d : disks_) { if(d.minZ() > 0 ) min = MIN(min, d.minZwithHybrids()); } return min; });*/
   }
+
+  double maxRwithHybrids() const { double max = 0;                                  for (const auto& d : disks_) { max = MAX(max, d.maxRwithHybrids()); } return max; }
+  double minRwithHybrids() const { double min = std::numeric_limits<double>::max(); for (const auto& d : disks_) { min = MIN(min, d.minRwithHybrids()); } return min; }
+  double maxZwithHybrids() const { double max = 0;                                  for (const auto& d : disks_) { if(d.maxZ() > 0 ) max = MAX(max, d.maxZwithHybrids()); } return max; }
+  double minZwithHybrids() const { double min = std::numeric_limits<double>::max(); for (const auto& d : disks_) { if(d.minZ() > 0 ) min = MIN(min, d.minZwithHybrids()); } return min; }
+
   void build();
   void cutAtEta(double eta);
   void accept(GeometryVisitor& v) {
@@ -73,7 +79,7 @@ class Endcap : public PropertyObject, public Buildable, public Identifiable<std:
   Property<        double, NoDefault>  outerZ;
   ReadonlyProperty<double, Computable> maxZ, minZ;
   ReadonlyProperty<double, Computable> maxR, minR;
-  Property<double, Computable> minZwithHybrids, maxZwithHybrids, minRwithHybrids, maxRwithHybrids;
+  //Property<double, Computable> minZwithHybrids, maxZwithHybrids, minRwithHybrids, maxRwithHybrids;
   ReadonlyProperty<bool  , Default>    skipServices;
 };
 

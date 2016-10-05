@@ -107,12 +107,25 @@ double AnalyzerHelpers::calculatePetalCrossover(const Tracker& tracker, const Si
 
 
 bool AnalyzerHelpers::isModuleInEtaSector(const SimParms& simParms, const Tracker& tracker, const DetectorModule& module, int etaSector) {
-  int numProcEta = simParms.numTriggerTowersEta();
-  double etaCut = simParms.triggerEtaCut();
-  double etaSlice = etaCut*2 / numProcEta;
   double maxR = tracker.maxR();
   double zError = simParms.zErrorCollider();
-  double eta = etaSlice*etaSector-etaCut;    
+
+  int numProcEta = simParms.numTriggerTowersEta();
+  double etaCut = simParms.triggerEtaCut();
+
+  //double etaSlice = etaCut*2 / numProcEta;
+  double etaSliceStandard = 2.2*2 / numProcEta;
+  double etaSliceExtended = etaSliceStandard + etaCut - 2.2;
+  double etaSlice;
+  if (etaSector == 0 || etaSector == (numProcEta - 1)) etaSlice = etaSliceExtended;
+  else etaSlice = etaSliceStandard;
+  
+  //double eta = etaSlice*etaSector-etaCut;
+  double eta;
+  if (etaSector == 0) eta = -etaCut;
+  else if (etaSector == 1) eta = -etaCut + etaSliceExtended;
+  else if (etaSector > 1 && etaSector < numProcEta) eta = -etaCut + etaSliceExtended + (etaSector - 1) * etaSliceStandard;
+  else { std::cout << "Error : etaSector reached does not make sense. etaSector = " << etaSector << "numProcEta = " << numProcEta << std::endl; }
 
   double modMinZ = module.minZ();
   double modMaxZ = module.maxZ();
@@ -121,6 +134,15 @@ bool AnalyzerHelpers::isModuleInEtaSector(const SimParms& simParms, const Tracke
 
   double etaSliceZ1 = maxR/tan(2*atan(exp(-eta)));
   double etaSliceZ2 = maxR/tan(2*atan(exp(-eta-etaSlice)));
+
+  std::cout << "numProcEta = " << numProcEta << std::endl;
+  std::cout << "etaCut = " << etaCut << std::endl;
+  std::cout << "tracker maxR = " << maxR << std::endl;
+  std::cout << "etaSector = " << etaSector << std::endl;
+  std::cout << "etaSlice = " << etaSlice << std::endl;
+  std::cout << "eta = " << eta << std::endl;
+  std::cout << "etaSliceZ1 = " << etaSliceZ1 << "etaSliceZ2 = " << etaSliceZ2 << std::endl;
+
 
   double etaDist1 =  modMaxZ - ((etaSliceZ1 >= 0 ? modMinR : modMaxR)*(etaSliceZ1 + zError)/maxR - zError); // if etaDists are positive it means the module is in the slice
   double etaDist2 = -modMinZ + ((etaSliceZ2 >= 0 ? modMaxR : modMinR)*(etaSliceZ2 - zError)/maxR + zError); 

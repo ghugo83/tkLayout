@@ -123,25 +123,24 @@ bool AnalyzerHelpers::isModuleInEtaSector(const SimParms& simParms, const Tracke
   //double eta = etaSlice*etaSector-etaCut;
   double eta;
   if (etaSector == 0) eta = -etaCut;
-  else if (etaSector == 1) eta = -etaCut + etaSliceExtended;
-  else if (etaSector > 1 && etaSector < numProcEta) eta = -etaCut + etaSliceExtended + (etaSector - 1) * etaSliceStandard;
+  else if (etaSector > 0 && etaSector < numProcEta) eta = -etaCut + etaSliceExtended + (etaSector - 1) * etaSliceStandard;
   else { std::cout << "Error : etaSector reached does not make sense. etaSector = " << etaSector << "numProcEta = " << numProcEta << std::endl; }
+
+  double etaSliceZ1 = maxR/tan(2*atan(exp(-eta)));
+  double etaSliceZ2 = maxR/tan(2*atan(exp(-eta-etaSlice)));
 
   double modMinZ = module.minZ();
   double modMaxZ = module.maxZ();
   double modMinR = module.minR();                
   double modMaxR = module.maxR();                
-
-  double etaSliceZ1 = maxR/tan(2*atan(exp(-eta)));
-  double etaSliceZ2 = maxR/tan(2*atan(exp(-eta-etaSlice)));
-
-  std::cout << "numProcEta = " << numProcEta << std::endl;
+ 
+  /*std::cout << "numProcEta = " << numProcEta << std::endl;
   std::cout << "etaCut = " << etaCut << std::endl;
   std::cout << "tracker maxR = " << maxR << std::endl;
   std::cout << "etaSector = " << etaSector << std::endl;
   std::cout << "etaSlice = " << etaSlice << std::endl;
   std::cout << "eta = " << eta << std::endl;
-  std::cout << "etaSliceZ1 = " << etaSliceZ1 << "etaSliceZ2 = " << etaSliceZ2 << std::endl;
+  std::cout << "etaSliceZ1 = " << etaSliceZ1 << "etaSliceZ2 = " << etaSliceZ2 << std::endl;*/
 
 
   double etaDist1 =  modMaxZ - ((etaSliceZ1 >= -zError ? modMinR : modMaxR)*(etaSliceZ1 + zError)/maxR - zError); // if etaDists are positive it means the module is in the slice

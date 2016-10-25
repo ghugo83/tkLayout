@@ -322,6 +322,9 @@ namespace material {
     materialTab_ (MaterialTab::instance()),
     materialType_(newMaterialType) {};
 
+
+
+
   MaterialObject::Element::Element(const Element& original, double multiplier) : Element(original.materialType_) {
     if(original.destination.state())
       destination(original.destination());
@@ -333,6 +336,38 @@ namespace material {
     scaleOnSensor(0);
     unit(original.unit());
     debugInactivate(original.debugInactivate());
+  }
+
+
+
+  MaterialObject::Element::Element(const Element& input, const Element& output, double multiplier) : Element(output.materialType_) {
+    // Nearly all information assigned to the new element is taken from the output element
+    if(output.destination.state()) {
+      destination(output.destination());
+    }
+    if(output.componentName.state()) {
+      componentName(output.componentName());
+    }
+    elementName(output.elementName());
+    service(output.service());
+    quantity(output.quantity() * output.scalingMultiplier() * multiplier); //apply the scaling in the copied object
+    scaleOnSensor(0);
+    unit(output.unit());
+    debugInactivate(output.debugInactivate());
+
+    // The following information is taken from the input element
+    if (input.componentName.state() && !output.componentName.state()) {
+      componentName(input.componentName());
+    }
+
+    if (input.debugInactivate()) {  //apply the inactivation also to converteds
+      debugInactivate(true);
+    }
+
+    //TODO: check if is ok to do this
+    if(input.destination.state() && !output.destination.state()) {  //apply the same destination of converted element (only if not defined in output conversion rule)
+      destination(input.destination());
+    }
   }
   
   MaterialObject::Element::~Element() { }

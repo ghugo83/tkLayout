@@ -140,6 +140,7 @@ namespace material {
 
       Element(MaterialObject::Type& newMaterialType);
       Element(const Element& original, double multiplier = 1.0);
+      Element(const Element& input, const Element& output, double multiplier = 1.0);
       //Element(const Element& originElement);
       std::map<int, ReferenceSensor*> referenceSensors_;
 

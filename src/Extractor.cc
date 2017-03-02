@@ -75,8 +75,8 @@ namespace insur {
     Rotation rot;
     rot.name = xml_places_unflipped_mod_in_rod;
     rot.thetax = 90.0;
-    rot.phix = 90.0;
-    rot.thetay = 0.0;
+    rot.phix = 270.0;
+    rot.thetay = 180.0;
     rot.phiy = 0.0;
     rot.thetaz = 90.0;
     rot.phiz = 0.0;
@@ -85,8 +85,8 @@ namespace insur {
     // This rotation places a flipped module within a rod
     rot.name = xml_places_flipped_mod_in_rod;
     rot.thetax = 90.0;
-    rot.phix = 270.0;
-    rot.thetay = 0.0;
+    rot.phix = 90.0;
+    rot.thetay = 180.0;
     rot.phiy = 0.0;
     rot.thetaz = 90.0;
     rot.phiz = 180.0;

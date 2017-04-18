@@ -7,6 +7,7 @@
 #include <SimParms.hh>
 #include <TagMaker.hh>
 #include <RootWeb.hh>
+#include <Sensor.hh>
 
 
     //**************************************//

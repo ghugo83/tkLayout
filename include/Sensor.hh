@@ -28,11 +28,11 @@ class Sensor : public PropertyObject, public Buildable, public Identifiable<int>
 public:
   ReadonlyProperty<int, NoDefault> numStripsAcross;
   ReadonlyProperty<double, NoDefault> pitchEstimate;
-  ReadonlyProperty<int, NoDefault> numSegments;
+  Property<int, NoDefault> numSegments;
   ReadonlyProperty<double, NoDefault> stripLengthEstimate;
   ReadonlyProperty<int, NoDefault> numROCX, numROCY;
   ReadonlyProperty<double, NoDefault> sensorThickness;
-  ReadonlyProperty<SensorType, Default> type;
+  Property<SensorType, Default> type;
   ReadonlyProperty<double, Computable> minR, maxR;
   ReadonlyProperty<double, Computable> minZ, maxZ;
   ReadonlyProperty<double, AutoDefault> powerPerChannel;

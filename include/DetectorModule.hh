@@ -46,6 +46,8 @@ namespace insur {
 using insur::ModuleCap;
 using material::ElementsVector;
 
+//class SensorType;
+
 class DetectorModule : public Decorator<GeometricModule>, public ModuleBase, public DetIdentifiable {// implementors of the DetectorModuleInterface must take care of rotating the module based on which part of the subdetector it will be used in (Barrel, EC)
   PropertyNode<int> sensorNode;
 
@@ -240,13 +242,27 @@ public:
   void skew(double angle) { rotateY(-angle); skewAngle_ += angle; }
 
   bool flipped() const { return decorated().flipped(); } 
+
   bool flipped(bool newFlip) {
     if (newFlip && numSensors() > 1) {
       sensors_.front().innerOuter(SensorPosition::UPPER);
-      sensors_.back().innerOuter(SensorPosition::LOWER);
+      sensors_.back().innerOuter(SensorPosition::LOWER);     
+
+     
+      /*int tempS = sensors_.front().numSegments();
+      sensors_.front().numSegments(sensors_.back().numSegments());
+      sensors_.back().numSegments(tempS);
+	
+
+      SensorType tempT = sensors_.front().type();
+      sensors_.front().type(sensors_.back().type());
+      sensors_.back().type(tempT);*/
+
+
     }
     return decorated().flipped(newFlip);
   } 
+
   ModuleShape shape() const { return decorated().shape(); }
   ////////
 
@@ -281,8 +297,23 @@ public:
 
   const Sensors& sensors() const { return sensors_; }
   const MaterialObject& materialObject() const { return materialObject_; }
-  const Sensor& innerSensor() const { return sensors_.front(); }
-  const Sensor& outerSensor() const { return sensors_.back(); }
+
+  const Sensor& innerSensor() const { 
+    return (flipped() ?  sensors_.back() :  sensors_.front());
+
+    // for (const auto& s : sensors_) {
+    //   if (s.innerOuter() == SensorPosition::LOWER) 
+    //	}
+    //return sensors_.find_if(sensors_.begin(), sensors_.end(), [&](Sensor& s) { return (s.innerOuter() == SensorPosition::LOWER); }  );
+  }
+
+  const Sensor& outerSensor() const { 
+    //return sensors_.back();    
+    return (flipped() ?  sensors_.front() :  sensors_.back());
+
+
+}
+
   ElementsVector& getLocalElements() const {return materialObject_.getLocalElements(); }
   int maxSegments() const { int segm = 0; for (const auto& s : sensors()) { segm = MAX(segm, s.numSegmentsEstimate()); } return segm; } // CUIDADO NEEDS OPTIMIZATION (i.e. caching or just MAX())
   int minSegments() const { int segm = std::numeric_limits<int>::max(); for (const auto& s : sensors()) { segm = MIN(segm, s.numSegmentsEstimate()); } return segm; }

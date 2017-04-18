@@ -298,7 +298,7 @@ void TiltedLayersVisitor::visit(const Layer& l) {
     //************************************//
 void TrackerVisitor::preVisit() {
   //output_ << "Section/C:Layer/I:Ring/I:r_mm/D:z_mm/D:tiltAngle_deg/D:phi_deg/D:meanWidth_mm/D:length_mm/D:sensorSpacing_mm/D:sensorThickness_mm/D, DetId/I" << std::endl;
-  output_ << "DetId/U, BinaryDetId/B, Section/C, Layer/I, Ring/I, r_mm/D, z_mm/D, tiltAngle_deg/D, phi_deg/D, meanWidth_mm/D, length_mm/D, sensorSpacing_mm/D, sensorThickness_mm/D" << std::endl;
+  output_ << "DetId/U, BinaryDetId/B, Section/C, Layer/I, Ring/I, r_mm/D, z_mm/D, tiltAngle_deg/D, phi_deg/D, meanWidth_mm/D, length_mm/D, sensorSpacing_mm/D, sensorThickness_mm/D, flipped" << std::endl;
 }
 
 void TrackerVisitor::visit(const Barrel& b) {
@@ -318,6 +318,28 @@ void TrackerVisitor::visit(const Disk& d) {
 }
 
 void TrackerVisitor::visit(const Module& m) {
+
+  if (sectionName_ == "TEDD_2" && layerId_ == 3 && m.moduleRing() == 4) {
+ 
+    for (const auto& s : m.sensors()) {
+
+      std::string type;
+      if (s.type() == SensorType::None) type  = "None";
+      else if (s.type() == SensorType::Pixel) type  = "Pixel";
+      else if (s.type() == SensorType::Largepix) type  = "Largepix";
+      else if (s.type() == SensorType::Strip) type  = "Strip";
+
+      std::string innerOuter;
+      if (s.innerOuter() == SensorPosition::NO) innerOuter  = "NO";
+      else if (s.innerOuter() == SensorPosition::LOWER) innerOuter = "Lower";
+      else if (s.innerOuter() == SensorPosition::UPPER) innerOuter = "Upper";
+
+      //std::cout << "isFlipped = " << m.flipped() << " innerOuter = " << innerOuter  << " Rho = " <<  s.center().Rho() << " Z = " << s.center().Z() << " numSegments = " << s.numSegments() << type << std::endl;
+    }
+
+  }
+
+
   output_ << m.myDetId() << ","
 	  << m.myBinaryDetId() << ","
 	  << sectionName_ << ", "
@@ -331,7 +353,8 @@ void TrackerVisitor::visit(const Module& m) {
 	  << m.meanWidth() << ", "
 	  << m.length() << ", "
 	  << m.dsDistance() << ", "
-	  << m.sensorThickness()
+	  << m.sensorThickness() << ", "
+	  << m.flipped()
 	  << std::endl;
 }
 

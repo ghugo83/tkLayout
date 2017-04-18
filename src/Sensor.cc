@@ -56,6 +56,16 @@ void Sensor::clearPolys() {
 
 std::pair<XYZVector, int> Sensor::checkHitSegment(const XYZVector& trackOrig, const XYZVector& trackDir) const {
   const Polygon3d<4>& poly = hitPoly();
+
+  if (center().Rho() >= 352.13 && center().Rho() <= 352.14 && center().Z() >= 2650. && center().Z() <= 2680.) {
+    std::cout << "Sensor numSegments() = " << numSegments() << ", poly.getCenter().Rho() = " << poly.getCenter().Rho() << ", poly.getCenter().Z() = " << poly.getCenter().Z() << std::endl;
+    /* std::cout << "poly.getVertex(0).Rho() = " << poly.getVertex(0).Rho() << " poly.getVertex(0).Z() = " << poly.getVertex(0).Z()
+	      << "poly.getVertex(1).Rho() = " << poly.getVertex(1).Rho() << " poly.getVertex(1).Z() = " << poly.getVertex(1).Z()
+	      << "poly.getVertex(2).Rho() = " << poly.getVertex(2).Rho() << " poly.getVertex(2).Z() = " << poly.getVertex(2).Z()
+	      << "poly.getVertex(3).Rho() = " << poly.getVertex(3).Rho() << " poly.getVertex(3).Z() = " << poly.getVertex(3).Z()
+	      << std::endl;*/
+  }
+
   XYZVector p;
   if (poly.isLineIntersecting(trackOrig, trackDir, p)) {
     XYZVector v = p - poly.getVertex(0);

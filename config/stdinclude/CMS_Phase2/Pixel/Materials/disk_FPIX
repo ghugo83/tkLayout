@@ -42,9 +42,10 @@ Materials FPIX_disk {
   // Power for the module
   // Average on disk
   Component {
-    componentName "Power wires"
+    componentName "IT LV power wires"
     service false
     scaleOnSensor 0
+    
     Element {
       elementName Al
       quantity 13.31
@@ -64,9 +65,10 @@ Materials FPIX_disk {
   // fake numbers for calculating conversion with a factor of 1000
   // 12 chains per disk
   Component {
-    componentName "Power wires"
+    componentName "IT LV power wires"
     service true
     scaleOnSensor 0
+    
     Element {
       elementName FPIX_Al
       quantity 0.0954
@@ -87,9 +89,10 @@ Materials FPIX_disk {
   // HV power wires
   // Power for the module
   Component {
-    componentName "Sensor HV line"
+    componentName "IT HV power wires"
     service false
     scaleOnSensor 0
+    
     Element {
       elementName Al_HV
       quantity 1.46
@@ -109,9 +112,10 @@ Materials FPIX_disk {
   // fake numbers for calculating conversion with a factor of 1000
   // 12 chains per disk, 2 wires per chain
   Component {
-    componentName "Sensor HV line"
+    componentName "IT HV power wires"
     service true
     scaleOnSensor 0
+    
     Element {
       elementName FPIX_Al_HV
       quantity 0.0064

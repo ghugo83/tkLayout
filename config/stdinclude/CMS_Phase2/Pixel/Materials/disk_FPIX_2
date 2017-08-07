@@ -44,9 +44,10 @@ Materials FPIX_2_disk {
 // Average on disk
 // Rescaled on surface *2.41
   Component {
-    componentName "Power wires"
+    componentName "IT LV power wires"
     service false
     scaleOnSensor 0
+    
     Element {
       elementName Al
       quantity 9.94
@@ -66,9 +67,10 @@ Materials FPIX_2_disk {
   // fake numbers for calculating conversion with a factor of 1000
   // 24 chains per disk
   Component {
-    componentName "Power wires"
+    componentName "IT LV power wires"
     service true
     scaleOnSensor 0
+    
     Element {
       elementName FPIX_Al
       quantity 0.0527
@@ -91,9 +93,10 @@ Materials FPIX_2_disk {
 // Rescaled on surface *2.41
 // Proportional to PP0-SEH-HV (700067231 Rev 01)
   Component {
-    componentName "Sensor HV line"
+    componentName "IT HV power wires"
     service false
     scaleOnSensor 0
+    
     Element {
       elementName Al_HV
       quantity 3.34
@@ -115,9 +118,10 @@ Materials FPIX_2_disk {
   // Proportional to PP0-SEH-HV (700067231 Rev 01)
 
   Component {
-    componentName "Sensor HV line"
+    componentName "IT HV power wires"
     service true
     scaleOnSensor 0
+    
     Element {
       elementName FPIX_Al_HV
       quantity 0.0110

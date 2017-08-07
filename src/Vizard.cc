@@ -789,8 +789,8 @@ namespace insur {
       myTable->setContent(0, 2, "Interaction length");
 
 
-      THStack* rCompTrackingVolumeStack = new THStack("rcomptrackingvolumestack", "Radiation Length by Component in tracking volume");
-      THStack* iCompTrackingVolumeStack = new THStack("icomptrackingvolumestack", "Interaction Length by Component in tracking volume");
+      THStack* rCompTrackingVolumeStack = new THStack("rcomptrackingvolumestack", "Radiation Length");
+      THStack* iCompTrackingVolumeStack = new THStack("icomptrackingvolumestack", "Interaction Length");
 
       TLegend* compLegendTrackingVolume = new TLegend(0.1,0.6,0.35,0.9);
 
@@ -849,7 +849,8 @@ namespace insur {
       myContentDetails->addItem(myTable);
 
       myImage = new RootWImage(myCanvas, 2*vis_min_canvas_sizeX, vis_min_canvas_sizeY);
-      myImage->setComment("Radiation and interaction length distribution in eta by component type in total tracking volume");
+      std::string coucou = (name == "outer" ? "OT" : "IT");
+      myImage->setComment("Radiation and Interaction length distributions in eta, within " + any2str(coucou) + " tracking volume.");
       myImage->setName("matComponentsTrackingVolume");
       myContentDetails->addItem(myImage);
 
@@ -2671,8 +2672,9 @@ namespace insur {
     compLegend->Draw();
 
     materialComponentsContent->addItem(myTable);
+      
     myImage = new RootWImage(myCanvas, 2*vis_min_canvas_sizeX, vis_min_canvas_sizeY);
-    myImage->setComment("Radiation and interaction length distribution in eta by component type in total tracking volume");
+    myImage->setComment("Radiation and Interaction length distributions in eta.");
     myImage->setName("fullLayoutMatComponentsTrackingVolume");
     materialComponentsContent->addItem(myImage);
 
@@ -2684,19 +2686,20 @@ namespace insur {
     myTable->setContent(0, 2, "Interaction length");
     compLegend = new TLegend(0.1,0.6,0.35,0.9);
 
+    // coucou
     std::vector<std::pair<std::string, TH1D*>> histoPerCategoryR, histoPerCategoryI;
     if (rCompBeamPipeStack->GetHists()) histoPerCategoryR.push_back(std::make_pair("Beam pipe", (TH1D*)rCompBeamPipeStack->GetStack()->Last()));
     if (iCompBeamPipeStack->GetHists()) histoPerCategoryI.push_back(std::make_pair("Beam pipe", (TH1D*)iCompBeamPipeStack->GetStack()->Last()));
     if (rCompPixelIntersticeStack->GetHists()) histoPerCategoryR.push_back(std::make_pair("Services and Supports under Pixel Tracking Volume", (TH1D*)rCompPixelIntersticeStack->GetStack()->Last()));
     if (iCompPixelIntersticeStack->GetHists()) histoPerCategoryI.push_back(std::make_pair("Services and Supports under Pixel Tracking Volume", (TH1D*)iCompPixelIntersticeStack->GetStack()->Last()));
-    if (rCompPixelTrackingVolumeStack->GetHists()) histoPerCategoryR.push_back(std::make_pair("Pixel Tracking Volume", (TH1D*)rCompPixelTrackingVolumeStack->GetStack()->Last()));
-    if (iCompPixelTrackingVolumeStack->GetHists()) histoPerCategoryI.push_back(std::make_pair("Pixel Tracking Volume", (TH1D*)iCompPixelTrackingVolumeStack->GetStack()->Last()));
+    if (rCompPixelTrackingVolumeStack->GetHists()) histoPerCategoryR.push_back(std::make_pair("PWR in IT Tracking Volume", (TH1D*)rCompPixelTrackingVolumeStack->GetStack()->Last()));
+    if (iCompPixelTrackingVolumeStack->GetHists()) histoPerCategoryI.push_back(std::make_pair("PWR in IT Tracking Volume", (TH1D*)iCompPixelTrackingVolumeStack->GetStack()->Last()));
     if (rCompIntersticeStack->GetHists()) histoPerCategoryR.push_back(std::make_pair("Services and Supports between Pixel and Outer Tracking Volumes", (TH1D*)rCompIntersticeStack->GetStack()->Last()));
     if (iCompIntersticeStack->GetHists()) histoPerCategoryI.push_back(std::make_pair("Services and Supports between Pixel and Outer Tracking Volumes", (TH1D*)iCompIntersticeStack->GetStack()->Last()));
-    if (rCompOuterTrackingVolumeStack->GetHists()) histoPerCategoryR.push_back(std::make_pair("Outer Tracking Volume", (TH1D*)rCompOuterTrackingVolumeStack->GetStack()->Last()));
-    if (iCompOuterTrackingVolumeStack->GetHists()) histoPerCategoryI.push_back(std::make_pair("Outer Tracking Volume", (TH1D*)iCompOuterTrackingVolumeStack->GetStack()->Last()));
-    THStack* rCompCategoryTrackingVolumeStack = new THStack("rcompcategorytrackingvolumestack", "Radiation Length by Category in tracking volume");
-    THStack* iCompCategoryTrackingVolumeStack = new THStack("icompcategorytrackingvolumestack", "Interaction Length by Category in tracking volume");
+    if (rCompOuterTrackingVolumeStack->GetHists()) histoPerCategoryR.push_back(std::make_pair("PWR in OT Tracking Volume", (TH1D*)rCompOuterTrackingVolumeStack->GetStack()->Last()));
+    if (iCompOuterTrackingVolumeStack->GetHists()) histoPerCategoryI.push_back(std::make_pair("PWR in OT Tracking Volume", (TH1D*)iCompOuterTrackingVolumeStack->GetStack()->Last()));
+    THStack* rCompCategoryTrackingVolumeStack = new THStack("rcompcategorytrackingvolumestack", "Radiation Length");
+    THStack* iCompCategoryTrackingVolumeStack = new THStack("icompcategorytrackingvolumestack", "Interaction Length");
     THStack* dummy = new THStack("dummy", "dummy");
 
     myCanvas = new TCanvas("FullLayoutMaterialCategoriesTrackingVolumeRI");
@@ -2723,7 +2726,7 @@ namespace insur {
 
     materialCategoriesContent->addItem(myTable);
     myImage = new RootWImage(myCanvas, 2*vis_min_canvas_sizeX, vis_min_canvas_sizeY);
-    myImage->setComment("Radiation and interaction length distribution in eta by category in total tracking volume");
+    myImage->setComment("Radiation and Interaction length distributions in eta.");
     myImage->setName("fullLayoutMatCategoriesTrackingVolume");
     materialCategoriesContent->addItem(myImage);
    

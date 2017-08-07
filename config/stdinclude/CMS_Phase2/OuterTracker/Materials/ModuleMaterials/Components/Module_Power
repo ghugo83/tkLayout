@@ -7,9 +7,10 @@
 // 2 wires
 // Diameter 0.19 Al, 0.20 Cu
 Component {
-  componentName "Hybrid Power lines"
+  componentName "OT LV power wires"
   service true
-  scaleOnSensor 1
+  scaleOnSensor 1 
+  
   Element {
     elementName Al_MV
     quantity 0.612
@@ -30,9 +31,10 @@ Component {
 // HV: 1 wire
 // PP0-SEH-HV (700067231 Rev 01)
 Component {
-  componentName "Sensor HV line"
+  componentName "OT HV power wires"
   service true
   scaleOnSensor 0
+  
   Element {
     elementName Al_HV
     quantity 0.2295

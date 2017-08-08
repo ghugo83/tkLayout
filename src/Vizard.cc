@@ -884,22 +884,29 @@ namespace insur {
 
       // coucou
       // IMPORT FILE
-      /*TFile *rTotalFile = TFile::Open("/afs/cern.ch/user/g/ghugo/Desktop/power_wires/OT_total.root");
+      TFile *rTotalFile = TFile::Open("/afs/cern.ch/user/g/ghugo/Desktop/power_wires/OT_total.root");
       if (!rTotalFile) std::cout << "!!!!!!!!!!!!!!!!!!!! No rTotal file " << std::endl;
      
-      std::string canvasName = "matOverviewTrackingVolume001";
-      TCanvas* rTotalCanvas = (TCanvas*) rTotalFile->Get(canvasName.c_str());
-      rTotalCanvas->cd();
-      TPad* rTotalPad = overviewMaterialTrackingVolumepixel_1
-      std::string rTotalName = "Material_outer_matOverviewTrackingVolume_profile_px_profile";
-      TProfile* rTotalProf = (TProfile*) rTotalFile->Get(rTotalName.c_str());
-      std::cout << rTotalProf->GetNbins() << std::endl;
+      // GET CANVAS
+      TCanvas *rTotalCan = (TCanvas*)rTotalFile->Get("matOverviewTrackingVolume000");
+      if (!rTotalCan) std::cout << "!!!!!!!!!!!!!!!!!!!! No rTotal canvas " << std::endl;
+
+      // GET PAD
+      TPad* rTotalPad = (TPad*)rTotalCan->GetPad(1);
+      if (!rTotalPad) std::cout << "!!!!!!!!!!!!!!!!!!!! No rTotal pad 0 " << std::endl;
+      
+      // GET PROFILE
+      TProfile* rTotalProf = (TProfile*)rTotalPad->GetPrimitive("Material_outer_matOverviewTrackingVolume_profile_px_profile");
+      if (!rTotalProf) std::cout << "!!!!!!!!!!!!!!!!!!!! No rTotal profile " << std::endl;
+
       TH1D* rTotal = (TH1D*)rTotalProf->ProjectionX();
       rTotal->SetMarkerStyle(8);
-      rTotal->SetMarkerColor(kBlack);
       rTotal->SetMarkerSize(1);
-      rTotal->Draw("same");*/
-      //compLegendTrackingVolume->AddEntry(rTotal, "Total OT Tracking volume");
+      rTotal->SetLineColor(kBlack);
+
+      myPad->cd();
+      rTotal->Draw("same");
+      //compLegendTrackingVolume->AddEntry(rTotal, "All components");
       
 
       myPad = myCanvas->GetPad(2);

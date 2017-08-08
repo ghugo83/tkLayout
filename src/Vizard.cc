@@ -797,6 +797,8 @@ namespace insur {
 	iCompTrackingVolumeStack->SetTitle("Interaction Length within OT Tracking volume; #eta; #lambda/#lambda_{0}");
 	rCompTrackingVolumeStack->SetMaximum(0.45);
 	iCompTrackingVolumeStack->SetMaximum(0.14);
+	//rCompTrackingVolumeStack->GetYaxis()->SetTitleOffset(1.4);
+	//iCompTrackingVolumeStack->GetYaxis()->SetTitleOffset(1.4);
       }
       else {
 	rCompTrackingVolumeStack->SetTitle("Radiation Length within IT Tracking volume; #eta; x/X_{0}");
@@ -879,34 +881,40 @@ namespace insur {
 	}
       }
       rCompTrackingVolumeStack->Draw("hist");
-      compLegendTrackingVolume->Draw();
-
 
       // coucou
       // IMPORT FILE
-      TFile *rTotalFile = TFile::Open("/afs/cern.ch/user/g/ghugo/Desktop/power_wires/OT_total.root");
-      if (!rTotalFile) std::cout << "!!!!!!!!!!!!!!!!!!!! No rTotal file " << std::endl;
+      TFile *rTotalFile = (name == "outer" ? 
+			   TFile::Open("/afs/cern.ch/user/g/ghugo/Desktop/power_wires/OT_total.root")
+			   : TFile::Open("/afs/cern.ch/user/g/ghugo/Desktop/power_wires/IT_total.root"));
+      if (!rTotalFile) std::cout << name << "!!!!!!!!!!!!!!!!!!!! No rTotal file " << std::endl;
      
       // GET CANVAS
-      TCanvas *rTotalCan = (TCanvas*)rTotalFile->Get("matOverviewTrackingVolume000");
-      if (!rTotalCan) std::cout << "!!!!!!!!!!!!!!!!!!!! No rTotal canvas " << std::endl;
+      TCanvas *rTotalCan = (name == "outer" ? 
+			    (TCanvas*)rTotalFile->Get("matOverviewTrackingVolume000")
+			    : (TCanvas*)rTotalFile->Get("matOverviewTrackingVolume001"));
+      if (!rTotalCan) std::cout << name << "!!!!!!!!!!!!!!!!!!!! No rTotal canvas " << std::endl;
 
       // GET PAD
       TPad* rTotalPad = (TPad*)rTotalCan->GetPad(1);
-      if (!rTotalPad) std::cout << "!!!!!!!!!!!!!!!!!!!! No rTotal pad 0 " << std::endl;
+      if (!rTotalPad) std::cout << name <<  "!!!!!!!!!!!!!!!!!!!! No rTotal pad 0 " << std::endl;
       
       // GET PROFILE
-      TProfile* rTotalProf = (TProfile*)rTotalPad->GetPrimitive("Material_outer_matOverviewTrackingVolume_profile_px_profile");
-      if (!rTotalProf) std::cout << "!!!!!!!!!!!!!!!!!!!! No rTotal profile " << std::endl;
+      TProfile* rTotalProf = (name == "outer" ? 
+			      (TProfile*)rTotalPad->GetPrimitive("Material_outer_matOverviewTrackingVolume_profile_px_profile")
+			      : (TProfile*)rTotalPad->GetPrimitive("Material_pixel_matOverviewTrackingVolume_profile_px_profile"));
+      if (!rTotalProf) std::cout << name << "!!!!!!!!!!!!!!!!!!!! No rTotal profile " << std::endl;
 
       TH1D* rTotal = (TH1D*)rTotalProf->ProjectionX();
       rTotal->SetMarkerStyle(8);
-      rTotal->SetMarkerSize(1);
+      rTotal->SetMarkerSize(0);
       rTotal->SetLineColor(kBlack);
 
       myPad->cd();
       rTotal->Draw("same");
-      //compLegendTrackingVolume->AddEntry(rTotal, "All components");
+      compLegendTrackingVolume->AddEntry(rTotal, "All components");
+
+      compLegendTrackingVolume->Draw();
       
 
       myPad = myCanvas->GetPad(2);
@@ -964,7 +972,41 @@ namespace insur {
 	}
       }
       iCompTrackingVolumeStack->Draw("hist");
+
+      // coucou
+      // IMPORT FILE
+      TFile *iTotalFile = (name == "outer" ? 
+			   TFile::Open("/afs/cern.ch/user/g/ghugo/Desktop/power_wires/OT_total.root")
+			   : TFile::Open("/afs/cern.ch/user/g/ghugo/Desktop/power_wires/IT_total.root"));
+      if (!iTotalFile) std::cout << name << "!!!!!!!!!!!!!!!!!!!! No iTotal file " << std::endl;
+     
+      // GET CANVAS
+      TCanvas *iTotalCan = (name == "outer" ? 
+			    (TCanvas*)iTotalFile->Get("matOverviewTrackingVolume000")
+			    : (TCanvas*)iTotalFile->Get("matOverviewTrackingVolume001"));
+      if (!iTotalCan) std::cout << name << "!!!!!!!!!!!!!!!!!!!! No iTotal canvas " << std::endl;
+
+      // GET PAD
+      TPad* iTotalPad = (TPad*)iTotalCan->GetPad(2);
+      if (!iTotalPad) std::cout << name <<  "!!!!!!!!!!!!!!!!!!!! No iTotal pad 0 " << std::endl;
+      
+      // GET PROFILE
+      TProfile* iTotalProf = (name == "outer" ? 
+			      (TProfile*)iTotalPad->GetPrimitive("Material_outer_matOverviewTrackingVolume_profile_px_profile")
+			      : (TProfile*)iTotalPad->GetPrimitive("Material_pixel_matOverviewTrackingVolume_profile_px_profile"));
+      if (!iTotalProf) std::cout << name << "!!!!!!!!!!!!!!!!!!!! No iTotal profile " << std::endl;
+
+      TH1D* iTotal = (TH1D*)iTotalProf->ProjectionX();
+      iTotal->SetMarkerStyle(8);
+      iTotal->SetMarkerSize(0);
+      iTotal->SetLineColor(kBlack);
+
+      myPad->cd();
+      iTotal->Draw("same");
+
       compLegendTrackingVolume->Draw();
+
+
 
       myContentDetails->addItem(myTable);
 

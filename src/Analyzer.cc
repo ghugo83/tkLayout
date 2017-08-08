@@ -1311,7 +1311,7 @@ void Analyzer::analyzeMaterialBudget(MaterialBudget& mb, const std::vector<doubl
 	  InactiveElement* inactive = hit->getHitInactiveElement();
 	  std::map<std::string, Material> servicesComponentsRI = inactive->getComponentsRI();
 	  for (const auto& it : servicesComponentsRI) {
-	    if (it.first == "OT LV power wires" || it.first == "OT HV power wires" || it.first == "IT LV power wires" || it.first == "IT HV power wires") {
+	    //if (it.first == "OT LV power wires" || it.first == "OT HV power wires" || it.first == "IT LV power wires" || it.first == "IT HV power wires") {
 	      Material res;
 	      res.radiation = it.second.radiation / (inactive->isVertical() ? cos(theta) : sin(theta));  
 	      res.interaction = it.second.interaction / (inactive->isVertical() ? cos(theta) : sin(theta));
@@ -1325,7 +1325,7 @@ void Analyzer::analyzeMaterialBudget(MaterialBudget& mb, const std::vector<doubl
 		iComponentsPixelTrackingVolume[it.first]->SetBins(nTracks, 0.0, getEtaMaxMaterial()); 
 	      }
 	      iComponentsPixelTrackingVolume[it.first]->Fill(eta, res.interaction);
-	    }
+	      //}
 
 	  }
 	}	  
@@ -1340,7 +1340,7 @@ void Analyzer::analyzeMaterialBudget(MaterialBudget& mb, const std::vector<doubl
 	  InactiveElement* inactive = hit->getHitInactiveElement();
 	  std::map<std::string, Material> servicesComponentsRI = inactive->getComponentsRI();
 	  for (const auto& it : servicesComponentsRI) {
-	    if (it.first == "OT LV power wires" || it.first == "OT HV power wires" || it.first == "IT LV power wires" || it.first == "IT HV power wires") {
+	    //if (it.first == "OT LV power wires" || it.first == "OT HV power wires" || it.first == "IT LV power wires" || it.first == "IT HV power wires") {
 	      Material res;
 	      res.radiation = it.second.radiation / (inactive->isVertical() ? cos(theta) : sin(theta));  
 	      res.interaction = it.second.interaction / (inactive->isVertical() ? cos(theta) : sin(theta));
@@ -1354,7 +1354,7 @@ void Analyzer::analyzeMaterialBudget(MaterialBudget& mb, const std::vector<doubl
 		iComponentsOuterTrackingVolume[it.first]->SetBins(nTracks, 0.0, getEtaMaxMaterial()); 
 	      }
 	      iComponentsOuterTrackingVolume[it.first]->Fill(eta, res.interaction);
-	    }
+	      //}
 
 	  }
 	}	  

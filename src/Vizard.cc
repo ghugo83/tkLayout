@@ -795,16 +795,14 @@ namespace insur {
       if (name == "outer") {
 	rCompTrackingVolumeStack->SetTitle("Radiation Length within OT Tracking volume; #eta; x/X_{0}");
 	iCompTrackingVolumeStack->SetTitle("Interaction Length within OT Tracking volume; #eta; #lambda/#lambda_{0}");
-	rCompTrackingVolumeStack->SetMaximum(0.45);
-	iCompTrackingVolumeStack->SetMaximum(0.14);
-	//rCompTrackingVolumeStack->GetYaxis()->SetTitleOffset(1.4);
-	//iCompTrackingVolumeStack->GetYaxis()->SetTitleOffset(1.4);
+	//rCompTrackingVolumeStack->SetMaximum(0.45);
+	//iCompTrackingVolumeStack->SetMaximum(0.14);
       }
       else {
 	rCompTrackingVolumeStack->SetTitle("Radiation Length within IT Tracking volume; #eta; x/X_{0}");
 	iCompTrackingVolumeStack->SetTitle("Interaction Length within IT Tracking volume; #eta; #lambda/#lambda_{0}");
-	rCompTrackingVolumeStack->SetMaximum(0.7);
-	iCompTrackingVolumeStack->SetMaximum(0.21);
+	//rCompTrackingVolumeStack->SetMaximum(0.7);
+	//iCompTrackingVolumeStack->SetMaximum(0.21);
       }
       rCompTrackingVolumeStack->SetMinimum(0.);  
       iCompTrackingVolumeStack->SetMinimum(0.);
@@ -829,7 +827,6 @@ namespace insur {
       int compIndexTrackingVolume = 1;
 
       for (const auto& it : rCompsTrackingVolume) {
-	if (it.first == "OT LV power wires") {
 	  prof = newProfile((TH1D*)it.second, 0., a.getEtaMaxMaterial(), materialNBins);
 	  histo = prof->ProjectionX();
 	  histo->SetLineColor(Palette::color(compIndexTrackingVolume));
@@ -839,52 +836,12 @@ namespace insur {
 	  rCompTrackingVolumeStack->Add(histo);
 	  myTable->setContent(compIndexTrackingVolume, 0, it.first);
 	  myTable->setContent(compIndexTrackingVolume++, 1, averageHistogramValues(*histo, a.getEtaMaxMaterial()), 5);
-	}
-      }
-      for (const auto& it : rCompsTrackingVolume) {
-	if (it.first == "OT HV power wires") {
-	  prof = newProfile((TH1D*)it.second, 0., a.getEtaMaxMaterial(), materialNBins);
-	  histo = prof->ProjectionX();
-	  histo->SetLineColor(Palette::color(compIndexTrackingVolume));
-	  histo->SetFillColor(Palette::color(compIndexTrackingVolume));
-	  histo->SetTitle(it.first.c_str());
-	  compLegendTrackingVolume->AddEntry(histo, it.first.c_str());
-	  rCompTrackingVolumeStack->Add(histo);
-	  myTable->setContent(compIndexTrackingVolume, 0, it.first);
-	  myTable->setContent(compIndexTrackingVolume++, 1, averageHistogramValues(*histo, a.getEtaMaxMaterial()), 5);
-	}
-      }
-      for (const auto& it : rCompsTrackingVolume) {
-	if (it.first == "IT LV power wires") {
-	  prof = newProfile((TH1D*)it.second, 0., a.getEtaMaxMaterial(), materialNBins);
-	  histo = prof->ProjectionX();
-	  histo->SetLineColor(Palette::color(compIndexTrackingVolume));
-	  histo->SetFillColor(Palette::color(compIndexTrackingVolume));
-	  histo->SetTitle(it.first.c_str());
-	  compLegendTrackingVolume->AddEntry(histo, it.first.c_str());
-	  rCompTrackingVolumeStack->Add(histo);
-	  myTable->setContent(compIndexTrackingVolume, 0, it.first);
-	  myTable->setContent(compIndexTrackingVolume++, 1, averageHistogramValues(*histo, a.getEtaMaxMaterial()), 5);
-	}
-      }
-      for (const auto& it : rCompsTrackingVolume) {
-	if (it.first == "IT HV power wires") {
-	  prof = newProfile((TH1D*)it.second, 0., a.getEtaMaxMaterial(), materialNBins);
-	  histo = prof->ProjectionX();
-	  histo->SetLineColor(Palette::color(compIndexTrackingVolume));
-	  histo->SetFillColor(Palette::color(compIndexTrackingVolume));
-	  histo->SetTitle(it.first.c_str());
-	  compLegendTrackingVolume->AddEntry(histo, it.first.c_str());
-	  rCompTrackingVolumeStack->Add(histo);
-	  myTable->setContent(compIndexTrackingVolume, 0, it.first);
-	  myTable->setContent(compIndexTrackingVolume++, 1, averageHistogramValues(*histo, a.getEtaMaxMaterial()), 5);
-	}
       }
       rCompTrackingVolumeStack->Draw("hist");
 
       // coucou
       // IMPORT FILE
-      TFile *rTotalFile = (name == "outer" ? 
+      /*TFile *rTotalFile = (name == "outer" ? 
 			   TFile::Open("/afs/cern.ch/user/g/ghugo/Desktop/power_wires/OT_total.root")
 			   : TFile::Open("/afs/cern.ch/user/g/ghugo/Desktop/power_wires/IT_total.root"));
       if (!rTotalFile) std::cout << name << "!!!!!!!!!!!!!!!!!!!! No rTotal file " << std::endl;
@@ -912,7 +869,7 @@ namespace insur {
 
       myPad->cd();
       rTotal->Draw("same");
-      compLegendTrackingVolume->AddEntry(rTotal, "All components");
+      compLegendTrackingVolume->AddEntry(rTotal, "All components");*/
 
       compLegendTrackingVolume->Draw();
       
@@ -928,7 +885,6 @@ namespace insur {
       compIndexTrackingVolume = 1;
 
       for (const auto& it : iCompsTrackingVolume) {
-	if (it.first == "OT LV power wires") {
 	  prof = newProfile((TH1D*)it.second, 0., a.getEtaMaxMaterial(), materialNBins);
 	  histo = prof->ProjectionX();
 	  histo->SetLineColor(Palette::color(compIndexTrackingVolume));
@@ -936,46 +892,12 @@ namespace insur {
 	  histo->SetTitle(it.first.c_str());
 	  iCompTrackingVolumeStack->Add(histo);
 	  myTable->setContent(compIndexTrackingVolume++, 2, averageHistogramValues(*histo, a.getEtaMaxMaterial()), 5);
-	}
-      }
-      for (const auto& it : iCompsTrackingVolume) {
-	if (it.first == "OT HV power wires") {
-	  prof = newProfile((TH1D*)it.second, 0., a.getEtaMaxMaterial(), materialNBins);
-	  histo = prof->ProjectionX();
-	  histo->SetLineColor(Palette::color(compIndexTrackingVolume));
-	  histo->SetFillColor(Palette::color(compIndexTrackingVolume));
-	  histo->SetTitle(it.first.c_str());
-	  iCompTrackingVolumeStack->Add(histo);
-	  myTable->setContent(compIndexTrackingVolume++, 2, averageHistogramValues(*histo, a.getEtaMaxMaterial()), 5);
-	}
-      }
-      for (const auto& it : iCompsTrackingVolume) {
-	if (it.first == "IT LV power wires") {
-	  prof = newProfile((TH1D*)it.second, 0., a.getEtaMaxMaterial(), materialNBins);
-	  histo = prof->ProjectionX();
-	  histo->SetLineColor(Palette::color(compIndexTrackingVolume));
-	  histo->SetFillColor(Palette::color(compIndexTrackingVolume));
-	  histo->SetTitle(it.first.c_str());
-	  iCompTrackingVolumeStack->Add(histo);
-	  myTable->setContent(compIndexTrackingVolume++, 2, averageHistogramValues(*histo, a.getEtaMaxMaterial()), 5);
-	}
-      }
-      for (const auto& it : iCompsTrackingVolume) {
-	if (it.first == "IT HV power wires") {
-	  prof = newProfile((TH1D*)it.second, 0., a.getEtaMaxMaterial(), materialNBins);
-	  histo = prof->ProjectionX();
-	  histo->SetLineColor(Palette::color(compIndexTrackingVolume));
-	  histo->SetFillColor(Palette::color(compIndexTrackingVolume));
-	  histo->SetTitle(it.first.c_str());
-	  iCompTrackingVolumeStack->Add(histo);
-	  myTable->setContent(compIndexTrackingVolume++, 2, averageHistogramValues(*histo, a.getEtaMaxMaterial()), 5);
-	}
       }
       iCompTrackingVolumeStack->Draw("hist");
 
       // coucou
       // IMPORT FILE
-      TFile *iTotalFile = (name == "outer" ? 
+      /*TFile *iTotalFile = (name == "outer" ? 
 			   TFile::Open("/afs/cern.ch/user/g/ghugo/Desktop/power_wires/OT_total.root")
 			   : TFile::Open("/afs/cern.ch/user/g/ghugo/Desktop/power_wires/IT_total.root"));
       if (!iTotalFile) std::cout << name << "!!!!!!!!!!!!!!!!!!!! No iTotal file " << std::endl;
@@ -1002,7 +924,7 @@ namespace insur {
       iTotal->SetLineColor(kBlack);
 
       myPad->cd();
-      iTotal->Draw("same");
+      iTotal->Draw("same");*/
 
       compLegendTrackingVolume->Draw();
 

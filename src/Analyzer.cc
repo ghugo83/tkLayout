@@ -1306,7 +1306,7 @@ void Analyzer::analyzeMaterialBudget(MaterialBudget& mb, const std::vector<doubl
 
       // SERVICES DETAILS: PIXEL TRACKING VOLUME
       for (const auto& hit : track.getHitV()) {
-	if (hit->getObjectCategory() == Hit::Service) {
+	if (hit->isTotalTrackingVolume() && hit->getObjectCategory() == Hit::Service) {
 	  
 	  InactiveElement* inactive = hit->getHitInactiveElement();
 	  std::map<std::string, Material> servicesComponentsRI = inactive->getComponentsRI();
@@ -1335,7 +1335,7 @@ void Analyzer::analyzeMaterialBudget(MaterialBudget& mb, const std::vector<doubl
 
       // SERVICES DETAILS: OUTER TRACKING VOLUME
       for (const auto& hit : track.getHitV()) {
-	if (hit->getObjectCategory() == Hit::Service) {
+	if (hit->isTotalTrackingVolume() && hit->getObjectCategory() == Hit::Service) {
 	  
 	  InactiveElement* inactive = hit->getHitInactiveElement();
 	  std::map<std::string, Material> servicesComponentsRI = inactive->getComponentsRI();

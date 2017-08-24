@@ -801,8 +801,8 @@ namespace insur {
 	//iCompTrackingVolumeStack->GetYaxis()->SetTitleOffset(1.4);
       }
       else {
-	rCompTrackingVolumeStack->SetTitle("Radiation Length within IT Full volume; #eta; x/X_{0}");
-	iCompTrackingVolumeStack->SetTitle("Interaction Length within IT Full volume; #eta; #lambda/#lambda_{0}");
+	rCompTrackingVolumeStack->SetTitle("Radiation Length within Tracking volume; #eta; x/X_{0}");
+	iCompTrackingVolumeStack->SetTitle("Interaction Length within Tracking volume; #eta; #lambda/#lambda_{0}");
 	rCompTrackingVolumeStack->SetMaximum(0.9);
 	iCompTrackingVolumeStack->SetMaximum(0.3);
       }
@@ -847,8 +847,9 @@ namespace insur {
 	  histo = prof->ProjectionX();
 	  histo->SetLineColor(Palette::color(compIndexTrackingVolume));
 	  histo->SetFillColor(Palette::color(compIndexTrackingVolume));
-	  histo->SetTitle(it.first.c_str());
-	  compLegendTrackingVolume->AddEntry(histo, it.first.c_str());
+	  std::string gbt = "IT GBT + DCDC";
+	  histo->SetTitle(gbt.c_str());
+	  compLegendTrackingVolume->AddEntry(histo, gbt.c_str());
 	  rCompTrackingVolumeStack->Add(histo);
 	  myTable->setContent(compIndexTrackingVolume, 0, it.first);
 	  myTable->setContent(compIndexTrackingVolume++, 1, averageHistogramValues(*histo, a.getEtaMaxMaterial()), 5);
@@ -918,7 +919,8 @@ namespace insur {
 	  histo = prof->ProjectionX();
 	  histo->SetLineColor(Palette::color(compIndexTrackingVolume));
 	  histo->SetFillColor(Palette::color(compIndexTrackingVolume));
-	  histo->SetTitle(it.first.c_str());
+	  std::string gbt = "IT GBT + DCDC";
+	  histo->SetTitle(gbt.c_str());
 	  iCompTrackingVolumeStack->Add(histo);
 	  myTable->setContent(compIndexTrackingVolume++, 2, averageHistogramValues(*histo, a.getEtaMaxMaterial()), 5);
 	}

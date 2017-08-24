@@ -801,10 +801,10 @@ namespace insur {
 	//iCompTrackingVolumeStack->GetYaxis()->SetTitleOffset(1.4);
       }
       else {
-	rCompTrackingVolumeStack->SetTitle("Radiation Length within IT Tracking volume; #eta; x/X_{0}");
-	iCompTrackingVolumeStack->SetTitle("Interaction Length within IT Tracking volume; #eta; #lambda/#lambda_{0}");
-	rCompTrackingVolumeStack->SetMaximum(0.7);
-	iCompTrackingVolumeStack->SetMaximum(0.21);
+	rCompTrackingVolumeStack->SetTitle("Radiation Length within IT Full volume; #eta; x/X_{0}");
+	iCompTrackingVolumeStack->SetTitle("Interaction Length within IT Full volume; #eta; #lambda/#lambda_{0}");
+	rCompTrackingVolumeStack->SetMaximum(0.9);
+	iCompTrackingVolumeStack->SetMaximum(0.3);
       }
       rCompTrackingVolumeStack->SetMinimum(0.);  
       iCompTrackingVolumeStack->SetMinimum(0.);
@@ -829,7 +829,7 @@ namespace insur {
       int compIndexTrackingVolume = 1;
 
       for (const auto& it : rCompsTrackingVolume) {
-	if (it.first == "OT LV power wires") {
+	if (it.first == "IT Twisted pairs") {
 	  prof = newProfile((TH1D*)it.second, 0., a.getEtaMaxMaterial(), materialNBins);
 	  histo = prof->ProjectionX();
 	  histo->SetLineColor(Palette::color(compIndexTrackingVolume));
@@ -842,33 +842,7 @@ namespace insur {
 	}
       }
       for (const auto& it : rCompsTrackingVolume) {
-	if (it.first == "OT HV power wires") {
-	  prof = newProfile((TH1D*)it.second, 0., a.getEtaMaxMaterial(), materialNBins);
-	  histo = prof->ProjectionX();
-	  histo->SetLineColor(Palette::color(compIndexTrackingVolume));
-	  histo->SetFillColor(Palette::color(compIndexTrackingVolume));
-	  histo->SetTitle(it.first.c_str());
-	  compLegendTrackingVolume->AddEntry(histo, it.first.c_str());
-	  rCompTrackingVolumeStack->Add(histo);
-	  myTable->setContent(compIndexTrackingVolume, 0, it.first);
-	  myTable->setContent(compIndexTrackingVolume++, 1, averageHistogramValues(*histo, a.getEtaMaxMaterial()), 5);
-	}
-      }
-      for (const auto& it : rCompsTrackingVolume) {
-	if (it.first == "IT LV power wires") {
-	  prof = newProfile((TH1D*)it.second, 0., a.getEtaMaxMaterial(), materialNBins);
-	  histo = prof->ProjectionX();
-	  histo->SetLineColor(Palette::color(compIndexTrackingVolume));
-	  histo->SetFillColor(Palette::color(compIndexTrackingVolume));
-	  histo->SetTitle(it.first.c_str());
-	  compLegendTrackingVolume->AddEntry(histo, it.first.c_str());
-	  rCompTrackingVolumeStack->Add(histo);
-	  myTable->setContent(compIndexTrackingVolume, 0, it.first);
-	  myTable->setContent(compIndexTrackingVolume++, 1, averageHistogramValues(*histo, a.getEtaMaxMaterial()), 5);
-	}
-      }
-      for (const auto& it : rCompsTrackingVolume) {
-	if (it.first == "IT HV power wires") {
+	if (it.first == "GBT + DCDC") {
 	  prof = newProfile((TH1D*)it.second, 0., a.getEtaMaxMaterial(), materialNBins);
 	  histo = prof->ProjectionX();
 	  histo->SetLineColor(Palette::color(compIndexTrackingVolume));
@@ -886,13 +860,13 @@ namespace insur {
       // IMPORT FILE
       TFile *rTotalFile = (name == "outer" ? 
 			   TFile::Open("/afs/cern.ch/user/g/ghugo/Desktop/power_wires/OT_total.root")
-			   : TFile::Open("/afs/cern.ch/user/g/ghugo/Desktop/power_wires/IT_total.root"));
+			   : TFile::Open("/afs/cern.ch/user/g/ghugo/Desktop/elinks/IT_Total.root"));
       if (!rTotalFile) std::cout << name << "!!!!!!!!!!!!!!!!!!!! No rTotal file " << std::endl;
      
       // GET CANVAS
       TCanvas *rTotalCan = (name == "outer" ? 
 			    (TCanvas*)rTotalFile->Get("matOverviewTrackingVolume000")
-			    : (TCanvas*)rTotalFile->Get("matOverviewTrackingVolume001"));
+			    : (TCanvas*)rTotalFile->Get("matOverviewFull001"));
       if (!rTotalCan) std::cout << name << "!!!!!!!!!!!!!!!!!!!! No rTotal canvas " << std::endl;
 
       // GET PAD
@@ -902,7 +876,7 @@ namespace insur {
       // GET PROFILE
       TProfile* rTotalProf = (name == "outer" ? 
 			      (TProfile*)rTotalPad->GetPrimitive("Material_outer_matOverviewTrackingVolume_profile_px_profile")
-			      : (TProfile*)rTotalPad->GetPrimitive("Material_pixel_matOverviewTrackingVolume_profile_px_profile"));
+			      : (TProfile*)rTotalPad->GetPrimitive("Material_pixel_matOverviewFull_rglobal_profile"));
       if (!rTotalProf) std::cout << name << "!!!!!!!!!!!!!!!!!!!! No rTotal profile " << std::endl;
 
       TH1D* rTotal = (TH1D*)rTotalProf->ProjectionX();
@@ -912,7 +886,7 @@ namespace insur {
 
       myPad->cd();
       rTotal->Draw("same");
-      compLegendTrackingVolume->AddEntry(rTotal, "All components");
+      compLegendTrackingVolume->AddEntry(rTotal, "All IT components");
 
       compLegendTrackingVolume->Draw();
       
@@ -928,7 +902,7 @@ namespace insur {
       compIndexTrackingVolume = 1;
 
       for (const auto& it : iCompsTrackingVolume) {
-	if (it.first == "OT LV power wires") {
+	if (it.first == "IT Twisted pairs") {
 	  prof = newProfile((TH1D*)it.second, 0., a.getEtaMaxMaterial(), materialNBins);
 	  histo = prof->ProjectionX();
 	  histo->SetLineColor(Palette::color(compIndexTrackingVolume));
@@ -939,29 +913,7 @@ namespace insur {
 	}
       }
       for (const auto& it : iCompsTrackingVolume) {
-	if (it.first == "OT HV power wires") {
-	  prof = newProfile((TH1D*)it.second, 0., a.getEtaMaxMaterial(), materialNBins);
-	  histo = prof->ProjectionX();
-	  histo->SetLineColor(Palette::color(compIndexTrackingVolume));
-	  histo->SetFillColor(Palette::color(compIndexTrackingVolume));
-	  histo->SetTitle(it.first.c_str());
-	  iCompTrackingVolumeStack->Add(histo);
-	  myTable->setContent(compIndexTrackingVolume++, 2, averageHistogramValues(*histo, a.getEtaMaxMaterial()), 5);
-	}
-      }
-      for (const auto& it : iCompsTrackingVolume) {
-	if (it.first == "IT LV power wires") {
-	  prof = newProfile((TH1D*)it.second, 0., a.getEtaMaxMaterial(), materialNBins);
-	  histo = prof->ProjectionX();
-	  histo->SetLineColor(Palette::color(compIndexTrackingVolume));
-	  histo->SetFillColor(Palette::color(compIndexTrackingVolume));
-	  histo->SetTitle(it.first.c_str());
-	  iCompTrackingVolumeStack->Add(histo);
-	  myTable->setContent(compIndexTrackingVolume++, 2, averageHistogramValues(*histo, a.getEtaMaxMaterial()), 5);
-	}
-      }
-      for (const auto& it : iCompsTrackingVolume) {
-	if (it.first == "IT HV power wires") {
+	if (it.first == "GBT + DCDC") {
 	  prof = newProfile((TH1D*)it.second, 0., a.getEtaMaxMaterial(), materialNBins);
 	  histo = prof->ProjectionX();
 	  histo->SetLineColor(Palette::color(compIndexTrackingVolume));
@@ -977,13 +929,13 @@ namespace insur {
       // IMPORT FILE
       TFile *iTotalFile = (name == "outer" ? 
 			   TFile::Open("/afs/cern.ch/user/g/ghugo/Desktop/power_wires/OT_total.root")
-			   : TFile::Open("/afs/cern.ch/user/g/ghugo/Desktop/power_wires/IT_total.root"));
+			   : TFile::Open("/afs/cern.ch/user/g/ghugo/Desktop/elinks/IT_Total.root"));
       if (!iTotalFile) std::cout << name << "!!!!!!!!!!!!!!!!!!!! No iTotal file " << std::endl;
      
       // GET CANVAS
       TCanvas *iTotalCan = (name == "outer" ? 
 			    (TCanvas*)iTotalFile->Get("matOverviewTrackingVolume000")
-			    : (TCanvas*)iTotalFile->Get("matOverviewTrackingVolume001"));
+			    : (TCanvas*)iTotalFile->Get("matOverviewFull001"));
       if (!iTotalCan) std::cout << name << "!!!!!!!!!!!!!!!!!!!! No iTotal canvas " << std::endl;
 
       // GET PAD
@@ -993,7 +945,7 @@ namespace insur {
       // GET PROFILE
       TProfile* iTotalProf = (name == "outer" ? 
 			      (TProfile*)iTotalPad->GetPrimitive("Material_outer_matOverviewTrackingVolume_profile_px_profile")
-			      : (TProfile*)iTotalPad->GetPrimitive("Material_pixel_matOverviewTrackingVolume_profile_px_profile"));
+			      : (TProfile*)iTotalPad->GetPrimitive("Material_pixel_matOverviewFull_iglobal_profile"));
       if (!iTotalProf) std::cout << name << "!!!!!!!!!!!!!!!!!!!! No iTotal profile " << std::endl;
 
       TH1D* iTotal = (TH1D*)iTotalProf->ProjectionX();

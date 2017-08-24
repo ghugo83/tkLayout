@@ -1306,12 +1306,12 @@ void Analyzer::analyzeMaterialBudget(MaterialBudget& mb, const std::vector<doubl
 
       // SERVICES DETAILS: PIXEL TRACKING VOLUME
       for (const auto& hit : track.getHitV()) {
-	if (hit->isPixelTrackingVolume() && hit->getObjectCategory() == Hit::Service) {
+	if (hit->getObjectCategory() == Hit::Service) {
 	  
 	  InactiveElement* inactive = hit->getHitInactiveElement();
 	  std::map<std::string, Material> servicesComponentsRI = inactive->getComponentsRI();
 	  for (const auto& it : servicesComponentsRI) {
-	    if (it.first == "OT LV power wires" || it.first == "OT HV power wires" || it.first == "IT LV power wires" || it.first == "IT HV power wires") {
+	    if (it.first == "IT Twisted pairs" || it.first == "GBT + DCDC") {
 	      Material res;
 	      res.radiation = it.second.radiation / (inactive->isVertical() ? cos(theta) : sin(theta));  
 	      res.interaction = it.second.interaction / (inactive->isVertical() ? cos(theta) : sin(theta));
@@ -1335,12 +1335,12 @@ void Analyzer::analyzeMaterialBudget(MaterialBudget& mb, const std::vector<doubl
 
       // SERVICES DETAILS: OUTER TRACKING VOLUME
       for (const auto& hit : track.getHitV()) {
-	if (hit->isOuterTrackingVolume() && hit->getObjectCategory() == Hit::Service) {
+	if (hit->getObjectCategory() == Hit::Service) {
 	  
 	  InactiveElement* inactive = hit->getHitInactiveElement();
 	  std::map<std::string, Material> servicesComponentsRI = inactive->getComponentsRI();
 	  for (const auto& it : servicesComponentsRI) {
-	    if (it.first == "OT LV power wires" || it.first == "OT HV power wires" || it.first == "IT LV power wires" || it.first == "IT HV power wires") {
+	    if (it.first == "IT Twisted pairs" || it.first == "GBT + DCDC") {
 	      Material res;
 	      res.radiation = it.second.radiation / (inactive->isVertical() ? cos(theta) : sin(theta));  
 	      res.interaction = it.second.interaction / (inactive->isVertical() ? cos(theta) : sin(theta));

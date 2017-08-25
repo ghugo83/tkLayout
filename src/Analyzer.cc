@@ -1224,7 +1224,7 @@ void Analyzer::analyzeMaterialBudget(MaterialBudget& mb, const std::vector<doubl
 
 
      
-      /*for (const auto& it : ignoredPixelSumComponentsRI) {
+      for (const auto& it : ignoredPixelSumComponentsRI) {
 	if (rComponentsPixelTrackingVolume[it.first]==NULL) {
 	  rComponentsPixelTrackingVolume[it.first] = new TH1D();
 	  rComponentsPixelTrackingVolume[it.first]->SetBins(nTracks, 0.0, getEtaMaxMaterial()); 
@@ -1235,15 +1235,15 @@ void Analyzer::analyzeMaterialBudget(MaterialBudget& mb, const std::vector<doubl
 	  iComponentsPixelTrackingVolume[it.first]->SetBins(nTracks, 0.0, getEtaMaxMaterial()); 
 	}
 	iComponentsPixelTrackingVolume[it.first]->Fill(eta, it.second.interaction);
-	}*/
+      }
 
       
 
 
 
-      /*for (const auto& hit : track.getHitV()) {
+      for (const auto& hit : track.getHitV()) {
 
-	if (hit->isPixelTrackingVolume() && hit->getObjectCategory() == Hit::Service) {
+	if (hit->isPixel() && hit->isTotalTrackingVolume() && hit->getObjectCategory() == Hit::Service) {
 	  if (rComponentsPixelTrackingVolume["Services in Pixel Tracking Volume"]==NULL) {	   
 	    rComponentsPixelTrackingVolume["Services in Pixel Tracking Volume"] = new TH1D();
 	    rComponentsPixelTrackingVolume["Services in Pixel Tracking Volume"]->SetBins(nTracks, 0.0, getEtaMaxMaterial()); 
@@ -1254,11 +1254,11 @@ void Analyzer::analyzeMaterialBudget(MaterialBudget& mb, const std::vector<doubl
 	    iComponentsPixelTrackingVolume["Services in Pixel Tracking Volume"]->SetBins(nTracks, 0.0, getEtaMaxMaterial()); 
 	  }
 	  iComponentsPixelTrackingVolume["Services in Pixel Tracking Volume"]->Fill(eta, hit->getCorrectedMaterial().interaction);
-	  }
+	}
 
 
 
-	if (hit->isPixelTrackingVolume() && hit->getObjectCategory() == Hit::Support) {
+	if (hit->isPixel() && hit->isTotalTrackingVolume() && hit->getObjectCategory() == Hit::Support) {
 	  if (rComponentsPixelTrackingVolume["Supports in Pixel Tracking Volume"]==NULL) {
 	    rComponentsPixelTrackingVolume["Supports in Pixel Tracking Volume"] = new TH1D();
 	    rComponentsPixelTrackingVolume["Supports in Pixel Tracking Volume"]->SetBins(nTracks, 0.0, getEtaMaxMaterial()); 
@@ -1270,6 +1270,9 @@ void Analyzer::analyzeMaterialBudget(MaterialBudget& mb, const std::vector<doubl
 	  }
 	  iComponentsPixelTrackingVolume["Supports in Pixel Tracking Volume"]->Fill(eta, hit->getCorrectedMaterial().interaction);
 	}
+      }
+
+	/*
 
 
 	if (hit->isIntersticeVolume()) {
@@ -1305,7 +1308,7 @@ void Analyzer::analyzeMaterialBudget(MaterialBudget& mb, const std::vector<doubl
     
 
       // SERVICES DETAILS: PIXEL TRACKING VOLUME
-      for (const auto& hit : track.getHitV()) {
+      /*for (const auto& hit : track.getHitV()) {
 	if (hit->isTotalTrackingVolume() && hit->getObjectCategory() == Hit::Service) {
 	  
 	  InactiveElement* inactive = hit->getHitInactiveElement();
@@ -1358,7 +1361,7 @@ void Analyzer::analyzeMaterialBudget(MaterialBudget& mb, const std::vector<doubl
 
 	  }
 	}	  
-      }
+	}*/
 
 
 

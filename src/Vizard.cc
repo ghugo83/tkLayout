@@ -829,7 +829,7 @@ namespace insur {
       int compIndexTrackingVolume = 1;
 
       for (const auto& it : rCompsTrackingVolume) {
-	if (it.first == "IT Twisted pairs") {
+	//if (it.first == "IT Twisted pairs") {
 	  prof = newProfile((TH1D*)it.second, 0., a.getEtaMaxMaterial(), materialNBins);
 	  histo = prof->ProjectionX();
 	  histo->SetLineColor(Palette::color(compIndexTrackingVolume));
@@ -839,10 +839,10 @@ namespace insur {
 	  rCompTrackingVolumeStack->Add(histo);
 	  myTable->setContent(compIndexTrackingVolume, 0, it.first);
 	  myTable->setContent(compIndexTrackingVolume++, 1, averageHistogramValues(*histo, a.getEtaMaxMaterial()), 5);
-	}
+	  //	}
       }
-      for (const auto& it : rCompsTrackingVolume) {
-	if (it.first == "GBT + DCDC") {
+      /*for (const auto& it : rCompsTrackingVolume) {
+	//	if (it.first == "GBT + DCDC") {
 	  prof = newProfile((TH1D*)it.second, 0., a.getEtaMaxMaterial(), materialNBins);
 	  histo = prof->ProjectionX();
 	  histo->SetLineColor(Palette::color(compIndexTrackingVolume));
@@ -853,8 +853,8 @@ namespace insur {
 	  rCompTrackingVolumeStack->Add(histo);
 	  myTable->setContent(compIndexTrackingVolume, 0, it.first);
 	  myTable->setContent(compIndexTrackingVolume++, 1, averageHistogramValues(*histo, a.getEtaMaxMaterial()), 5);
-	}
-      }
+	  //	}
+	  }*/
       rCompTrackingVolumeStack->Draw("hist");
 
       // coucou
@@ -903,7 +903,7 @@ namespace insur {
       compIndexTrackingVolume = 1;
 
       for (const auto& it : iCompsTrackingVolume) {
-	if (it.first == "IT Twisted pairs") {
+	//	if (it.first == "IT Twisted pairs") {
 	  prof = newProfile((TH1D*)it.second, 0., a.getEtaMaxMaterial(), materialNBins);
 	  histo = prof->ProjectionX();
 	  histo->SetLineColor(Palette::color(compIndexTrackingVolume));
@@ -911,10 +911,10 @@ namespace insur {
 	  histo->SetTitle(it.first.c_str());
 	  iCompTrackingVolumeStack->Add(histo);
 	  myTable->setContent(compIndexTrackingVolume++, 2, averageHistogramValues(*histo, a.getEtaMaxMaterial()), 5);
-	}
+	  //	}
       }
-      for (const auto& it : iCompsTrackingVolume) {
-	if (it.first == "GBT + DCDC") {
+      /*for (const auto& it : iCompsTrackingVolume) {
+	//	if (it.first == "GBT + DCDC") {
 	  prof = newProfile((TH1D*)it.second, 0., a.getEtaMaxMaterial(), materialNBins);
 	  histo = prof->ProjectionX();
 	  histo->SetLineColor(Palette::color(compIndexTrackingVolume));
@@ -923,8 +923,8 @@ namespace insur {
 	  histo->SetTitle(gbt.c_str());
 	  iCompTrackingVolumeStack->Add(histo);
 	  myTable->setContent(compIndexTrackingVolume++, 2, averageHistogramValues(*histo, a.getEtaMaxMaterial()), 5);
-	}
-      }
+	  //	}
+	  }*/
       iCompTrackingVolumeStack->Draw("hist");
 
       // coucou

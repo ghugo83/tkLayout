@@ -175,6 +175,7 @@ public:
 
   Property<double, AutoDefault> actualZError;
   Property<double, AutoDefault> actualPhiOverlap;
+  Property<double, AutoDefault> tracksLoss; // percentage of tracks loss, taken into account only hole in Z (not in Phi)
 
   double minR()      const { return minRadius_; }
   double maxR()      const { return maxRadius_; }

@@ -284,8 +284,8 @@ const std::pair<double, bool> Disk::computeIntersectionWithZAxis(double lastZ, d
  */
 void Disk::computeActualZCoverage() {
 
-  double lastMinRho, lastMaxRho;
-  double lastMinZ, lastMaxZ;
+  double lastMinRho;
+  double lastMinZ;
 
   for (int i = numRings(), parity = -bigParity(); i > 0; i--, parity *= -1) {
 
@@ -313,19 +313,39 @@ void Disk::computeActualZCoverage() {
 	if (isPositiveSlope) zErrorCoverage = -zErrorCoverage;
 	else zErrorCoverage = std::numeric_limits<double>::infinity();
       }
+
+      // COMPUTE PERCENTAGE OF TRACKS LOST THROUGH COVERAGE HOLE
+      double tracksLoss = computeActualTracksLoss(parity, zErrorCoverage);
       
-      // STORE THE RESULT
+      // STORE THE RESULTS
       rings_.at(i-1).actualZError(zErrorCoverage);
       ringIndexMap_[i]->actualZError(zErrorCoverage);
+      rings_.at(i-1).tracksLoss(tracksLoss);
+      ringIndexMap_[i]->tracksLoss(tracksLoss);
     }
 
     // Keep for next calculation : radii and Z of the most stringent points in ring (i+1).
     lastMinRho = rings_.at(i-1).minR();
     lastMinZ = rings_.at(i-1).minZ();
 
-    lastMaxRho = rings_.at(i-1).maxR();
-    lastMaxZ = rings_.at(i-1).maxZ();
   }
+}
+
+
+double Disk::computeActualTracksLoss(int parity, double actualZError) {
+  double loss = 0.;
+
+  double totalLuminosityArea = 1.0;  // = INTEGRAL(-infinity, +infinity, tracksDistr)
+  double designZError = zError();
+
+  if (parity > 0.) {
+    if (actualZError < designZError) loss = 1. / (2.*designZError) * (designZError - actualZError);  // = INTEGRAL(actualZError, +infinity, tracksDistr)
+  }
+  else {
+    if (actualZError < designZError) loss = 1. / (2.*designZError) * (designZError - actualZError);  // = INTEGRAL(-infinity, -actualZError, tracksDistr)
+  }
+
+  return loss;
 }
 
 

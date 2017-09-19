@@ -76,7 +76,7 @@ void LayerDiskSummaryVisitor::visit(const Disk& d) {
   RootWTable* zErrorTable = new RootWTable();
   zErrorTable->setContent(0, 0, "Ring :");
   zErrorTable->setContent(1, 0, "zError (Ring i & i+1)");
-  zErrorTable->setContent(2, 0, "% tracks lost (Ring i & i+1)");
+  zErrorTable->setContent(2, 0, "Stub inefficiency (Ring i & i+1) (‱)");
   zErrorTables.push_back(zErrorTable);
 }
 

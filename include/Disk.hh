@@ -124,7 +124,7 @@ public:
   const std::pair<double, bool> computeIntersectionWithZAxis(double lastZ, double lastRho, double newZ, double newRho) const;
   void computeActualCoverage();
   void computeActualZCoverage();
-  double computeActualTracksLoss(int parity, double actualZError);
+  double computeActualTracksLoss(int parity, double actualZError, double lastMinZ, double lastMinRho, double newMaxZ, double newMaxRho);
 
   void accept(GeometryVisitor& v) {
     v.visit(*this); 

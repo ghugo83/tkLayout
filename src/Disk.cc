@@ -315,7 +315,7 @@ void Disk::computeActualZCoverage() {
       }
 
       // COMPUTE PERCENTAGE OF TRACKS LOST THROUGH COVERAGE HOLE
-      double tracksLoss = computeActualTracksLoss(parity, zErrorCoverage);
+      double tracksLoss = computeActualTracksLoss(parity, zErrorCoverage, lastMinZ, lastMinRho, newMaxZ, newMaxRho);
       
       // STORE THE RESULTS
       rings_.at(i-1).actualZError(zErrorCoverage);
@@ -332,17 +332,32 @@ void Disk::computeActualZCoverage() {
 }
 
 
-double Disk::computeActualTracksLoss(int parity, double actualZError) {
+double Disk::computeActualTracksLoss(int parity, double covZ, double lastZ, double lastRho, double newZ, double newRho) {
+  double interaZ = zError();
+
   double loss = 0.;
+  double numerator = 0.;
 
-  double totalLuminosityArea = 1.0;  // = INTEGRAL(-infinity, +infinity, tracksDistr)
-  double designZError = zError();
+  //std::cout << "lastZ = " << lastZ << " lastRho = " << lastRho << " newZ = " << newZ << " newRho = " <<  newRho << std::endl;
 
-  if (parity > 0.) {
-    if (actualZError < designZError) loss = 1. / (2.*designZError) * (designZError - actualZError);  // = INTEGRAL(actualZError, +infinity, tracksDistr)
-  }
-  else {
-    if (actualZError < designZError) loss = 1. / (2.*designZError) * (designZError - actualZError);  // = INTEGRAL(-infinity, -actualZError, tracksDistr)
+  if (covZ < interaZ) {
+    double boundMinZ = MAX(covZ, -interaZ);
+
+    if (parity > 0.) {
+      numerator = (interaZ - boundMinZ) * log(lastRho / newRho)
+	+ (newZ - boundMinZ) * log(newZ - boundMinZ) - (newZ - interaZ) * log(newZ - interaZ)
+	- (lastZ - boundMinZ) * log(lastZ - boundMinZ) + (lastZ - interaZ) * log(lastZ - interaZ);
+    }
+    
+    else {
+      numerator = (interaZ - boundMinZ) * log(lastRho / newRho)
+	+ (newZ + interaZ) * log(newZ + interaZ) - (newZ + boundMinZ) * log(newZ + boundMinZ)
+	- (lastZ + interaZ) * log(lastZ + interaZ) + (lastZ + boundMinZ) * log(lastZ + boundMinZ);
+    }
+    
+
+    //loss = fabs(numerator) / (8. * 2. * interaZ) * 1000;  // in ‱
+    loss = numerator / (8. * 2. * interaZ) * 10000.;  // in ‱
   }
 
   return loss;

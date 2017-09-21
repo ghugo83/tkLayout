@@ -173,9 +173,11 @@ public:
   Property<double, Default> ringOuterRadius;
   Property<double, Default> ringInnerRadius;
 
-  Property<double, AutoDefault> actualZError;
-  Property<double, AutoDefault> actualPhiOverlap;
-  Property<double, AutoDefault> tracksLoss; // percentage of tracks loss, taken into account only hole in Z (not in Phi)
+  Property<double, AutoDefault> actualZErrorStub;
+  Property<double, AutoDefault> stubInefficiency; // percentage of tracks loss, taken into account only hole in Z (not in Phi)
+  Property<double, AutoDefault> actualZErrorHit;
+  Property<double, AutoDefault> hitInefficiency;
+  Property<double, AutoDefault> actualPhiOverlap;  
 
   double minR()      const { return minRadius_; }
   double maxR()      const { return maxRadius_; }

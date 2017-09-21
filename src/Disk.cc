@@ -286,6 +286,7 @@ void Disk::computeActualZCoverage() {
 
   double lastMinRho;
   double lastMinZ;
+  double lastMaxZ;
 
   for (int i = numRings(), parity = -bigParity(); i > 0; i--, parity *= -1) {
 
@@ -296,7 +297,11 @@ void Disk::computeActualZCoverage() {
       // Find the radii and Z of the most stringent points in ring (i).
       double newMaxRho = rings_.at(i-1).buildStartRadius();
       double newMaxZ = rings_.at(i-1).maxZ();
+      double newMinZ = rings_.at(i-1).minZ() + 0.1;
 
+
+
+      // STUB INEFFICIENCY
       // Calculation : Min coordinates of ring (i+1) with max coordinates of ring (i)
       std::pair<double, bool> intersectionWithZAxis = computeIntersectionWithZAxis(lastMinZ, lastMinRho, newMaxZ, newMaxRho);
       double zErrorCoverage = intersectionWithZAxis.first;
@@ -314,20 +319,58 @@ void Disk::computeActualZCoverage() {
 	else zErrorCoverage = std::numeric_limits<double>::infinity();
       }
 
-      // COMPUTE PERCENTAGE OF TRACKS LOST THROUGH COVERAGE HOLE
-      double tracksLoss = computeActualTracksLoss(parity, zErrorCoverage, lastMinZ, lastMinRho, newMaxZ, newMaxRho);
+      // COMPUTE STUB INEFFICIENCY (in ‱)
+      double stubInefficiency = computeActualTracksLoss(parity, zErrorCoverage, lastMinZ, lastMinRho, newMaxZ, newMaxRho);
       
       // STORE THE RESULTS
-      rings_.at(i-1).actualZError(zErrorCoverage);
-      ringIndexMap_[i]->actualZError(zErrorCoverage);
-      rings_.at(i-1).tracksLoss(tracksLoss);
-      ringIndexMap_[i]->tracksLoss(tracksLoss);
+      rings_.at(i-1).actualZErrorStub(zErrorCoverage);
+      ringIndexMap_[i]->actualZErrorStub(zErrorCoverage);
+      rings_.at(i-1).stubInefficiency(stubInefficiency);
+      ringIndexMap_[i]->stubInefficiency(stubInefficiency);
+
+
+
+
+
+      // HIT INEFFICIENCY
+      // Calculation : Min coordinates of ring (i+1) with max coordinates of ring (i)
+      std::pair<double, bool> intersectionWithZAxisHit = computeIntersectionWithZAxis(lastMaxZ, lastMinRho, newMinZ, newMaxRho);
+      double zErrorCoverageHit = intersectionWithZAxisHit.first;
+      bool isPositiveSlopeHit = intersectionWithZAxisHit.second;
+      
+      // CASE WHERE RING (i+1) HAS SMALLER Z, AND RING (i) HAS BIGGER Z.
+      if (parity > 0.) {
+	if (isPositiveSlopeHit) zErrorCoverageHit = zErrorCoverageHit;
+	else zErrorCoverageHit = -std::numeric_limits<double>::infinity();
+      }
+
+      // CASE WHERE RING (i+1) HAS BIGGER Z, AND RING (i) HAS SMALLER Z.
+      else {
+	if (isPositiveSlopeHit) zErrorCoverageHit = -zErrorCoverageHit;
+	else zErrorCoverageHit = std::numeric_limits<double>::infinity();
+      }
+
+      // COMPUTE STUB INEFFICIENCY (in ‱)
+      double hitInefficiency = computeActualTracksLoss(parity, zErrorCoverageHit, lastMaxZ, lastMinRho, newMinZ, newMaxRho);
+      
+      // STORE THE RESULTS
+      rings_.at(i-1).actualZErrorHit(zErrorCoverageHit);
+      ringIndexMap_[i]->actualZErrorHit(zErrorCoverageHit);
+      rings_.at(i-1).hitInefficiency(hitInefficiency);
+      ringIndexMap_[i]->hitInefficiency(hitInefficiency);
+
+
+
+
+
+
+
     }
 
     // Keep for next calculation : radii and Z of the most stringent points in ring (i+1).
     lastMinRho = rings_.at(i-1).minR();
     lastMinZ = rings_.at(i-1).minZ();
-
+    lastMaxZ = rings_.at(i-1).maxZ() - 0.1;
   }
 }
 
@@ -357,7 +400,8 @@ double Disk::computeActualTracksLoss(int parity, double covZ, double lastZ, doub
     
 
     //loss = fabs(numerator) / (8. * 2. * interaZ) * 1000;  // in ‱
-    loss = numerator / (8. * 2. * interaZ) * 10000.;  // in ‱
+    loss = numerator / (8. * 2. * interaZ);
+    loss *= 10000.;  // result in ‱
   }
 
   return loss;

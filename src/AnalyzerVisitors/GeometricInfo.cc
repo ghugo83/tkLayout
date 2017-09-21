@@ -75,8 +75,10 @@ void LayerDiskSummaryVisitor::visit(const Disk& d) {
 
   RootWTable* zErrorTable = new RootWTable();
   zErrorTable->setContent(0, 0, "Ring :");
-  zErrorTable->setContent(1, 0, "zError (Ring i & i+1)");
+  zErrorTable->setContent(1, 0, "zError : Stub coverage in Z (Ring i & i+1)");
   zErrorTable->setContent(2, 0, "Stub inefficiency (Ring i & i+1) (‱)");
+  zErrorTable->setContent(3, 0, "zError : Hit coverage in Z (Ring i & i+1)");
+  zErrorTable->setContent(4, 0, "Hit inefficiency (Ring i & i+1) (‱)");
   zErrorTables.push_back(zErrorTable);
 }
 
@@ -88,8 +90,10 @@ void LayerDiskSummaryVisitor::visit(const Ring& r) {
   endcapTables.at(nEndcaps-1)->setContent(6, nRings, r.actualPhiOverlap(), coordPrecision);
   endcapTables.at(nEndcaps-1)->setContent(7, nRings, r.numModules());
   zErrorTables.at(nDisks-1)->setContent(0, nRings, r.myid());
-  if (nRings != nRingsTotal) zErrorTables.at(nDisks-1)->setContent(1, nRings, r.actualZError(), coordPrecision);
-  if (nRings != nRingsTotal) zErrorTables.at(nDisks-1)->setContent(2, nRings, r.tracksLoss(), coordPrecision);
+  if (nRings != nRingsTotal) zErrorTables.at(nDisks-1)->setContent(1, nRings, r.actualZErrorStub(), coordPrecision);
+  if (nRings != nRingsTotal) zErrorTables.at(nDisks-1)->setContent(2, nRings, r.stubInefficiency(), coordPrecision);
+  if (nRings != nRingsTotal) zErrorTables.at(nDisks-1)->setContent(3, nRings, r.actualZErrorHit(), coordPrecision);
+  if (nRings != nRingsTotal) zErrorTables.at(nDisks-1)->setContent(4, nRings, r.hitInefficiency(), coordPrecision);
 }
 
 void LayerDiskSummaryVisitor::visit(const Module& m) {

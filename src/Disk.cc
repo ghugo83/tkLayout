@@ -300,39 +300,35 @@ void Disk::computeActualZCoverage() {
       double newMinZ = rings_.at(i-1).minZ() + 0.1;
 
 
-
-      // STUB INEFFICIENCY
+      // STUB INEFFICIENCY (geometrical aspect only)
       // Calculation : Min coordinates of ring (i+1) with max coordinates of ring (i)
       std::pair<double, bool> intersectionWithZAxis = computeIntersectionWithZAxis(lastMinZ, lastMinRho, newMaxZ, newMaxRho);
-      double zErrorCoverage = intersectionWithZAxis.first;
-      bool isPositiveSlope = intersectionWithZAxis.second;
+      double zErrorCoverageStub = intersectionWithZAxis.first;
+      bool isPositiveSlopeStub = intersectionWithZAxis.second;
       
       // CASE WHERE RING (i+1) HAS SMALLER Z, AND RING (i) HAS BIGGER Z.
       if (parity > 0.) {
-	if (isPositiveSlope) zErrorCoverage = zErrorCoverage;
-	else zErrorCoverage = -std::numeric_limits<double>::infinity();
+	if (!isPositiveSlopeStub) zErrorCoverageStub = -std::numeric_limits<double>::infinity();
       }
 
       // CASE WHERE RING (i+1) HAS BIGGER Z, AND RING (i) HAS SMALLER Z.
       else {
-	if (isPositiveSlope) zErrorCoverage = -zErrorCoverage;
-	else zErrorCoverage = std::numeric_limits<double>::infinity();
+	if (isPositiveSlopeStub) zErrorCoverageStub *= -1.;
+	else zErrorCoverageStub = std::numeric_limits<double>::infinity();
       }
 
       // COMPUTE STUB INEFFICIENCY (in ‱)
-      double stubInefficiency = computeActualTracksLoss(parity, zErrorCoverage, lastMinZ, lastMinRho, newMaxZ, newMaxRho);
+      double stubInefficiency = computeActualTracksLoss(parity, zErrorCoverageStub, lastMinZ, lastMinRho, newMaxZ, newMaxRho);
       
       // STORE THE RESULTS
-      rings_.at(i-1).actualZErrorStub(zErrorCoverage);
-      ringIndexMap_[i]->actualZErrorStub(zErrorCoverage);
+      rings_.at(i-1).actualZErrorStub(zErrorCoverageStub);
+      ringIndexMap_[i]->actualZErrorStub(zErrorCoverageStub);
       rings_.at(i-1).stubInefficiency(stubInefficiency);
       ringIndexMap_[i]->stubInefficiency(stubInefficiency);
 
 
 
-
-
-      // HIT INEFFICIENCY
+      // HIT INEFFICIENCY (geometrical aspect only)
       // Calculation : Min coordinates of ring (i+1) with max coordinates of ring (i)
       std::pair<double, bool> intersectionWithZAxisHit = computeIntersectionWithZAxis(lastMaxZ, lastMinRho, newMinZ, newMaxRho);
       double zErrorCoverageHit = intersectionWithZAxisHit.first;
@@ -340,13 +336,12 @@ void Disk::computeActualZCoverage() {
       
       // CASE WHERE RING (i+1) HAS SMALLER Z, AND RING (i) HAS BIGGER Z.
       if (parity > 0.) {
-	if (isPositiveSlopeHit) zErrorCoverageHit = zErrorCoverageHit;
-	else zErrorCoverageHit = -std::numeric_limits<double>::infinity();
+	if (!isPositiveSlopeHit) zErrorCoverageHit = -std::numeric_limits<double>::infinity();
       }
 
       // CASE WHERE RING (i+1) HAS BIGGER Z, AND RING (i) HAS SMALLER Z.
       else {
-	if (isPositiveSlopeHit) zErrorCoverageHit = -zErrorCoverageHit;
+	if (isPositiveSlopeHit) zErrorCoverageHit *= -1.;
 	else zErrorCoverageHit = std::numeric_limits<double>::infinity();
       }
 
@@ -358,13 +353,6 @@ void Disk::computeActualZCoverage() {
       ringIndexMap_[i]->actualZErrorHit(zErrorCoverageHit);
       rings_.at(i-1).hitInefficiency(hitInefficiency);
       ringIndexMap_[i]->hitInefficiency(hitInefficiency);
-
-
-
-
-
-
-
     }
 
     // Keep for next calculation : radii and Z of the most stringent points in ring (i+1).
@@ -375,33 +363,46 @@ void Disk::computeActualZCoverage() {
 }
 
 
+/* Compute the ‱ of tracks which were lost in a given ring transition. 
+   'Lost' mean that no hit or no stub was detected, when a track crosses that specific ring transition.
+   This method can be used for both 'no hit detected' or 'no stub detected' scenarios. The choice between the 2 scenarios is to be made when the method is called: one needs to provide the geometric parameters corresponding to the relevant scenario. 
+   * parity: parity of the considered TEDD ring transition.
+   * covZ: geometrical coverage in (Z) insured by the considered TEDD ring transition.
+   * lastZ, lastRho: Ring (i+1) 's Z and Rho of interest.
+   * lastZ, lastRho: Ring (i) 's Z and Rho of interest.
+ */ 
 double Disk::computeActualTracksLoss(int parity, double covZ, double lastZ, double lastRho, double newZ, double newRho) {
-  double interaZ = zError();
+  double interaZ = zError(); // The luminous region is assumed here to extend in (Z) from -interaZ to + interaZ uniformly.
 
   double loss = 0.;
   double numerator = 0.;
 
-  //std::cout << "lastZ = " << lastZ << " lastRho = " << lastRho << " newZ = " << newZ << " newRho = " <<  newRho << std::endl;
-
+  // Case where the luminous region extends more in (Z) than the coverage insured by the TEDD ring transition.
+  // Otherwise, the (geometrical) loss is 0. !
   if (covZ < interaZ) {
+    // Min boundary of the integral. Please see formula sent on paper.
     double boundMinZ = MAX(covZ, -interaZ);
 
+    // CASE WHERE RING (i+1) HAS SMALLER Z, AND RING (i) HAS BIGGER Z.
     if (parity > 0.) {
+      // Please see formula sent on paper for calculation of the integral.
       numerator = (interaZ - boundMinZ) * log(lastRho / newRho)
 	+ (newZ - boundMinZ) * log(newZ - boundMinZ) - (newZ - interaZ) * log(newZ - interaZ)
 	- (lastZ - boundMinZ) * log(lastZ - boundMinZ) + (lastZ - interaZ) * log(lastZ - interaZ);
     }
     
+    // CASE WHERE RING (i+1) HAS BIGGER Z, AND RING (i) HAS SMALLER Z.
     else {
+      // Please see formula sent on paper for calculation of the integral.
       numerator = (interaZ - boundMinZ) * log(lastRho / newRho)
 	+ (newZ + interaZ) * log(newZ + interaZ) - (newZ + boundMinZ) * log(newZ + boundMinZ)
 	- (lastZ + interaZ) * log(lastZ + interaZ) + (lastZ + boundMinZ) * log(lastZ + boundMinZ);
     }
     
 
-    //loss = fabs(numerator) / (8. * 2. * interaZ) * 1000;  // in ‱
-    loss = numerator / (8. * 2. * interaZ);
-    loss *= 10000.;  // result in ‱
+    loss = numerator / (8. * 2. * interaZ);  // Use 8 for normalization in eta, since eta is uniform in [-4; 4].
+                                             // Use 2. * interaZ for normalization in Z, since Z is unform in [-interaZ; interaZ].
+    loss *= 10000.;  // Convert result to ‱
   }
 
   return loss;

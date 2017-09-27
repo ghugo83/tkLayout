@@ -165,7 +165,7 @@ void Analyzer::createTaggedTrackCollection(std::vector<MaterialBudget*> material
     theta = 2 * atan(exp(-eta));
     //std::cout << " track's phi = " << phi << std::endl; 
     track.setThetaPhiPt(theta,phi,1*Units::TeV);
-    track.setOrigin(0., 0., 0.); // TODO: Not assuming z-error when analyzing resolution (missing implementation of non-zero track starting point in inactive hits)
+    track.setOrigin(0., 0., SimParms::getInstance().zErrorCollider()); // TODO: Not assuming z-error when analyzing resolution (missing implementation of non-zero track starting point in inactive hits)
     //track.setTheta(theta);
     //track.setPhi(phi);
 
@@ -489,7 +489,7 @@ bool Analyzer::analyzePatterReco(MaterialBudget& mb, mainConfigHandler& mainConf
     double pT    = 100*Units::TeV; // Arbitrarily high number
 
     matTrack.setThetaPhiPt(theta, phi, pT);
-    matTrack.setOrigin(0, 0, 0); // TODO: Not assuming z-error when analyzing resolution (missing implementation of non-zero track starting point in inactive hits)
+    matTrack.setOrigin(0, 0, SimParms::getInstance().zErrorCollider()); // TODO: Not assuming z-error when analyzing resolution (missing implementation of non-zero track starting point in inactive hits)
 
     // Assign material to the track
     findAllHits(mb, pm, matTrack);
@@ -1840,6 +1840,7 @@ Material Analyzer::analyzeInactiveSurfaces(std::vector<InactiveElement>& element
  * @return The scaled and summed up crossed material amount
  */
 Material Analyzer::findHitsInactiveSurfaces(std::vector<InactiveElement>& elements, TrackNew& t, bool isPixel) {
+  const double trackOriginZ = t.getOrigin().Z();
   std::vector<InactiveElement>::iterator iter = elements.begin();
   std::vector<InactiveElement>::iterator guard = elements.end();
   Material res, corr;
@@ -1851,14 +1852,14 @@ Material Analyzer::findHitsInactiveSurfaces(std::vector<InactiveElement>& elemen
     // only volumes of the requested category, or those without one (which should not exist) are examined
     if ((iter->getZOffset() + iter->getZLength()) > 0) {
       // collision detection: check eta range
-      tmp = iter->getEtaMinMax();
+      tmp = iter->getEtaMinMax(trackOriginZ);
       // Volume was hit if:
       if ((tmp.first < t.getEta()) && (tmp.second > t.getEta())) {
-        double r, z;
+        double hitZ, hitR;
         // radiation and interaction lenth scaling for vertical volumes
         if (iter->isVertical()) { // Element is vertical
-          z = iter->getZOffset() + iter->getZLength() / 2.0;
-          r = z * tan(t.getTheta());
+          hitZ = iter->getZOffset() + iter->getZLength() / 2.0;
+          hitR = (hitZ - trackOriginZ) * tan(t.getTheta());
 
           // In case we are crossing the material with a very shallow angle
           // we have to take into account its finite radial size
@@ -1879,7 +1880,8 @@ Material Analyzer::findHitsInactiveSurfaces(std::vector<InactiveElement>& elemen
         }
         // radiation and interaction length scaling for horizontal volumes
         else { // Element is horizontal
-          r = iter->getInnerRadius() + iter->getRWidth() / 2.0;
+          hitR = iter->getInnerRadius() + iter->getRWidth() / 2.0;
+	  hitZ = hitR/tan(t.getTheta()) + trackOriginZ;
 
           // In case we are crossing the material with a very shallow angle
           // we have to take into account its finite z length
@@ -1899,22 +1901,18 @@ Material Analyzer::findHitsInactiveSurfaces(std::vector<InactiveElement>& elemen
           }
         }
         // Create Hit object with appropriate parameters, add to Track t
-        double rPos = r;
-        double zPos = r/tan(t.getTheta());
-
-        HitNewPtr hit(new HitNew(rPos, zPos));
+        HitNewPtr hit(new HitNew(hitR, hitZ));
         hit->setAsPassive();
         hit->setCorrectedMaterial(corr);
         t.addHit(std::move(hit));
 
-//        Hit* hit = new Hit((theta == 0) ? r : (r / sin(theta)));
+//        Hit* hit = new Hit((theta == 0) ? hitR : (hitR / sin(theta)));
 //        if (iter->isVertical()) hit->setOrientation(Hit::Vertical);
 //        else hit->setOrientation(Hit::Horizontal);
 //        hit->setObjectKind(Hit::Inactive);
 //        hit->setCorrectedMaterial(corr);
 //        hit->setPixel(isPixel);
 //        t.addHit(hit);
-	// std::cout << "OLD USED" << std::endl;
       }
     }
     iter++;

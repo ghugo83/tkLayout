@@ -60,7 +60,7 @@ namespace insur {
     void setLocalMass(double mass);
     void setRadiationLength(double rlength);
     void setInteractionLength(double ilength);
-    std::pair<double, double> getEtaMinMax();
+    std::pair<double, double> getEtaMinMax(const double zOrigin = 0.);
     virtual void print();
   protected:
     bool is_vertical, is_final;

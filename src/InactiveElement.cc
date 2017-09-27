@@ -186,35 +186,37 @@ namespace insur {
     void InactiveElement::setInteractionLength(double ilength) { i_length = ilength; }
     
     /**
-     * Calculate and return the Eta range of the element
+     * Calculate and return the Eta range of the element, seen from zOrigin.
      * @return The pair <i>(Eta_min, Eta_max)</i>
      */
-    std::pair<double, double> InactiveElement::getEtaMinMax() {
+    std::pair<double, double> InactiveElement::getEtaMinMax(const double zOrigin) {
+      double zOffset = getZOffset() - zOrigin;
+
         std::pair<double, double> res;
         double theta0, theta1;
         // volumes crossing z=0
-        if ((getZOffset() < 0) && (getZOffset() + getZLength() > 0)) {
+        if ((zOffset < 0) && (zOffset + getZLength() > 0)) {
             // lower left of tube wall above z-axis
-            theta0 = atan(getInnerRadius() / (-1 * getZOffset()));
+            theta0 = atan(getInnerRadius() / (-1 * zOffset));
             theta0 = M_PI - theta0;
             // lower right of tube wall above z-axis
-            theta1 = atan(getInnerRadius() / (getZOffset() + getZLength()));
+            theta1 = atan(getInnerRadius() / (zOffset + getZLength()));
         }
         // volumes on either side of z=0
         else {
             // rings
             if (isVertical()) {
                 // upper centre of tube wall above z-axis
-                theta0 = atan((getInnerRadius() + getRWidth()) / (getZLength() / 2.0 + getZOffset()));
+                theta0 = atan((getInnerRadius() + getRWidth()) / (getZLength() / 2.0 + zOffset));
                 // lower centre of tube wall above z-axis
-                theta1 = atan(getInnerRadius() / (getZLength() / 2.0 + getZOffset()));
+                theta1 = atan(getInnerRadius() / (getZLength() / 2.0 + zOffset));
             }
             // tubes
             else {
                 // centre left of tube wall above z-axis
-                theta0 = atan((getRWidth() / 2.0 + getInnerRadius()) / getZOffset());
+                theta0 = atan((getRWidth() / 2.0 + getInnerRadius()) / zOffset);
                 // centre right of tube wall above z-axis
-                theta1 = atan((getRWidth() / 2.0 + getInnerRadius()) / (getZOffset() + getZLength()));
+                theta1 = atan((getRWidth() / 2.0 + getInnerRadius()) / (zOffset + getZLength()));
             }
         }
         // convert angle theta to pseudorapidity eta

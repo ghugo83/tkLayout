@@ -25,6 +25,7 @@ class Sensor : public PropertyObject, public Buildable, public Identifiable<int>
   mutable const Polygon3d<4>* hitMidPoly_ = 0;
   mutable const Polygon3d<8>* envelopePoly_ = 0;
   mutable const Polygon3d<8>* envelopeMidPoly_ = 0;
+  Polygon3d<10>* hybridsPoly_ = 0;
 public:
   ReadonlyProperty<int, NoDefault> numStripsAcross;
   ReadonlyProperty<double, NoDefault> pitchEstimate;
@@ -35,6 +36,7 @@ public:
   ReadonlyProperty<SensorType, Default> type;
   ReadonlyProperty<double, Computable> minR, maxR;
   ReadonlyProperty<double, Computable> minZ, maxZ;
+  ReadonlyProperty<double, Computable> minZWithContour, maxZWithContour, minRWithContour, maxRWithContour;
   ReadonlyProperty<double, AutoDefault> powerPerChannel;
   // Timing barrel module : approximated as 1 single sensor made of crystals (for the XML export)
   ReadonlyProperty<int, AutoDefault> numCrystalsX;
@@ -94,6 +96,7 @@ public:
   const Polygon3d<4>& hitMidPoly() const;        // losange formed by the mid-points of hitPoly
   const Polygon3d<8>& envelopePoly() const;      // sensor parallelepiped rectangle
   const Polygon3d<8>& envelopeMidPoly() const;   // parallelepiped formed by hitMidPoly shifted by -sensorThickness/2 and + sensorThickness/2
+  const Polygon3d<10>* hybridsPoly();
   void clearPolys();
 
   std::pair<XYZVector, int> checkHitSegment(const XYZVector& trackOrig, const XYZVector& trackDir) const;
@@ -112,6 +115,10 @@ public:
     maxR.setup([&]() { return CoordinateOperations::computeMaxR(envelopePoly()); });
     minZ.setup([&]() { return CoordinateOperations::computeMinZ(envelopePoly()); });
     maxZ.setup([&]() { return CoordinateOperations::computeMaxZ(envelopePoly()); });
+    minRWithContour.setup([&]() { return CoordinateOperations::computeMinR((*hybridsPoly())); });
+    maxRWithContour.setup([&]() { return CoordinateOperations::computeMaxR((*hybridsPoly())); });
+    minZWithContour.setup([&]() { return CoordinateOperations::computeMinZ((*hybridsPoly())); });
+    maxZWithContour.setup([&]() { return CoordinateOperations::computeMaxZ((*hybridsPoly())); });
   }
 
   void accept(SensorGeometryVisitor& v) { 

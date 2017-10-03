@@ -168,6 +168,7 @@ public:
   Property<double, NoDefault> buildStartRadius;
   Property<double, NoDefault> buildCropRadius;
   Property<double, Computable> minZ, maxZ;
+  Property<double, Computable> minZWithContour, maxZWithContour, minRWithContour, maxRWithContour;
   Property<double, Computable> minZwithHybrids, maxZwithHybrids, minRwithHybrids, maxRwithHybrids;
   Property<int   , NoDefault> numModules; // if set forces the number of modules (in phi) to be exactly numModules
 
@@ -208,6 +209,12 @@ public:
   void setup() {
     minZ.setup([this]() { double min = std::numeric_limits<double>::max(); for (const auto& m : modules_) min = MIN(min, m.minZ()); return min; });
     maxZ.setup([this]() { double max = 0; for (const auto& m : modules_) max = MAX(max, m.maxZ()); return max; });
+
+    minZWithContour.setup([this]() { double min = std::numeric_limits<double>::max(); for (const auto& m : modules_) min = MIN(min, m.minZWithContour()); return min; });
+    maxZWithContour.setup([this]() { double max = 0; for (const auto& m : modules_) max = MAX(max, m.maxZWithContour()); return max; });
+    minRWithContour.setup([this]() { double min = std::numeric_limits<double>::max(); for (const auto& m : modules_) min = MIN(min, m.minRWithContour()); return min; });
+    maxRWithContour.setup([this]() { double max = 0; for (const auto& m : modules_) max = MAX(max, m.maxRWithContour()); return max; });
+
     maxModuleThickness.setup([this]() { 
       double max = 0;
       for (const auto& m : modules_) { 

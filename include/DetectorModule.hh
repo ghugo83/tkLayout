@@ -166,8 +166,10 @@ public:
     virtual bool hasAnyResolutionLocalYParam() const = 0;
     virtual void setup();
     virtual void build();
-    // Geometric module interface
-    const Polygon3d<4>& basePoly() const { return decorated().basePoly(); }
+
+  // Geometric module interface
+  const Polygon3d<4>& basePoly() const { return decorated().basePoly(); }
+  const std::vector<XYZVector>& contour() const { return decorated().contour(); }
 
   const XYZVector& center() const { return decorated().center(); }
   const XYZVector& normal() const { return decorated().normal(); }
@@ -255,6 +257,10 @@ public:
   double minZ() const { return minget2(sensors_.begin(), sensors_.end(), &Sensor::minZ); }
   double maxR() const { return maxget2(sensors_.begin(), sensors_.end(), &Sensor::maxR); }
   double minR() const { return minget2(sensors_.begin(), sensors_.end(), &Sensor::minR); }
+  double maxZWithContour() const { return maxget2(sensors_.begin(), sensors_.end(), &Sensor::maxZWithContour); }
+  double minZWithContour() const { return minget2(sensors_.begin(), sensors_.end(), &Sensor::minZWithContour); }
+  double maxRWithContour() const { return maxget2(sensors_.begin(), sensors_.end(), &Sensor::maxRWithContour); }
+  double minRWithContour() const { return minget2(sensors_.begin(), sensors_.end(), &Sensor::minRWithContour); }
 
   std::map<std::string, double> extremaWithHybrids() const;
   double minZwithHybrids() const { return extremaWithHybrids()["minZ"]; }

@@ -43,6 +43,31 @@ const Polygon3d<8>& Sensor::envelopeMidPoly() const {
   return *envelopeMidPoly_;
 }
 
+// TO DO: USE DIRECTLY A POLYGON AND NOT A VECTOR OF XYZVECTOR IN GEOEMETRIC MODULE.
+const Polygon3d<10>* Sensor::hybridsPoly() {
+  //double offset = sensorNormalOffset();
+  //if (hybridsPoly_ == 0) hybridsPoly_ = CoordinateOperations::computeTranslatedPolygon(parent_->contour(), offset);
+
+  const int contourSize = parent_->contour().size();
+  //if (contourSize == 0) return nullptr;
+     
+  // Our local axes in global coordinates
+  XYZVector ex, ey;
+  ey = hitPoly().getVertex(0) - hitPoly().getVertex(1) ;
+  ex = hitPoly().getVertex(2) - hitPoly().getVertex(1) ;
+  XYZVector center = hitPoly().getCenter();
+  ex = ex / sqrt(ex.Mag2());
+  ey = ey / sqrt(ey.Mag2());
+
+  for (int i = 0; i < contourSize; i++) {
+    const XYZVector& contourLocal = parent_->contour().at(i);
+    XYZVector contourGlobal = ex * contourLocal.X() + ey * contourLocal.Y() + center;
+    *hybridsPoly_ << contourGlobal;
+  }
+
+  return hybridsPoly_;
+}
+
 void Sensor::clearPolys() { 
   delete hitPoly_; 
   hitPoly_ = 0;
@@ -52,6 +77,8 @@ void Sensor::clearPolys() {
   envelopePoly_ = 0;
   delete envelopeMidPoly_;
   envelopeMidPoly_ = 0;
+  delete hybridsPoly_; 
+  hybridsPoly_ = 0;
 }
 
 std::pair<XYZVector, int> Sensor::checkHitSegment(const XYZVector& trackOrig, const XYZVector& trackDir) const {

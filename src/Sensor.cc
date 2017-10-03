@@ -43,46 +43,6 @@ const Polygon3d<8>& Sensor::envelopeMidPoly() const {
   return *envelopeMidPoly_;
 }
 
-// TO DO: USE DIRECTLY A POLYGON OF TEMPLATED SIZE AND NOT A VECTOR OF XYZVECTOR IN GEOMETRIC MODULE.
-// + Handle Inner Tracker case
-Polygon3d<10>& Sensor::hybridsPoly() const {
-  
-  if (hybridsPoly_ == 0) {
-    const int contourSize = parent_->contour().size();
-    if (contourSize != 0) {
-    
-      // Our local axes in global coordinates
-      XYZVector ex, ey;
-      ey = hitPoly().getVertex(0) - hitPoly().getVertex(1) ;
-      ex = hitPoly().getVertex(2) - hitPoly().getVertex(1) ;
-      XYZVector center = hitPoly().getCenter();
-      ex = ex / sqrt(ex.Mag2());
-      ey = ey / sqrt(ey.Mag2());
-
-      //Polygon3d<10> poly;
-      for (int i = 0; i < contourSize; i++) {
-	const XYZVector& contourLocal = parent_->contour().at(i);
-	XYZVector contourGlobal = ex * contourLocal.X() + ey * contourLocal.Y() + center;
-	*hybridsPoly_ << contourGlobal;
-      }
-      //*hybridsPoly_ = poly;
-
-      //std::cout << "contourGlobal.X() = " << contourGlobal.X() << "contourGlobal.Y() = " << contourGlobal.Y() << "contourGlobal.Z() = " << contourGlobal.Z() << std::endl;
-    }
-    // Do not care about Inner Tracker case here, since private branch for Outer Tracker!
-    else {
-      //Polygon3d<10> fakePoly;
-      for (int i = 0; i < 10; i++) {
-	*hybridsPoly_ << XYZVector( 1., 1., 1.);
-      }
-      //hybridsPoly_ = &fakePoly;
-    }
-
-  }
-
-  return *hybridsPoly_;
-}
-
 void Sensor::clearPolys() { 
   delete hitPoly_; 
   hitPoly_ = 0;
@@ -92,8 +52,6 @@ void Sensor::clearPolys() {
   envelopePoly_ = 0;
   delete envelopeMidPoly_;
   envelopeMidPoly_ = 0;
-  delete hybridsPoly_; 
-  hybridsPoly_ = 0;
 }
 
 std::pair<XYZVector, int> Sensor::checkHitSegment(const XYZVector& trackOrig, const XYZVector& trackDir) const {

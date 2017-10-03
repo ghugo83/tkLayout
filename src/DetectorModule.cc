@@ -578,6 +578,51 @@ void EndcapModule::build() {
 }
 
 
+// TO DO: USE DIRECTLY A POLYGON OF TEMPLATED SIZE AND NOT A VECTOR OF XYZVECTOR IN GEOMETRIC MODULE.
+// + Handle Inner Tracker case
+void EndcapModule::computeHybridsPoly() {
+
+  if (hybridsPoly_.size() == 0) {
+
+    const int contourSize = contour().size();
+    std::cout << "contourSize = " << contourSize << std::endl;
+
+    if (contourSize != 0) {
+    
+      // Our local axes in global coordinates
+      XYZVector ex, ey;
+      ey = basePoly().getVertex(0) - basePoly().getVertex(1) ;
+      ex = basePoly().getVertex(2) - basePoly().getVertex(1) ;
+      XYZVector center = basePoly().getCenter();
+      ex = ex / sqrt(ex.Mag2());
+      ey = ey / sqrt(ey.Mag2());
+
+      for (int i = 0; i < contourSize; i++) {
+	const XYZVector& contourLocal = contour().at(i);
+	XYZVector contourGlobal = ex * contourLocal.X() + ey * contourLocal.Y() + center;
+	hybridsPoly_.push_back(contourGlobal);
+
+	std::cout << "contourGlobal.X() = " << contourGlobal.X() << "contourGlobal.Y() = " << contourGlobal.Y() << "contourGlobal.Z() = " << contourGlobal.Z() << std::endl;
+      }
+
+    
+    }
+    // Do not care about Inner Tracker case here, since private branch for Outer Tracker!
+    else {
+      for (int i = 0; i < 10; i++) {
+	hybridsPoly_.push_back(XYZVector( 1., 1., 1.));
+      }
+    }
+
+    std::cout << "hybridsPoly_.size() = " << hybridsPoly_.size() << std::endl;
+    for (int i = 0; i < hybridsPoly_.size(); i++) {
+      std::cout << "hybridsPoly_.at(i).X() = " << hybridsPoly_.at(i).X() << "hybridsPoly_.at(i).Y() = " << hybridsPoly_.at(i).Y() << "hybridsPoly_.at(i).Z() = " << hybridsPoly_.at(i).Z() << std::endl;
+    }
+
+  }
+}
+
+
 
 
 define_enum_strings(SensorLayout) = { "nosensors", "mono", "pt", "stereo" };

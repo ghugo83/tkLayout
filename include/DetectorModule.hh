@@ -257,10 +257,6 @@ public:
   double minZ() const { return minget2(sensors_.begin(), sensors_.end(), &Sensor::minZ); }
   double maxR() const { return maxget2(sensors_.begin(), sensors_.end(), &Sensor::maxR); }
   double minR() const { return minget2(sensors_.begin(), sensors_.end(), &Sensor::minR); }
-  double maxZWithContour() const { return maxget2(sensors_.begin(), sensors_.end(), &Sensor::maxZWithContour); }
-  double minZWithContour() const { return minget2(sensors_.begin(), sensors_.end(), &Sensor::minZWithContour); }
-  double maxRWithContour() const { return maxget2(sensors_.begin(), sensors_.end(), &Sensor::maxRWithContour); }
-  double minRWithContour() const { return minget2(sensors_.begin(), sensors_.end(), &Sensor::minRWithContour); }
 
   std::map<std::string, double> extremaWithHybrids() const;
   double minZwithHybrids() const { return extremaWithHybrids()["minZ"]; }
@@ -361,6 +357,7 @@ public:
   ReadonlyProperty<double, NoDefault> resolutionLocalYBarrelParam2;
   ReadonlyProperty<double, NoDefault> resolutionLocalYBarrelParam3;
   ReadonlyProperty<double, NoDefault> resolutionLocalYBarrelParam4;
+  //ReadonlyProperty<double, Computable> minZWithContour, maxZWithContour, minRWithContour, maxRWithContour;
 
  BarrelModule(Decorated* decorated) :
   DetectorModule(decorated),
@@ -529,6 +526,7 @@ public:
   ReadonlyProperty<double, NoDefault> resolutionLocalXEndcapParam3;
   ReadonlyProperty<double, NoDefault> resolutionLocalYEndcapParam0;
   ReadonlyProperty<double, NoDefault> resolutionLocalYEndcapParam1;
+  //ReadonlyProperty<double, Computable> minZWithContour, maxZWithContour, minRWithContour, maxRWithContour;
 
  EndcapModule(Decorated* decorated) :
   DetectorModule(decorated),
@@ -663,11 +661,23 @@ public:
 	// if model parameters specified, return -1
 	else return -1.0;
       });
+
+    /*computeHybridsPoly();
+
+    minRWithContour.setup([&]() { return minget(hybridsPoly_.begin(), hybridsPoly_.end(), [](const XYZVector& v) { return v.Rho(); }); });
+    maxRWithContour.setup([&]() { return maxget(hybridsPoly_.begin(), hybridsPoly_.end(), [](const XYZVector& v) { return v.Rho(); }); });
+    minZWithContour.setup([&]() { return minget(hybridsPoly_.begin(), hybridsPoly_.end(), [](const XYZVector& v) { return v.Z(); }); });
+    maxZWithContour.setup([&]() { return maxget(hybridsPoly_.begin(), hybridsPoly_.end(), [](const XYZVector& v) { return v.Z(); }); });*/
   }
 
   void check() override;
 
   void build();
+
+  const double minRWithContour() { computeHybridsPoly(); return minget(hybridsPoly_.begin(), hybridsPoly_.end(), [](const XYZVector& v) { return v.Rho(); }); };
+  const double maxRWithContour() { computeHybridsPoly(); return maxget(hybridsPoly_.begin(), hybridsPoly_.end(), [](const XYZVector& v) { return v.Rho(); }); };
+  const double minZWithContour() { computeHybridsPoly(); return minget(hybridsPoly_.begin(), hybridsPoly_.end(), [](const XYZVector& v) { return v.Z(); }); };
+  const double maxZWithContour() { computeHybridsPoly(); return maxget(hybridsPoly_.begin(), hybridsPoly_.end(), [](const XYZVector& v) { return v.Z(); }); };
 
   void accept(GeometryVisitor& v) {
     v.visit(*this); 
@@ -706,6 +716,12 @@ public:
   PosRef posRef() const { return (PosRef){ subdetectorId(), (side() > 0 ? disk() : -disk()), ring(), blade() }; }
   TableRef tableRef() const { return (TableRef){ subdetectorName(), disk(), ring() }; }
   UniRef uniRef() const { return UniRef{ subdetectorName(), disk(), ring(), blade(), side() }; }
+
+  const std::vector<XYZVector> hybridsPoly() const { return hybridsPoly_; }
+  
+private:
+  void computeHybridsPoly();
+  std::vector<XYZVector> hybridsPoly_;
 };
 
 

@@ -357,7 +357,6 @@ public:
   ReadonlyProperty<double, NoDefault> resolutionLocalYBarrelParam2;
   ReadonlyProperty<double, NoDefault> resolutionLocalYBarrelParam3;
   ReadonlyProperty<double, NoDefault> resolutionLocalYBarrelParam4;
-  //ReadonlyProperty<double, Computable> minZWithContour, maxZWithContour, minRWithContour, maxRWithContour;
 
  BarrelModule(Decorated* decorated) :
   DetectorModule(decorated),
@@ -676,8 +675,6 @@ public:
 
   const double minRWithContour() { computeHybridsPoly(); return minget(hybridsPoly_.begin(), hybridsPoly_.end(), [](const XYZVector& v) { return v.Rho(); }); };
   const double maxRWithContour() { computeHybridsPoly(); return maxget(hybridsPoly_.begin(), hybridsPoly_.end(), [](const XYZVector& v) { return v.Rho(); }); };
-  const double minZWithContour() { computeHybridsPoly(); return minget(hybridsPoly_.begin(), hybridsPoly_.end(), [](const XYZVector& v) { return v.Z(); }); };
-  const double maxZWithContour() { computeHybridsPoly(); return maxget(hybridsPoly_.begin(), hybridsPoly_.end(), [](const XYZVector& v) { return v.Z(); }); };
 
   void accept(GeometryVisitor& v) {
     v.visit(*this); 

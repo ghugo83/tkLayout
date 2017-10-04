@@ -210,8 +210,6 @@ public:
     minZ.setup([this]() { double min = std::numeric_limits<double>::max(); for (const auto& m : modules_) min = MIN(min, m.minZ()); return min; });
     maxZ.setup([this]() { double max = 0; for (const auto& m : modules_) max = MAX(max, m.maxZ()); return max; });
 
-    minZWithContour.setup([this]() { double min = std::numeric_limits<double>::max(); for (const auto& m : modules_) min = MIN(min, m.minZWithContour()); return min; });
-    maxZWithContour.setup([this]() { double max = 0; for (const auto& m : modules_) max = MAX(max, m.maxZWithContour()); return max; });
     minRWithContour.setup([this]() { double min = std::numeric_limits<double>::max(); for (const auto& m : modules_) min = MIN(min, m.minRWithContour()); return min; });
     maxRWithContour.setup([this]() { double max = 0; for (const auto& m : modules_) max = MAX(max, m.maxRWithContour()); return max; });
 
@@ -222,7 +220,6 @@ public:
       } 
       return max;
     });
-
 
     minZwithHybrids.setup([this]() { double min = std::numeric_limits<double>::max(); for (const auto& m : modules_) min = MIN(min, m.minZwithHybrids()); return min; });
     maxZwithHybrids.setup([this]() { double max = 0; for (const auto& m : modules_) max = MAX(max, m.maxZwithHybrids()); return max; });

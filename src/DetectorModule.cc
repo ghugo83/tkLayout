@@ -585,10 +585,8 @@ void EndcapModule::computeHybridsPoly() {
   if (hybridsPoly_.size() == 0) {
 
     const int contourSize = contour().size();
-    std::cout << "contourSize = " << contourSize << std::endl;
 
-    if (contourSize != 0) {
-    
+    if (contourSize != 0) {    
       // Our local axes in global coordinates
       XYZVector ex, ey;
       ey = basePoly().getVertex(0) - basePoly().getVertex(1) ;
@@ -601,24 +599,14 @@ void EndcapModule::computeHybridsPoly() {
 	const XYZVector& contourLocal = contour().at(i);
 	XYZVector contourGlobal = ex * contourLocal.X() + ey * contourLocal.Y() + center;
 	hybridsPoly_.push_back(contourGlobal);
-
-	std::cout << "contourGlobal.X() = " << contourGlobal.X() << "contourGlobal.Y() = " << contourGlobal.Y() << "contourGlobal.Z() = " << contourGlobal.Z() << std::endl;
-      }
-
-    
+      }   
     }
     // Do not care about Inner Tracker case here, since private branch for Outer Tracker!
     else {
       for (int i = 0; i < 10; i++) {
-	hybridsPoly_.push_back(XYZVector( 1., 1., 1.));
+	hybridsPoly_.push_back(XYZVector( 0., 0., 0.));
       }
     }
-
-    std::cout << "hybridsPoly_.size() = " << hybridsPoly_.size() << std::endl;
-    for (int i = 0; i < hybridsPoly_.size(); i++) {
-      std::cout << "hybridsPoly_.at(i).X() = " << hybridsPoly_.at(i).X() << "hybridsPoly_.at(i).Y() = " << hybridsPoly_.at(i).Y() << "hybridsPoly_.at(i).Z() = " << hybridsPoly_.at(i).Z() << std::endl;
-    }
-
   }
 }
 

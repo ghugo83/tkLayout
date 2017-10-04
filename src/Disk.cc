@@ -293,6 +293,7 @@ const std::pair<double, bool> Disk::computeIntersectionWithZAxis(double lastZ, d
 void Disk::computeActualZCoverage() {
   
   double lastMinRho;
+  double lastMinRhoWithContour, oneBeforeLastMinRhoWithContour;
   double lastMinZ;
   const double ringsSensorThickness = scanSensorThickness();
 
@@ -304,6 +305,7 @@ void Disk::computeActualZCoverage() {
      
       // Find the radii and Z of the most stringent points in ring (i).
       double newMaxRho = rings_.at(i-1).buildStartRadius();
+      double newMaxRhoWithContour = rings_.at(i-1).maxRWithContour();
       double newMaxZ = rings_.at(i-1).maxZ() - ringsSensorThickness / 2.;
 
       // Calculation : Min coordinates of ring (i+1) with max coordinates of ring (i)
@@ -323,15 +325,23 @@ void Disk::computeActualZCoverage() {
 	if (isPositiveSlope) zErrorCoverage = -zIntersection;
 	else zErrorCoverage = std::numeric_limits<double>::infinity();
       }
-      
+
       // STORE THE RESULT
       rings_.at(i-1).actualZError(zErrorCoverage);
-      ringIndexMap_[i]->actualZError(zErrorCoverage);
+      ringIndexMap_[i]->actualZError(zErrorCoverage);  
+      if (i != (numRings() - 1)) {
+	const double rSpace = oneBeforeLastMinRhoWithContour - newMaxRhoWithContour;
+	rings_.at(i-1).actualRSpace(rSpace);
+	ringIndexMap_[i]->actualRSpace(rSpace);
+      }
     }
 
-    // Keep for next calculation : radii and Z of the most stringent point in ring (i+1).
+    // Keep for next calculation : radii and Z of the most stringent point in ring (i+1).   
     lastMinRho = rings_.at(i-1).minR();
     lastMinZ = rings_.at(i-1).minZ() + ringsSensorThickness / 2.;
+    // Keep for next calculation : radii in ring (i+2).   
+    oneBeforeLastMinRhoWithContour = lastMinRhoWithContour;
+    lastMinRhoWithContour = rings_.at(i-1).minRWithContour();
   }
 }
 

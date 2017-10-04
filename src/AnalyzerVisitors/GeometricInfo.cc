@@ -78,6 +78,7 @@ void LayerDiskSummaryVisitor::visit(const Disk& d) {
   RootWTable* zErrorTable = new RootWTable();
   zErrorTable->setContent(0, 0, "Ring :");
   zErrorTable->setContent(1, 0, "zError (Ring i & i+1)");
+  zErrorTable->setContent(2, 0, "rSpace (Ring i & i+2)");
   zErrorTables.push_back(zErrorTable);
 }
 
@@ -90,6 +91,7 @@ void LayerDiskSummaryVisitor::visit(const Ring& r) {
   endcapTables.at(nEndcaps-1)->setContent(9, nRings, r.numModules());
   zErrorTables.at(nDisks-1)->setContent(0, nRings, r.myid());
   if (nRings != nRingsTotal) zErrorTables.at(nDisks-1)->setContent(1, nRings, r.actualZError(), coordPrecision);
+  if (nRings != nRingsTotal && nRings != nRingsTotal - 1) zErrorTables.at(nDisks-1)->setContent(2, nRings, r.actualRSpace(), coordPrecision);
 }
 
 void LayerDiskSummaryVisitor::visit(const Module& m) {

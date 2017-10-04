@@ -61,6 +61,8 @@ public:
 
   const Polygon3d<4>& basePoly() const { return basePoly_; }
   const std::vector<XYZVector>& contour() const { return contour_; }
+  const double minRWithContour() const;
+  const double maxRWithContour() const;
   const XYZVector& center() const { return basePoly_.getCenter(); }
   const XYZVector& normal() const { return basePoly_.getNormal(); }
   virtual double area() const = 0;
@@ -69,9 +71,6 @@ public:
   virtual double minWidth() const = 0;
   virtual double meanWidth() const = 0;
   double thickness() const { return dsDistance() + sensorThickness(); }
-
-  const double minRWithContour() const;
-  const double maxRWithContour() const;
  
   double tiltAngle() const { return tiltAngle_; }
   double skewAngle() const { return skewAngle_; }

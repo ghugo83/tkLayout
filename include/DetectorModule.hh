@@ -525,7 +525,6 @@ public:
   ReadonlyProperty<double, NoDefault> resolutionLocalXEndcapParam3;
   ReadonlyProperty<double, NoDefault> resolutionLocalYEndcapParam0;
   ReadonlyProperty<double, NoDefault> resolutionLocalYEndcapParam1;
-  //ReadonlyProperty<double, Computable> minZWithContour, maxZWithContour, minRWithContour, maxRWithContour;
 
  EndcapModule(Decorated* decorated) :
   DetectorModule(decorated),
@@ -660,17 +659,7 @@ public:
 	// if model parameters specified, return -1
 	else return -1.0;
       });
-
-    /*computeHybridsPoly();
-
-    minRWithContour.setup([&]() { return minget(hybridsPoly_.begin(), hybridsPoly_.end(), [](const XYZVector& v) { return v.Rho(); }); });
-    maxRWithContour.setup([&]() { return maxget(hybridsPoly_.begin(), hybridsPoly_.end(), [](const XYZVector& v) { return v.Rho(); }); });
-    minZWithContour.setup([&]() { return minget(hybridsPoly_.begin(), hybridsPoly_.end(), [](const XYZVector& v) { return v.Z(); }); });
-    maxZWithContour.setup([&]() { return maxget(hybridsPoly_.begin(), hybridsPoly_.end(), [](const XYZVector& v) { return v.Z(); }); });*/
   }
-
-  const double minRWithContour() const { return decorated().minRWithContour(); };
-  const double maxRWithContour() const { return decorated().maxRWithContour(); };
 
   void check() override;
 
@@ -692,15 +681,10 @@ public:
     for (auto& s : sensors_) { s.accept(v); }
   }
 
-  //double minZ() const { return center().Z(); } // CUIDADO not accounting for sensor placement
-  //double maxZ() const { return center().Z(); } // ditto here
-  //double maxR() const { return MAX(basePoly().getVertex(0).Rho(), basePoly().getVertex(2).Rho()); }
-  //double minR() const { XYZVector side[2];
-  //                      std::partial_sort_copy(basePoly().begin(), basePoly().end(), std::begin(side), std::end(side), [](const XYZVector& v1, const XYZVector& v2) { return v1.Rho() < v2.Rho(); });
-  //                      return ((side[0]+side[1])/2).Rho(); }
-
-
   virtual ModuleSubdetector subdet() const { return ENDCAP; }
+
+  const double minRWithContour() const { return decorated().minRWithContour(); };
+  const double maxRWithContour() const { return decorated().maxRWithContour(); };
 
   double calculateParameterizedResolutionLocalX(double trackPhi) const {
     return resolutionLocalXEndcapParam0() + resolutionLocalXEndcapParam1() * exp(-pow(1./tan(alpha(trackPhi)), 2.) / resolutionLocalXEndcapParam3()) * cos(resolutionLocalXEndcapParam2() * 1./tan(alpha(trackPhi)));    

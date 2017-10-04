@@ -578,41 +578,6 @@ void EndcapModule::build() {
 }
 
 
-// TO DO: USE DIRECTLY A POLYGON OF TEMPLATED SIZE AND NOT A VECTOR OF XYZVECTOR IN GEOMETRIC MODULE.
-// + Handle Inner Tracker case
-void EndcapModule::computeHybridsPoly() {
-
-  if (hybridsPoly_.size() == 0) {
-
-    const int contourSize = contour().size();
-
-    if (contourSize != 0) {    
-      // Our local axes in global coordinates
-      XYZVector ex, ey;
-      ey = basePoly().getVertex(0) - basePoly().getVertex(1) ;
-      ex = basePoly().getVertex(2) - basePoly().getVertex(1) ;
-      XYZVector center = basePoly().getCenter();
-      ex = ex / sqrt(ex.Mag2());
-      ey = ey / sqrt(ey.Mag2());
-
-      for (int i = 0; i < contourSize; i++) {
-	const XYZVector& contourLocal = contour().at(i);
-	XYZVector contourGlobal = ex * contourLocal.X() + ey * contourLocal.Y() + center;
-	hybridsPoly_.push_back(contourGlobal);
-      }   
-    }
-    // Do not care about Inner Tracker case here, since private branch for Outer Tracker!
-    else {
-      for (int i = 0; i < 10; i++) {
-	hybridsPoly_.push_back(XYZVector( 0., 0., 0.));
-      }
-    }
-  }
-}
-
-
-
-
 define_enum_strings(SensorLayout) = { "nosensors", "mono", "pt", "stereo" };
 define_enum_strings(ZCorrelation) = { "samesegment", "multisegment" };
 define_enum_strings(ReadoutType) = { "strip", "pixel", "pt" };

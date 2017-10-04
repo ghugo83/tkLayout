@@ -69,6 +69,9 @@ public:
   virtual double minWidth() const = 0;
   virtual double meanWidth() const = 0;
   double thickness() const { return dsDistance() + sensorThickness(); }
+
+  const double minRWithContour() const;
+  const double maxRWithContour() const;
  
   double tiltAngle() const { return tiltAngle_; }
   double skewAngle() const { return skewAngle_; }

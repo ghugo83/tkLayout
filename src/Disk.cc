@@ -339,6 +339,7 @@ void Disk::computeActualZCoverage() {
 /** This computes the actual coverage of a disk (after it is built).
  */
 void Disk::computeActualCoverage() {
+
   // Actual coverage in Z
   computeActualZCoverage();
 

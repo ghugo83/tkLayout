@@ -165,6 +165,91 @@ void RectangularModule::build() {
 }
 
 
+// TO DO: USE DIRECTLY A POLYGON OF TEMPLATED SIZE AND NOT A VECTOR OF XYZVECTOR IN GEOMETRIC MODULE.
+// + Handle Inner Tracker case
+/*void GeometricModule::computeHybridsPoly() {
+
+  if (hybridsPoly_.size() == 0) {
+
+    const int contourSize = contour().size();
+
+    if (contourSize != 0) {    
+      // Our local axes in global coordinates
+      XYZVector ex, ey;
+      ey = basePoly_.getVertex(0) - basePoly_.getVertex(1) ;
+      ex = basePoly_.getVertex(2) - basePoly_.getVertex(1) ;
+      XYZVector center = basePoly_.getCenter();
+      ex = ex / sqrt(ex.Mag2());
+      ey = ey / sqrt(ey.Mag2());
+
+      for (int i = 0; i < contourSize; i++) {
+	const XYZVector& contourLocal = contour_.at(i);
+	XYZVector contourGlobal = ex * contourLocal.X() + ey * contourLocal.Y() + center;
+	hybridsPoly_.push_back(contourGlobal);
+      }   
+    }
+    // Do not care about Inner Tracker case here, since private branch for Outer Tracker!
+    else {
+      for (int i = 0; i < 10; i++) {
+	hybridsPoly_.push_back(XYZVector( 0., 0., 0.));
+      }
+    }
+  }
+  }*/
+
+const double GeometricModule::minRWithContour() const { 
+
+  const int contourSize = contour().size();
+
+  if (contourSize != 0) {
+    std::vector<XYZVector> globalContour;
+
+    // Our local axes in global coordinates
+    XYZVector ex, ey;
+    ey = basePoly_.getVertex(0) - basePoly_.getVertex(1) ;
+    ex = basePoly_.getVertex(2) - basePoly_.getVertex(1) ;
+    XYZVector center = basePoly_.getCenter();
+    ex = ex / sqrt(ex.Mag2());
+    ey = ey / sqrt(ey.Mag2());
+
+    for (int i = 0; i < contourSize; i++) {
+      const XYZVector& localPoint = contour_.at(i);
+      XYZVector globalPoint = ex * localPoint.X() + ey * localPoint.Y() + center;
+      globalContour.push_back(globalPoint);
+    } 
+    return minget(globalContour.begin(), globalContour.end(), [](const XYZVector& v) { return v.Rho(); }); 
+  }
+  // Do not care about Inner Tracker case here, since private branch for Outer Tracker!
+  else return 0.;
+}
+
+
+const double GeometricModule::maxRWithContour() const { 
+
+  const int contourSize = contour().size();
+
+  if (contourSize != 0) {
+    std::vector<XYZVector> globalContour;
+
+    // Our local axes in global coordinates
+    XYZVector ex, ey;
+    ey = basePoly_.getVertex(0) - basePoly_.getVertex(1) ;
+    ex = basePoly_.getVertex(2) - basePoly_.getVertex(1) ;
+    XYZVector center = basePoly_.getCenter();
+    ex = ex / sqrt(ex.Mag2());
+    ey = ey / sqrt(ey.Mag2());
+
+    for (int i = 0; i < contourSize; i++) {
+      const XYZVector& localPoint = contour_.at(i);
+      XYZVector globalPoint = ex * localPoint.X() + ey * localPoint.Y() + center;
+      globalContour.push_back(globalPoint);
+    } 
+    return maxget(globalContour.begin(), globalContour.end(), [](const XYZVector& v) { return v.Rho(); }); 
+  }
+  // Do not care about Inner Tracker case here, since private branch for Outer Tracker!
+  else return 0.;
+}
+
 
 
 void WedgeModule::build() {

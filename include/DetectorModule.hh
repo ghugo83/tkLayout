@@ -669,12 +669,12 @@ public:
     maxZWithContour.setup([&]() { return maxget(hybridsPoly_.begin(), hybridsPoly_.end(), [](const XYZVector& v) { return v.Z(); }); });*/
   }
 
+  const double minRWithContour() const { return decorated().minRWithContour(); };
+  const double maxRWithContour() const { return decorated().maxRWithContour(); };
+
   void check() override;
 
   void build();
-
-  const double minRWithContour() { computeHybridsPoly(); return minget(hybridsPoly_.begin(), hybridsPoly_.end(), [](const XYZVector& v) { return v.Rho(); }); };
-  const double maxRWithContour() { computeHybridsPoly(); return maxget(hybridsPoly_.begin(), hybridsPoly_.end(), [](const XYZVector& v) { return v.Rho(); }); };
 
   void accept(GeometryVisitor& v) {
     v.visit(*this); 
@@ -713,12 +713,6 @@ public:
   PosRef posRef() const { return (PosRef){ subdetectorId(), (side() > 0 ? disk() : -disk()), ring(), blade() }; }
   TableRef tableRef() const { return (TableRef){ subdetectorName(), disk(), ring() }; }
   UniRef uniRef() const { return UniRef{ subdetectorName(), disk(), ring(), blade(), side() }; }
-
-  const std::vector<XYZVector> hybridsPoly() const { return hybridsPoly_; }
-  
-private:
-  void computeHybridsPoly();
-  std::vector<XYZVector> hybridsPoly_;
 };
 
 

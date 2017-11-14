@@ -1592,6 +1592,7 @@ namespace insur {
       l.push_back(logic);
       pos.parent_tag = xml_pixbarident + ":" + trackerXmlTags.bar;
       pos.child_tag = trackerXmlTags.nspace + ":" + lname.str();
+      if (isTimingLayer) { pos.parent_tag = xml_btlident + ":" + xml_BTL; } 
       p.push_back(pos);
       lspec.partselectors.push_back(lname.str());
       //lspec.moduletypes.push_back("");

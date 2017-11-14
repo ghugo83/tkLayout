@@ -73,6 +73,20 @@ namespace insur {
 		outstream.close();
 		outstream.clear();
 		std::cout << "CMSSW modified pixel endcap has been written to " << xmlOutputPath << xml_pixfwdfile << std::endl;
+
+		instream.open((xmlDirectoryPath + "/" + xml_btlfile).c_str());
+		outstream.open((xmlOutputPath + xml_btlfile).c_str());
+		if (instream.fail() || outstream.fail()) throw std::runtime_error("Error opening one of the btl files.");
+		//writeSimpleHeader(outstream);
+		wr.pixbar(data.shapes, instream, outstream);
+		if (outstream.fail()) throw std::runtime_error("Error writing to btl file.");
+		instream.close();
+		instream.clear();
+		outstream.close();
+		outstream.clear();
+		std::cout << "CMSSW modified btl has been written to " << xmlOutputPath << xml_btlfile << std::endl;
+
+
 	      }
 	    }
 

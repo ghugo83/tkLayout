@@ -140,6 +140,7 @@ namespace insur {
     static const std::string xml_PX_trackerfile = "pixel.xml";
     static const std::string xml_newtrackerfile = "newtracker.xml";
     static const std::string xml_trackervolumefile = "trackerVolumeTemplate.xml";
+    static const std::string xml_btlfile = "btl.xml";
     static const std::string xml_pixbarfile = "pixbar.xml";
     static const std::string xml_pixfwdfile = "pixfwd.xml";
     static const std::string xml_topologyfile = "trackerStructureTopology.xml";
@@ -195,12 +196,14 @@ namespace insur {
     static const std::string xml_material_air = "materials:Air";
     static const std::string xml_sensor_silicon = "SenSi";
     static const std::string xml_sensor_LYSO = "SenLYSO";
+    static const std::string xml_btlident = "btl";
     static const std::string xml_pixbarident = "pixbar";
     static const std::string xml_pixfwdident = "pixfwd";
     static const std::string xml_fileident = "tracker";
     static const std::string xml_newfileident = "newtracker";
     static const std::string xml_PX_fileident = "pixel";
     static const std::string xml_pixbar = "PixelBarrel";
+    static const std::string xml_BTL = "BarrelTimingLayer";
     static const std::string xml_OT_bar = "Phase2OTBarrel";
     static const std::string xml_PX_bar = "Phase2PixelBarrel";
     static const std::string xml_pixfwd = "PixelForward"; 

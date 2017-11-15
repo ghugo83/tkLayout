@@ -219,6 +219,12 @@ public:
     maxRwithHybrids.setup([this]() { double max = 0; for (const auto& m : modules_) max = MAX(max, m.maxRwithHybrids()); return max; });
 
   }
+
+  bool isTiming() const {
+    bool isTiming = false;
+    if (modules_.size() != 0) isTiming = modules_.front().isTimingModule();
+    return isTiming; 
+  }
   
   void build();
   void check() override;

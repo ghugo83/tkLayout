@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<DDDefinition xmlns="http://www.cern.ch/cms/DDL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.cern.ch/cms/DDL ../../../../DetectorDescription/Schema/DDLSchema.xsd">
+
+  <ConstantsSection label="etl.xml" eval="true">
+    <Constant name="ETLrmin" value="[pixfwd:RootRadius2]"/>
+    <Constant name="ETLrmax" value="116.0*cm"/>
+    <Constant name="ETLzmin" value="2335.0*mm"/>
+    <Constant name="ETLzmax" value="2383.0*mm"/>
+  </ConstantsSection>
+
+  <SolidSection label="etl.xml">
+    <Polycone name="EndcapTimingLayer" startPhi="0*deg" deltaPhi="360*deg">
+      <ZSection z="[ETLzmin]"         rMin="[ETLrmin]"          rMax="[ETLrmax]" />
+      <ZSection z="[ETLzmax]"         rMin="[ETLrmin]"          rMax="[ETLrmax]" />
+    </Polycone>
+  </SolidSection>
+
+  <LogicalPartSection label="etl.xml">                                 
+    <LogicalPart name="EndcapTimingLayer" category="unspecified">      
+      <rSolid name="EndcapTimingLayer"/>                               
+      <rMaterial name="materials:Air"/>                                
+    </LogicalPart>                                                     
+  </LogicalPartSection>                                                
+                                                                       
+  <PosPartSection label="etl.xml">                                     
+    <PosPart copyNumber="1">                                           
+      <rParent name="pixfwd:Phase2OTForward"/>                         
+      <rChild name="etl:EndcapTimingLayer"/>                           
+    </PosPart>                                                         
+  </PosPartSection>                                                    
+
+</DDDefinition>

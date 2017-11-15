@@ -1699,6 +1699,8 @@ namespace insur {
     // LOOP ON DISKS
     for (oiter = ec.begin(); oiter != ec.end(); oiter++) {
 
+      bool isTimingLayer = lagg.getEndcapLayers()->at(layer - 1)->isTiming();     
+
       if (lagg.getEndcapLayers()->at(layer - 1)->minZ() > 0) {
    
 	std::set<int> ringsIndexes; // VERY UGLY !! TO DO : IMPLEMENT ringsIndexes() IN CLASS DISK
@@ -2150,7 +2152,8 @@ namespace insur {
         pos.parent_tag = xml_pixfwdident + ":" + trackerXmlTags.fwd;
         pos.child_tag = trackerXmlTags.nspace + ":" + logic.name_tag;
         //pos.trans.dz = (zmax + zmin) / 2.0 - xml_z_pixfwd;
-	pos.trans.dz = diskZ - xml_z_pixfwd;
+        pos.trans.dz = diskZ - xml_z_pixfwd;
+        if (isTimingLayer) { pos.parent_tag = xml_etlident + ":" + xml_ETL; } 
         p.push_back(pos);
 
         dspec.partselectors.push_back(logic.name_tag);

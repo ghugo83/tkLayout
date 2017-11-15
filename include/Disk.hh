@@ -118,6 +118,8 @@ public:
   int diskNumber() const { return diskNumber_; }
   int numEmptyRings() const { return count_if(rings_.begin(), rings_.end(), [](const Ring& r) { return r.numModules() == 0; }); }
 
+  bool isTiming() const { return rings_.front().isTiming(); }
+
   const std::pair<double, bool> computeIntersectionWithZAxis(double lastZ, double lastRho, double newZ, double newRho) const;
   void computeActualCoverage();
   void computeActualZCoverage();

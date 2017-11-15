@@ -86,6 +86,18 @@ namespace insur {
 		outstream.clear();
 		std::cout << "CMSSW modified btl has been written to " << xmlOutputPath << xml_btlfile << std::endl;
 
+		instream.open((xmlDirectoryPath + "/" + xml_etlfile).c_str());
+		outstream.open((xmlOutputPath + xml_etlfile).c_str());
+		if (instream.fail() || outstream.fail()) throw std::runtime_error("Error opening one of the etl files.");
+		//writeSimpleHeader(outstream);
+		wr.pixfwd(data.shapes, instream, outstream);
+		if (outstream.fail()) throw std::runtime_error("Error writing to etl file.");
+		instream.close();
+		instream.clear();
+		outstream.close();
+		outstream.clear();
+		std::cout << "CMSSW modified etl has been written to " << xmlOutputPath << xml_etlfile << std::endl;
+
 
 	      }
 	    }

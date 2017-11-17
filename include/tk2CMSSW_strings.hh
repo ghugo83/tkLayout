@@ -136,6 +136,7 @@ namespace insur {
     /**
      * Input and output filenames
      */
+    static const std::string xml_MTD_trackerfile = "mtd.xml";
     static const std::string xml_OT_trackerfile = "tracker.xml";
     static const std::string xml_PX_trackerfile = "pixel.xml";
     static const std::string xml_newtrackerfile = "newtracker.xml";
@@ -145,13 +146,17 @@ namespace insur {
     static const std::string xml_pixbarfile = "pixbar.xml";
     static const std::string xml_pixfwdfile = "pixfwd.xml";
     static const std::string xml_topologyfile = "trackerStructureTopology.xml";
+    static const std::string xml_MTDtopologyfile = "mtdStructureTopology.xml";
     static const std::string xml_newtopologyfile = "newTrackerStructureTopology.xml";
     static const std::string xml_PX_topologyfile = "pixelStructureTopology.xml";
     static const std::string xml_prodcutsfile = "trackerProdCuts.xml";
+    static const std::string xml_MTDprodcutsfile = "mtdProdCuts.xml";
     static const std::string xml_PX_prodcutsfile = "pixelProdCuts.xml";
     static const std::string xml_trackersensfile = "trackersens.xml";
+    static const std::string xml_MTDsensfile = "mtdsens.xml";
     static const std::string xml_PX_trackersensfile = "pixelsens.xml";
     static const std::string xml_recomatfile = "trackerRecoMaterial.xml";
+    static const std::string xml_MTDrecomatfile = "mtdRecoMaterial.xml";
     static const std::string xml_newrecomatfile = "newTrackerRecoMaterial.xml";
     //static const std::string xml_PX_recomatfile = "pixelRecoMaterial.xml";
     static const std::string xml_tmppath = "tmp";
@@ -202,6 +207,7 @@ namespace insur {
     static const std::string xml_pixbarident = "pixbar";
     static const std::string xml_pixfwdident = "pixfwd";
     static const std::string xml_fileident = "tracker";
+    static const std::string xml_MTDfileident = "mtd";
     static const std::string xml_newfileident = "newtracker";
     static const std::string xml_PX_fileident = "pixel";
     static const std::string xml_pixbar = "PixelBarrel";
@@ -344,17 +350,17 @@ namespace insur {
 
 
     struct XmlTags {
-    XmlTags(bool isPixelTracker) : 
+      XmlTags(bool isPixelTracker, bool isMTD) : 
       nspace(!isPixelTracker ? xml_fileident : xml_PX_fileident),
 	tracker(!isPixelTracker ? xml_OT : xml_PX),
 	bar(!isPixelTracker ? xml_OT_bar : xml_PX_bar),
 	fwd(!isPixelTracker ? xml_OT_fwd : xml_PX_fwd),
 
-	trackerfile(!isPixelTracker ? xml_OT_trackerfile : xml_PX_trackerfile),
-	topologyfile(!isPixelTracker ? xml_topologyfile : xml_PX_topologyfile),
-	prodcutsfile(!isPixelTracker ? xml_prodcutsfile : xml_PX_prodcutsfile),
-	trackersensfile(!isPixelTracker ? xml_trackersensfile : xml_PX_trackersensfile),
-	recomatfile(xml_recomatfile),  // For users convinience, reco material info is stored in only one file for both OT and PX.
+      trackerfile(!isPixelTracker ? (!isMTD ? xml_OT_trackerfile : xml_MTD_trackerfile) : xml_PX_trackerfile),
+      topologyfile(!isPixelTracker ? (!isMTD ? xml_topologyfile : xml_MTDtopologyfile) : xml_PX_topologyfile),
+      prodcutsfile(!isPixelTracker ? (!isMTD ? xml_prodcutsfile : xml_MTDprodcutsfile) : xml_PX_prodcutsfile),
+      trackersensfile(!isPixelTracker ? (!isMTD ? xml_trackersensfile : xml_MTDsensfile) : xml_PX_trackersensfile),
+      recomatfile((!isMTD ? xml_recomatfile : xml_MTDrecomatfile)),  // For users convinience, reco material info is stored in only one file for both OT and PX.
 	insert_marker(!isPixelTracker ? xml_OT_insert_marker : xml_PX_insert_marker),
 
 	topo_barrel_name(!isPixelTracker ? xml_OT_topo_barrel_name : xml_PX_topo_barrel_name),

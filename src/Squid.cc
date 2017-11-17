@@ -7,6 +7,7 @@
 #include "SvnRevision.hh"
 #include "Squid.hh"
 #include "StopWatch.hh"
+#include "SimParms.hh"
 
 #include "ReportIrradiation.hh"
 
@@ -366,12 +367,14 @@ namespace insur {
     if (bfs::exists(xmlOutputPath)) bfs::rename(xmlOutputPath, temporaryPath);
     bfs::create_directory(xmlOutputPath);
 
+    bool isMTD = SimParms::getInstance().isMTD();
+
     try {
       if (mb) {
-	XmlTags outerTrackerXmlTags = XmlTags(false);
+        XmlTags outerTrackerXmlTags = XmlTags(false, isMTD);
 	t2c.translate(tkMaterialCalc.getMaterialTable(), *mb, outerTrackerXmlTags, xmlDirectoryPath, xmlOutputPath, xmlOutputName, false); // false is setting a mysterious flag called wt which changes the way the XML is output. apparently setting it to true is of no use anymore.
 	if (pm) {
-	  XmlTags pixelXmlTags = XmlTags(true);
+	  XmlTags pixelXmlTags = XmlTags(true, isMTD);
 	  t2c.translate(pxMaterialCalc.getMaterialTable(), *pm, pixelXmlTags, xmlDirectoryPath, xmlOutputPath, xmlOutputName, false);
 	}
       }

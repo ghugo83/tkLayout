@@ -5,6 +5,7 @@
 
 #include <SvnRevision.hh>
 #include <tk2CMSSW.hh>
+#include <SimParms.hh>
 
 namespace insur {
 
@@ -22,6 +23,8 @@ namespace insur {
      * @xmlOutputName A string with the name of a subfolder for the output; empty by default.
      */
   void tk2CMSSW::translate(MaterialTable& mt, MaterialBudget& mb, XmlTags& trackerXmlTags, std::string xmlDirectoryPath, std::string xmlOutputPath, std::string xmlOutputName, bool wt) {
+
+    bool isMTD = SimParms::getInstance().isMTD();
 
     bool isPixelTracker = mb.getTracker().isPixelTracker();
 

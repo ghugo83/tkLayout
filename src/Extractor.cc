@@ -10,6 +10,7 @@
 
 #include <Extractor.hh>
 #include <cstdlib>
+#include <SimParms.hh>
 
 namespace insur {
 
@@ -31,6 +32,7 @@ namespace insur {
     Tracker& tr = mb.getTracker();
     InactiveSurfaces& is = mb.getInactiveSurfaces();
     bool isPixelTracker = tr.isPixelTracker();
+    bool isMTD = SimParms::getInstance().isMTD();
 
     std::vector<std::vector<ModuleCap> >& bc = mb.getBarrelModuleCaps();
     std::vector<std::vector<ModuleCap> >& ec = mb.getEndcapModuleCaps();
@@ -246,6 +248,7 @@ namespace insur {
   void Extractor::analyseBarrelContainer(Tracker& t, XmlTags& trackerXmlTags, std::vector<std::pair<double, double> >& up,
                                          std::vector<std::pair<double, double> >& down) {
     
+    bool isMTD = SimParms::getInstance().isMTD();
     bool isPixelTracker = t.isPixelTracker();
 
     std::pair<double, double> rz;
@@ -348,6 +351,7 @@ namespace insur {
   void Extractor::analyseEndcapContainer(std::vector<std::vector<ModuleCap> >& ec, Tracker& t, XmlTags& trackerXmlTags,
                                          std::vector<std::pair<double, double> >& up, std::vector<std::pair<double, double> >& down) {
     
+    bool isMTD = SimParms::getInstance().isMTD();
     bool isPixelTracker = t.isPixelTracker();
 
     int first, last;
@@ -485,6 +489,7 @@ namespace insur {
 				std::vector<PosInfo>& p, std::vector<AlgoInfo>& a, std::map<std::string,Rotation>& r, std::vector<SpecParInfo>& t, 
 				std::vector<RILengthInfo>& ri, bool wt) {
 
+    bool isMTD = SimParms::getInstance().isMTD();
     bool isPixelTracker = tr.isPixelTracker();
 
     // Container inits
@@ -1633,6 +1638,7 @@ namespace insur {
                                std::vector<Composite>& c, std::vector<LogicalInfo>& l, std::vector<ShapeInfo>& s, std::vector<ShapeOperationInfo>& so,
 			       std::vector<PosInfo>& p, std::vector<AlgoInfo>& a, std::map<std::string,Rotation>& r, std::vector<SpecParInfo>& t, std::vector<RILengthInfo>& ri, bool wt) {
 
+    bool isMTD = SimParms::getInstance().isMTD();
     bool isPixelTracker = tr.isPixelTracker();
 
     // Container inits
@@ -2192,6 +2198,7 @@ namespace insur {
   void Extractor::analyseServices(InactiveSurfaces& is, bool& isPixelTracker, XmlTags& trackerXmlTags,
 					std::vector<Composite>& c, std::vector<LogicalInfo>& l,
                                         std::vector<ShapeInfo>& s, std::vector<PosInfo>& p, std::vector<SpecParInfo>& t, bool wt) {
+    bool isMTD = SimParms::getInstance().isMTD();
     // container inits
     ShapeInfo shape;
     LogicalInfo logic;
@@ -2386,6 +2393,7 @@ namespace insur {
   void Extractor::analyseSupports(InactiveSurfaces& is, bool& isPixelTracker, XmlTags& trackerXmlTags,
 				  std::vector<Composite>& c, std::vector<LogicalInfo>& l,
                                   std::vector<ShapeInfo>& s, std::vector<PosInfo>& p, std::vector<SpecParInfo>& t, bool wt) {
+    bool isMTD = SimParms::getInstance().isMTD();
     // container inits
     ShapeInfo shape;
     LogicalInfo logic;

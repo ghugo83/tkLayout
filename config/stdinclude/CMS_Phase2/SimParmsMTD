@@ -1,6 +1,6 @@
 SimParms {
 
-    isMTD            0
+    isMTD            1
 
     numMinBiasEvents 140      // Number of pile-up events
     bunchSpacingNs 25

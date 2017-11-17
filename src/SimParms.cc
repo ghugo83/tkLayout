@@ -15,6 +15,7 @@ SimParms& SimParms::getInstance()
 // Private constructor -> needed for singleton pattern
 //
 SimParms::SimParms() :
+    isMTD("isMTD", parsedAndChecked()),
     numMinBiasEvents("numMinBiasEvents", parsedAndChecked()),
     bunchSpacingNs("bunchSpacingNs", parsedAndChecked()),
     zErrorCollider("zErrorCollider", parsedAndChecked()),

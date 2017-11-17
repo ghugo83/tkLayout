@@ -23,6 +23,8 @@ public:
   //! SimParms access method -> get instance of singleton class SimParms
   static SimParms& getInstance();
 
+  ReadonlyProperty<bool, NoDefault> isMTD;
+
   ReadonlyProperty<int, NoDefault> numMinBiasEvents;
   ReadonlyProperty<int, NoDefault> bunchSpacingNs;
 

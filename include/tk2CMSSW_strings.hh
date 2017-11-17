@@ -351,7 +351,7 @@ namespace insur {
 
     struct XmlTags {
       XmlTags(bool isPixelTracker, bool isMTD) : 
-      nspace(!isPixelTracker ? xml_fileident : xml_PX_fileident),
+        nspace(!isPixelTracker ? (!isMTD ? xml_fileident : xml_MTDfileident) : xml_PX_fileident),
 	tracker(!isPixelTracker ? xml_OT : xml_PX),
 	bar(!isPixelTracker ? xml_OT_bar : xml_PX_bar),
 	fwd(!isPixelTracker ? xml_OT_fwd : xml_PX_fwd),

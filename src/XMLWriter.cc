@@ -433,7 +433,7 @@ namespace insur {
     void XMLWriter::logicalPartSection(std::vector<LogicalInfo>& l, std::string label, std::ostringstream& stream, bool isPixelTracker, XmlTags& trackerXmlTags, bool wt) {
         std::vector<LogicalInfo>::const_iterator iter, guard = l.end();
         stream << xml_logical_part_section_open << label << xml_general_inter;
-        if (!wt && !isPixelTracker) logicalPart(xml_tracker, trackerXmlTags.nspace + ":" + xml_tracker, xml_material_air, stream, trackerXmlTags);
+        if (!wt && !isPixelTracker && trackerXmlTags.nspace != "mtd" ) logicalPart(xml_tracker, trackerXmlTags.nspace + ":" + xml_tracker, xml_material_air, stream, trackerXmlTags);
         for (iter = l.begin(); iter != guard; iter++) logicalPart(iter->name_tag, iter->shape_tag, iter->material_tag, stream, trackerXmlTags);
         stream << xml_logical_part_section_close;
     }

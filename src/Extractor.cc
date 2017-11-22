@@ -1003,7 +1003,9 @@ namespace insur {
 		// LogicalPartSection
 		logic.name_tag = shape.name_tag;
 		logic.shape_tag = trackerXmlTags.nspace + ":" + logic.name_tag;
-		logic.material_tag = xml_fileident + ":" + xml_tkLayout_material + (iiter->getModule().isTimingModule() && iiter->getModule().subdet() == BARREL ? xml_sensor_LYSO : xml_sensor_silicon);
+        std::string prefix = xml_fileident;
+        if ( isMTD ) { prefix = xml_MTDfileident; }
+		logic.material_tag = prefix + ":" + xml_tkLayout_material + (iiter->getModule().isTimingModule() && iiter->getModule().subdet() == BARREL ? xml_sensor_LYSO : xml_sensor_silicon);
 		l.push_back(logic);
 
 		// PosPart section
@@ -1090,7 +1092,9 @@ namespace insur {
 		  // LogicalPartSection
 		  logic.name_tag = shape.name_tag;
 		  logic.shape_tag = trackerXmlTags.nspace + ":" + logic.name_tag;
-		  logic.material_tag = xml_fileident + ":" + xml_tkLayout_material + xml_sensor_LYSO;
+          std::string prefix = xml_fileident;
+          if ( isMTD ) { prefix = xml_MTDfileident; }
+		  logic.material_tag = prefix + ":" + xml_tkLayout_material + xml_sensor_LYSO;
 		  l.push_back(logic);
 
 		  // LOOP ON ALL CRYSTALS IN THE MODULE
@@ -1943,7 +1947,9 @@ namespace insur {
 
 	      logic.name_tag = shape.name_tag;
 	      logic.shape_tag = trackerXmlTags.nspace + ":" + logic.name_tag;
-	      logic.material_tag = xml_fileident + ":" + xml_tkLayout_material + xml_sensor_silicon;
+          std::string prefix = xml_fileident;
+          if ( isMTD ) { prefix = xml_MTDfileident; }
+	      logic.material_tag = prefix + ":" + xml_tkLayout_material + xml_sensor_silicon;
 	      l.push_back(logic);
 
 	      if (iiter->getModule().numSensors() == 2) pos.parent_tag = trackerXmlTags.nspace + ":" + mname.str() + xml_base_lowerupper + xml_base_waf;
@@ -1980,7 +1986,9 @@ namespace insur {
 
 		logic.name_tag = shape.name_tag;
 		logic.shape_tag = trackerXmlTags.nspace + ":" + logic.name_tag;
-		logic.material_tag = xml_fileident + ":" + xml_tkLayout_material + xml_sensor_silicon;
+        std::string prefix = xml_fileident;
+        if ( isMTD ) { prefix = xml_MTDfileident; }
+		logic.material_tag = prefix + ":" + xml_tkLayout_material + xml_sensor_silicon;
 		l.push_back(logic);
 
 		pos.parent_tag = trackerXmlTags.nspace + ":" + mname.str() + xml_base_lowerupper + xml_base_waf;
@@ -2942,10 +2950,12 @@ namespace insur {
                                                              center(module.center()),
                                                              normal(module.normal()),
                                                              prefix_material(xml_hybrid_comp) {
+    bool isMTD = SimParms::getInstance().isMTD();
     if (!module.isPixelModule()) {
       if (!module.isTimingModule()) expandedModThickness = sensorDistance + 2.0 * (supportPlateThickness + sensorThickness);
       else expandedModThickness = sensorThickness + 2.0 * MAX(supportPlateThickness, hybridThickness);
       prefix_xmlfile = xml_fileident + ":";
+      if ( isMTD ) { prefix_xmlfile = xml_MTDfileident + ":"; }
       nTypes = 9;
     }
     else {

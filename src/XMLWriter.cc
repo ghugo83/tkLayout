@@ -116,7 +116,7 @@ namespace insur {
       posPartSection(p, a, xml_newtrackerfile, buffer);
     }
     else {
-      if (!isPixelTracker) buffer << xml_const_section;
+      if (!isPixelTracker && trackerXmlTags.nspace != "mtd" ) buffer << xml_const_section;
       materialSection(trackerXmlTags.trackerfile, e, c, buffer, isPixelTracker, trackerXmlTags);
       rotationSection(r, trackerXmlTags.trackerfile, buffer);
       logicalPartSection(l, trackerXmlTags.trackerfile, buffer, isPixelTracker, trackerXmlTags);
@@ -607,7 +607,9 @@ namespace insur {
       stream << xml_general_inter;
       for (const auto& elem : elements) {
 	stream << xml_material_fraction_open << elem.second << xml_material_fraction_inter;
-	stream << xml_fileident << ":" << xml_tkLayout_material << elem.first << xml_material_fraction_close;
+    std::string prefix = xml_fileident;
+    if ( trackerXmlTags.nspace == "mtd" ) { prefix = xml_MTDfileident; }
+	stream << prefix << ":" << xml_tkLayout_material << elem.first << xml_material_fraction_close;
       }
       stream << xml_composite_material_close;
 

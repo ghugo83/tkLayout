@@ -16,8 +16,6 @@
 #include "TProfile.h"
 #include "TMath.h"
 
-#undef MATERIAL_SHADOW
-
 #include <TError.h>
 Int_t gErrorIgnoreLevel = kError;
 
@@ -128,18 +126,18 @@ namespace insur {
     //      active volumes, endcap
     totalMaterial += findHitsModules(mb.getEndcapModuleCaps(), track);
     //      services, barrel
-    totalMaterial += findHitsInactiveSurfaces(mb.getInactiveSurfaces().getBarrelServices(), track);
+    totalMaterial += findHitInactiveElement(track, mb.getInactiveSurfaces().getBarrelServices());
     //      services, endcap
-    totalMaterial += findHitsInactiveSurfaces(mb.getInactiveSurfaces().getEndcapServices(), track);
+    totalMaterial += findHitInactiveElement(track, mb.getInactiveSurfaces().getEndcapServices());
     //      supports
-    totalMaterial += findHitsInactiveSurfaces(mb.getInactiveSurfaces().getSupports(), track);
+    totalMaterial += findHitInactiveElement(track, mb.getInactiveSurfaces().getSupports());
     //      pixels, if they exist
     if (pm != NULL) {
       totalMaterial += findHitsModules(pm->getBarrelModuleCaps(), track, true);
       totalMaterial += findHitsModules(pm->getEndcapModuleCaps(), track, true);
-      totalMaterial += findHitsInactiveSurfaces(pm->getInactiveSurfaces().getBarrelServices(), track, true);
-      totalMaterial += findHitsInactiveSurfaces(pm->getInactiveSurfaces().getEndcapServices(), track, true);
-      totalMaterial += findHitsInactiveSurfaces(pm->getInactiveSurfaces().getSupports(), track, true);
+      totalMaterial += findHitInactiveElement(track, pm->getInactiveSurfaces().getBarrelServices(), true);
+      totalMaterial += findHitInactiveElement(track, pm->getInactiveSurfaces().getEndcapServices(), true);
+      totalMaterial += findHitInactiveElement(track, pm->getInactiveSurfaces().getSupports(), true);
     }
     return totalMaterial;
   }
@@ -918,14 +916,12 @@ void Analyzer::analyzeMaterialBudget(MaterialBudget& mb, const std::vector<doubl
   int nTracks;
   double etaStep, eta, theta, phi;
   clearMaterialBudgetHistograms();
-  clearCells();
   // prepare etaStep, phiStep, nTracks, nScans
   if (etaSteps > 1) etaStep = getEtaMaxMaterial() / (double)(etaSteps - 1);
   else etaStep = getEtaMaxMaterial();
   nTracks = etaSteps;
   // reset the number of bins and the histogram boundaries (0.0 to getEtaMaxMaterial()) for all histograms, recalculate the cell boundaries
   setHistogramBinsBoundaries(nTracks, 0.0, getEtaMaxMaterial());
-  setCellBoundaries(nTracks, 0.0, geom_max_radius + geom_inactive_volume_width, 0.0, getEtaMaxMaterial());
 
   // reset the list of tracks
   // std::vector<Track> tv;
@@ -993,112 +989,97 @@ void Analyzer::analyzeMaterialBudget(MaterialBudget& mb, const std::vector<doubl
       iComponents["Supports"]->SetBins(nTracks, 0.0, getEtaMaxMaterial()); 
     }
 
-    std::map<std::string, Material> sumServicesComponentsRI;
+    bool isPixel = false;
+    const bool isMaterialAnalysis = true;
 
     //      services, barrel
-    tmp = analyzeInactiveSurfaces(mb.getInactiveSurfaces().getBarrelServices(), track, sumServicesComponentsRI, MaterialProperties::no_cat);
-    rserfbarrel.Fill(eta, tmp.radiation);
-    iserfbarrel.Fill(eta, tmp.interaction);
-    rbarrelall.Fill(eta, tmp.radiation);
-    ibarrelall.Fill(eta, tmp.interaction);
-    rserfall.Fill(eta, tmp.radiation);
-    iserfall.Fill(eta, tmp.interaction);
-    rglobal.Fill(eta, tmp.radiation);
-    iglobal.Fill(eta, tmp.interaction);
-    rComponents["Services"]->Fill(eta, tmp.radiation);
-    iComponents["Services"]->Fill(eta, tmp.interaction);
+    const Material servicesBarrel = findHitInactiveElement(track, mb.getInactiveSurfaces().getBarrelServices(), isPixel, MaterialProperties::no_cat, isMaterialAnalysis);
+    rserfbarrel.Fill(eta, servicesBarrel.radiation);
+    iserfbarrel.Fill(eta, servicesBarrel.interaction);
+    rbarrelall.Fill(eta, servicesBarrel.radiation);
+    ibarrelall.Fill(eta, servicesBarrel.interaction);
+    rserfall.Fill(eta, servicesBarrel.radiation);
+    iserfall.Fill(eta, servicesBarrel.interaction);
+    rglobal.Fill(eta, servicesBarrel.radiation);
+    iglobal.Fill(eta, servicesBarrel.interaction);
+    rComponents["Services"]->Fill(eta, servicesBarrel.radiation);
+    iComponents["Services"]->Fill(eta, servicesBarrel.interaction);
     //      services, endcap
-    tmp = analyzeInactiveSurfaces(mb.getInactiveSurfaces().getEndcapServices(), track, sumServicesComponentsRI, MaterialProperties::no_cat);
-    rserfendcap.Fill(eta, tmp.radiation);
-    iserfendcap.Fill(eta, tmp.interaction);
-    rendcapall.Fill(eta, tmp.radiation);
-    iendcapall.Fill(eta, tmp.interaction);
-    rserfall.Fill(eta, tmp.radiation);
-    iserfall.Fill(eta, tmp.interaction);
-    rglobal.Fill(eta, tmp.radiation);
-    iglobal.Fill(eta, tmp.interaction);
-    rComponents["Services"]->Fill(eta, tmp.radiation);
-    iComponents["Services"]->Fill(eta, tmp.interaction);
-
-
-    /*for (std::map<std::string, Material>::iterator it = sumServicesComponentsRI.begin(); it != sumServicesComponentsRI.end(); ++it) {
-      if (rComponents[it->first]==NULL) { 
-      rComponents[it->first] = new TH1D();
-      rComponents[it->first]->SetBins(nTracks, 0.0, getEtaMaxMaterial()); 
-      }
-      rComponents[it->first]->Fill(eta, it->second.radiation);
-      if (iComponents[it->first]==NULL) {
-      iComponents[it->first] = new TH1D();
-      iComponents[it->first]->SetBins(nTracks, 0.0, getEtaMaxMaterial()); 
-      }
-      iComponents[it->first]->Fill(eta, it->second.interaction);
-      }*/
-
-
+    const Material servicesEndcap = findHitInactiveElement(track, mb.getInactiveSurfaces().getEndcapServices(), isPixel, MaterialProperties::no_cat, isMaterialAnalysis);
+    rserfendcap.Fill(eta, servicesEndcap.radiation);
+    iserfendcap.Fill(eta, servicesEndcap.interaction);
+    rendcapall.Fill(eta, servicesEndcap.radiation);
+    iendcapall.Fill(eta, servicesEndcap.interaction);
+    rserfall.Fill(eta, servicesEndcap.radiation);
+    iserfall.Fill(eta, servicesEndcap.interaction);
+    rglobal.Fill(eta, servicesEndcap.radiation);
+    iglobal.Fill(eta, servicesEndcap.interaction);
+    rComponents["Services"]->Fill(eta, servicesEndcap.radiation);
+    iComponents["Services"]->Fill(eta, servicesEndcap.interaction);
 
     //      supports, barrel
-    tmp = analyzeInactiveSurfaces(mb.getInactiveSurfaces().getSupports(), track, sumServicesComponentsRI, MaterialProperties::b_sup);
-    rlazybarrel.Fill(eta, tmp.radiation);
-    ilazybarrel.Fill(eta, tmp.interaction);
-    rbarrelall.Fill(eta, tmp.radiation);
-    ibarrelall.Fill(eta, tmp.interaction);
-    rlazyall.Fill(eta, tmp.radiation);
-    ilazyall.Fill(eta, tmp.interaction);
-    rglobal.Fill(eta, tmp.radiation);
-    iglobal.Fill(eta, tmp.interaction);
-    rComponents["Supports"]->Fill(eta, tmp.radiation);
-    iComponents["Supports"]->Fill(eta, tmp.interaction);
+    const Material supportsBarrel = findHitInactiveElement(track, mb.getInactiveSurfaces().getSupports(), isPixel, MaterialProperties::b_sup, isMaterialAnalysis);
+    rlazybarrel.Fill(eta, supportsBarrel.radiation);
+    ilazybarrel.Fill(eta, supportsBarrel.interaction);
+    rbarrelall.Fill(eta, supportsBarrel.radiation);
+    ibarrelall.Fill(eta, supportsBarrel.interaction);
+    rlazyall.Fill(eta, supportsBarrel.radiation);
+    ilazyall.Fill(eta, supportsBarrel.interaction);
+    rglobal.Fill(eta, supportsBarrel.radiation);
+    iglobal.Fill(eta, supportsBarrel.interaction);
+    rComponents["Supports"]->Fill(eta, supportsBarrel.radiation);
+    iComponents["Supports"]->Fill(eta, supportsBarrel.interaction);
     //      supports, endcap
-    tmp = analyzeInactiveSurfaces(mb.getInactiveSurfaces().getSupports(), track, sumServicesComponentsRI, MaterialProperties::e_sup);
-    rlazyendcap.Fill(eta, tmp.radiation);
-    ilazyendcap.Fill(eta, tmp.interaction);
-    rendcapall.Fill(eta, tmp.radiation);
-    iendcapall.Fill(eta, tmp.interaction);
-    rlazyall.Fill(eta, tmp.radiation);
-    ilazyall.Fill(eta, tmp.interaction);
-    rglobal.Fill(eta, tmp.radiation);
-    iglobal.Fill(eta, tmp.interaction);
-    rComponents["Supports"]->Fill(eta, tmp.radiation);
-    iComponents["Supports"]->Fill(eta, tmp.interaction);
+    const Material supportsEndcap = findHitInactiveElement(track, mb.getInactiveSurfaces().getSupports(), isPixel, MaterialProperties::e_sup, isMaterialAnalysis);
+    rlazyendcap.Fill(eta, supportsEndcap.radiation);
+    ilazyendcap.Fill(eta, supportsEndcap.interaction);
+    rendcapall.Fill(eta, supportsEndcap.radiation);
+    iendcapall.Fill(eta, supportsEndcap.interaction);
+    rlazyall.Fill(eta, supportsEndcap.radiation);
+    ilazyall.Fill(eta, supportsEndcap.interaction);
+    rglobal.Fill(eta, supportsEndcap.radiation);
+    iglobal.Fill(eta, supportsEndcap.interaction);
+    rComponents["Supports"]->Fill(eta, supportsEndcap.radiation);
+    iComponents["Supports"]->Fill(eta, supportsEndcap.interaction);
     //      supports, tubes
-    tmp = analyzeInactiveSurfaces(mb.getInactiveSurfaces().getSupports(), track, sumServicesComponentsRI, MaterialProperties::o_sup);
-    rlazytube.Fill(eta, tmp.radiation);
-    ilazytube.Fill(eta, tmp.interaction);
-    rlazyall.Fill(eta, tmp.radiation);
-    ilazyall.Fill(eta, tmp.interaction);
-    rglobal.Fill(eta, tmp.radiation);
-    iglobal.Fill(eta, tmp.interaction);
-    rComponents["Supports"]->Fill(eta, tmp.radiation);
-    iComponents["Supports"]->Fill(eta, tmp.interaction);
+    const Material supportsTubs = findHitInactiveElement(track, mb.getInactiveSurfaces().getSupports(), isPixel, MaterialProperties::o_sup, isMaterialAnalysis);
+    rlazytube.Fill(eta, supportsTubs.radiation);
+    ilazytube.Fill(eta, supportsTubs.interaction);
+    rlazyall.Fill(eta, supportsTubs.radiation);
+    ilazyall.Fill(eta, supportsTubs.interaction);
+    rglobal.Fill(eta, supportsTubs.radiation);
+    iglobal.Fill(eta, supportsTubs.interaction);
+    rComponents["Supports"]->Fill(eta, supportsTubs.radiation);
+    iComponents["Supports"]->Fill(eta, supportsTubs.interaction);
     //      supports, barrel tubes
-    tmp = analyzeInactiveSurfaces(mb.getInactiveSurfaces().getSupports(), track, sumServicesComponentsRI, MaterialProperties::t_sup);
-    rlazybtube.Fill(eta, tmp.radiation);
-    ilazybtube.Fill(eta, tmp.interaction);
-    rlazyall.Fill(eta, tmp.radiation);
-    ilazyall.Fill(eta, tmp.interaction);
-    rglobal.Fill(eta, tmp.radiation);
-    iglobal.Fill(eta, tmp.interaction);
-    rComponents["Supports"]->Fill(eta, tmp.radiation);
-    iComponents["Supports"]->Fill(eta, tmp.interaction);
+    const Material supportsBarrelTubs = findHitInactiveElement(track, mb.getInactiveSurfaces().getSupports(), isPixel, MaterialProperties::t_sup, isMaterialAnalysis);
+    rlazybtube.Fill(eta, supportsBarrelTubs.radiation);
+    ilazybtube.Fill(eta, supportsBarrelTubs.interaction);
+    rlazyall.Fill(eta, supportsBarrelTubs.radiation);
+    ilazyall.Fill(eta, supportsBarrelTubs.interaction);
+    rglobal.Fill(eta, supportsBarrelTubs.radiation);
+    iglobal.Fill(eta, supportsBarrelTubs.interaction);
+    rComponents["Supports"]->Fill(eta, supportsBarrelTubs.radiation);
+    iComponents["Supports"]->Fill(eta, supportsBarrelTubs.interaction);
     //      supports, user defined
-    tmp = analyzeInactiveSurfaces(mb.getInactiveSurfaces().getSupports(), track, sumServicesComponentsRI, MaterialProperties::u_sup);
-    rlazyuserdef.Fill(eta, tmp.radiation);
-    ilazyuserdef.Fill(eta, tmp.interaction);
-    rlazyall.Fill(eta, tmp.radiation);
-    ilazyall.Fill(eta, tmp.interaction);
-    rglobal.Fill(eta, tmp.radiation);
-    iglobal.Fill(eta, tmp.interaction);
-    rComponents["Supports"]->Fill(eta, tmp.radiation);
-    iComponents["Supports"]->Fill(eta, tmp.interaction);
+    const Material supportsUserDefined = findHitInactiveElement(track, mb.getInactiveSurfaces().getSupports(), isPixel, MaterialProperties::u_sup, isMaterialAnalysis);
+    rlazyuserdef.Fill(eta, supportsUserDefined.radiation);
+    ilazyuserdef.Fill(eta, supportsUserDefined.interaction);
+    rlazyall.Fill(eta, supportsUserDefined.radiation);
+    ilazyall.Fill(eta, supportsUserDefined.interaction);
+    rglobal.Fill(eta, supportsUserDefined.radiation);
+    iglobal.Fill(eta, supportsUserDefined.interaction);
+    rComponents["Supports"]->Fill(eta, supportsUserDefined.radiation);
+    iComponents["Supports"]->Fill(eta, supportsUserDefined.interaction);
     //      pixels, if they exist
     std::map<std::string, Material> ignoredPixelSumComponentsRI;
-    std::map<std::string, Material> ignoredPixelSumServicesComponentsRI;
     if (pm != nullptr) {
+      isPixel = true;
       analyzeModules(pm->getBarrelModuleCaps(), track, ignoredPixelSumComponentsRI, true);
       analyzeModules(pm->getEndcapModuleCaps(), track, ignoredPixelSumComponentsRI, true);
-      analyzeInactiveSurfaces(pm->getInactiveSurfaces().getBarrelServices(), track, ignoredPixelSumServicesComponentsRI, MaterialProperties::no_cat, true);
-      analyzeInactiveSurfaces(pm->getInactiveSurfaces().getEndcapServices(), track, ignoredPixelSumServicesComponentsRI, MaterialProperties::no_cat, true);
-      analyzeInactiveSurfaces(pm->getInactiveSurfaces().getSupports(),       track, ignoredPixelSumServicesComponentsRI, MaterialProperties::b_sup, true);
+      findHitInactiveElement(track, pm->getInactiveSurfaces().getBarrelServices(), isPixel, MaterialProperties::no_cat, isMaterialAnalysis);
+      findHitInactiveElement(track, pm->getInactiveSurfaces().getEndcapServices(), isPixel, MaterialProperties::no_cat, isMaterialAnalysis);
+      findHitInactiveElement(track, pm->getInactiveSurfaces().getSupports(), isPixel,       MaterialProperties::b_sup, isMaterialAnalysis);
     }
 
     // TODO: add the beam pipe as a user material eveywhere!
@@ -1206,23 +1187,6 @@ void Analyzer::analyzeMaterialBudget(MaterialBudget& mb, const std::vector<doubl
 
 
   } // loop on eta
-
-
-
-
-
-#ifdef MATERIAL_SHADOW       
-  // integration over eta
-  for (unsigned int i = 0; i < cells.size(); i++) {
-    for (unsigned int j = 1; j < cells.at(i).size(); j++) {
-      cells.at(i).at(j).rlength = cells.at(i).at(j).rlength + cells.at(i).at(j - 1).rlength;
-      cells.at(i).at(j).ilength = cells.at(i).at(j).ilength + cells.at(i).at(j - 1).ilength;
-    }
-  }
-  // transformation from (eta, r) to (z, r) coordinates
-  transformEtaToZ();
-#endif // MATERIAL_SHADOW
-
 }
 
 
@@ -1540,13 +1504,14 @@ Material Analyzer::findModuleLayerRI(std::vector<ModuleCap>& layer,
           // module was hit
           hits++;
           r = distance * sin(track.getTheta());
+	  const double z = distance * cos(track.getTheta());
           tmp.radiation = iter->getRadiationLength();
           tmp.interaction = iter->getInteractionLength();
 
           Module& m = iter->getModule();
           double tiltAngle = m.tiltAngle();
           // 2D material maps
-          fillMapRT(r, track.getTheta(), tmp);
+          fillMapRZ(r, z, tmp);
           // radiation and interaction length scaling for barrels
           if (iter->getModule().subdet() == BARREL) {
             tmp.radiation = tmp.radiation / sin(track.getTheta() + tiltAngle);
@@ -1568,8 +1533,6 @@ Material Analyzer::findModuleLayerRI(std::vector<ModuleCap>& layer,
             sumComponentsRI[cit->first].interaction += cit->second.interaction / (iter->getModule().subdet() == BARREL ? sin(track.getTheta() + tiltAngle) : cos(track.getTheta() + tiltAngle - M_PI/2));
             tmpi += sumComponentsRI[cit->first].interaction;
           }
-          // 2D plot and eta plot results
-          if (!isPixel) fillCell(r, track.getEta(), track.getTheta(), tmp);
           res += tmp;
 
           // Create Hit object with appropriate parameters, add to Track t
@@ -1710,138 +1673,115 @@ Material Analyzer::findHitsModuleLayer(std::vector<ModuleCap>& layer, Track& t, 
   return res;
 }
 
-/**
- * The analysis function for inactive volumes loops through the given vector of elements, checking for collisions with
- * the given track. If one is found, the radiation and interaction lengths are scaled with respect to theta, then summed
- * up into a grand total, which is returned. As all inactive volumes are symmetric with respect to rotation around the
- * z-axis, the track angle phi is not necessary.
- * @param elements A reference to the collection of inactive surfaces that is to be checked for collisions with the track
- * @param eta The pseudorapidity of the current track
- * @param theta The track angle in the yz-plane
- * @param t A reference to the current track object
- * @param cat The category of inactive surfaces that need to be considered within the collection; none if the function is to look at all of them
- * @param A boolean flag to indicate which set of active surfaces isa nalysed: true if the belong to a pixel detector, false if they belong to the tracker
- * @return The scaled and summed up radiation and interaction lengths for the given collection of elements and track, bundled into a <i>std::pair</i>
- */
-
-Material Analyzer::analyzeInactiveSurfaces(std::vector<InactiveElement>& elements, Track& track,
-                                           std::map<std::string, Material>& sumServicesComponentsRI, MaterialProperties::Category cat, bool isPixel) {
-
-  /*
-  for (InactiveElement& currElem : elements) {
-    currElem.calculateTotalMass();
-    currElem.calculateRadiationLength();
-    currElem.calculateInteractionLength();
-  }
+  /**
+     Checks whether a track hits an ensemble of inactive elements specified in input.
+     If hit, the hit position and crossed MB is obtained.
+     The corresponding inactive hit is added to the track.
+     The total MB encountered by the track is returned.
+     @param tag: Allows to select a given category of Inactive Elements to be only looked at (Service, Support).
   */
-  
-  std::vector<InactiveElement>::iterator iter = elements.begin();
-  std::vector<InactiveElement>::iterator guard = elements.end();
-  Material res, corr;
-  std::pair<double, double> tmp;
-  double s = 0.0;
-  while ((iter != guard)) {
-    //if  ((iter->getInteractionLength() > 0) && (iter->getRadiationLength() > 0)) {
-    // collision detection: rays are in z+ only, so only volumes in z+ need to be considered
-    // only volumes of the requested category, or those without one (which should not exist) are examined
-    if (((iter->getZOffset() + iter->getZLength()) > 0)
-        && ((cat == MaterialProperties::no_cat) || (cat == iter->getCategory()))) {
-      // collision detection: check eta range
-      tmp = iter->getEtaMinMax();
-      // volume was hit
-      if ((tmp.first < track.getEta()) && (tmp.second > track.getEta())) {
-        double rPos, zPos;
-        /*
-        if (eta<0.01) {
-          std::cout << "Hitting an inactive surface at z=("
-                    << iter->getZOffset() << " to " << iter->getZOffset()+iter->getZLength()
-                    << ") r=(" << iter->getInnerRadius() << " to " << iter->getInnerRadius()+iter->getRWidth() << ")" << std::endl;
-          const std::map<std::string, double>& localMasses = iter->getLocalMasses();
-          for (auto massIt : localMasses) std::cerr   << "       localMass" <<  massIt.first << " = " << any2str(massIt.second) << " g" << std::endl;
-        }
-        */
-        // radiation and interaction lenth scaling for vertical volumes
-        if (iter->isVertical()) {
-          zPos = iter->getZOffset() + iter->getZLength() / 2.0;
-          rPos = zPos * tan(track.getTheta());
-          // 2D maps for vertical surfaces
-          fillMapRZ(rPos,zPos,iter->getMaterialLengths());
-         
-          corr.radiation = iter->getRadiationLength() / cos(track.getTheta());
-          corr.interaction = iter->getInteractionLength() / cos(track.getTheta());
-          res += corr;
-          if (!isPixel) {
 
-            Material thisLength;
-            thisLength.radiation = corr.radiation;
-            thisLength.interaction = corr.interaction;
-            fillCell(rPos, track.getEta(), track.getTheta(), thisLength);
-          }
-        }
-        // radiation and interaction length scaling for horizontal volumes
-        else {
-          rPos = iter->getInnerRadius() + iter->getRWidth() / 2.0;
-          zPos = rPos/tan(track.getTheta());
-          // 2D maps for horizontal surfaces
-          fillMapRT(rPos,track.getTheta(),iter->getMaterialLengths());
-          // special treatment for user-defined supports; should not be necessary for now
-          // as all user-defined supports are vertical, but just in case...
+  const Material Analyzer::findHitInactiveElement(Track& track, std::vector<InactiveElement>& elements,  
+					    const bool isPixel, const MaterialProperties::Category tag, 
+					    const bool isMaterialAnalysis) {
+    const XYZVector& trackOrig = track.getOrigin();
+    XYZVector trackDir;
+    trackDir = track.getDirection();
 
-          corr.radiation = iter->getRadiationLength() / sin(track.getTheta());
-          corr.interaction = iter->getInteractionLength() / sin(track.getTheta());
-          res += corr;
-          if (!isPixel) {
-            Material thisLength;
-            thisLength.radiation = corr.radiation;
-            thisLength.interaction =  corr.interaction;
-            fillCell(rPos, track.getEta(), track.getTheta(), thisLength);
-          }
-        }
+    Material total;
+ 
+    // Loop on inactive elements
+    for (auto& elem : elements) {
+      // Select only volumes of the requested category, or those without one
+      if (elem.getCategory() == tag || tag == MaterialProperties::no_cat ) {
 
-        // Create Hit object with appropriate parameters, add to Track t
-        if ((iter->getCategory() != MaterialProperties::b_sup)
-	           && (iter->getCategory() != MaterialProperties::e_sup)
-	           && (iter->getCategory() != MaterialProperties::o_sup)
-	           && (iter->getCategory() != MaterialProperties::u_sup)
-	           && (iter->getCategory() != MaterialProperties::t_sup)) {
+	XYZVector hitPos;
+	Material hitMaterial;
 
-          sumServicesComponentsRI["Services : others"].radiation += corr.radiation;
-          sumServicesComponentsRI["Services : others"].interaction += corr.interaction;
-        }
-
-        if ((iter->getCategory() == MaterialProperties::b_ser)
-      	    || (iter->getCategory() == MaterialProperties::e_ser)) {
-
-          HitPtr hit(new Hit(rPos, zPos, &(*iter), HitPassiveType::Service));
-          if (isPixel) hit->setAsPixel();
-          hit->setCorrectedMaterial(corr);
-          track.addHit(std::move(hit));
-	      }
-	      else if ((iter->getCategory() == MaterialProperties::b_sup)
-		        || (iter->getCategory() == MaterialProperties::e_sup)
-		        || (iter->getCategory() == MaterialProperties::o_sup)
-		        || (iter->getCategory() == MaterialProperties::t_sup)) {
-
-	        HitPtr hit(new Hit(rPos, zPos, &(*iter), HitPassiveType::Support));
-	        if (isPixel) hit->setAsPixel();
-          hit->setCorrectedMaterial(corr);
-          track.addHit(std::move(hit));
-	      }
-	      else if (iter->getCategory() == MaterialProperties::no_cat) {
-
-	        HitPtr hit(new Hit(rPos, zPos, &(*iter), HitPassiveType::Service));
-	        if (isPixel) hit->setAsPixel();
-          hit->setCorrectedMaterial(corr);
-          track.addHit(std::move(hit));
-	      }
+	// Checks whether track hits the inactive element.
+	// If yes, return true with passed hit position vector & material. 
+	bool isHit = elem.checkTrackHits(trackOrig, trackDir, hitPos, hitMaterial);
 
 
+
+	// DELETE!!!!
+	/*double theta0, theta1;
+	// rings
+	if (elem.isVertical()) {
+	  // up point
+	  theta0 = atan((elem.getInnerRadius() + elem.getRWidth()) / (elem.getZLength() / 2.0 + elem.getZOffset() - trackOrig.Z() ));
+	  // down point
+	  theta1 = atan(elem.getInnerRadius() / (elem.getZLength() / 2.0 + elem.getZOffset() - trackOrig.Z()));
+	}
+	// tubes
+	else {
+	  // left point
+	  theta0 = atan((elem.getRWidth() / 2.0 + elem.getInnerRadius()) / (elem.getZOffset() - trackOrig.Z()) );
+	  // right point
+	  theta1 = atan((elem.getRWidth() / 2.0 + elem.getInnerRadius()) / (elem.getZOffset() + elem.getZLength() - trackOrig.Z()));
+	}
+	// convert angle theta to pseudorapidity eta
+	const double etaMin = -1 * log(tan(theta0 / 2.0));    // TODO change to the default converters
+	const double etaMax = -1 * log(tan(theta1 / 2.0));   // TODO change to the default converters
+	bool isHit = (trackDir.Eta() >= etaMin && trackDir.Eta() <= etaMax);*/
+
+
+
+
+	// Volume is hit
+	if (isHit) {
+	  const double hitRho = hitPos.Rho();
+	  const double hitZ = hitPos.Z();
+
+
+	  // DELETE !!
+	  /*double testRho = 0.;
+	  double testZ = 0.;
+	  double factor = 0.;
+	  if (elem.isVertical()) {
+	    testZ = (elem.getZOffset() + elem.getZMax()) / 2.;
+	    testRho = (testZ - trackOrig.Z()) * tan(trackDir.Theta());
+	    factor = 1. / cos(trackDir.Theta());
+	  }
+	  else {
+	    testRho = (elem.getInnerRadius() + elem.getOuterRadius()) / 2.;
+	    testZ = testRho / tan(trackDir.Theta()) + trackOrig.Z();
+	    factor = 1. / sin(trackDir.Theta());
+	  }
+	  Material testMaterial;
+	  testMaterial.radiation = elem.getRadiationLength() * factor;
+	  testMaterial.interaction = elem.getInteractionLength() * factor;*/
+
+
+
+	  if (isMaterialAnalysis) {
+	    // Fill Material Budget 2D map
+	    fillMapRZ(hitRho, hitZ, elem.getMaterialLengths());
+	    //fillMapRZ(testRho, testZ, elem.getMaterialLengths());
+	  }
+
+	  // Define type of inactive hit: service or support?
+	  HitPassiveType hitType = HitPassiveType::Undefined;
+	  if (elem.isService()) { hitType = HitPassiveType::Service; }
+	  else if (elem.isSupport()) { hitType = HitPassiveType::Support; }
+	  else { logERROR("Analyzed services / supports, but found an element which is of none of these types!"); }
+
+	  // Create Hit object with appropriate parameters
+	  HitPtr hit(new Hit(hitRho, hitZ, &elem, hitType));
+	  if (isPixel) hit->setAsPixel();
+	  hit->setCorrectedMaterial(hitMaterial);
+
+	  // Add the inactive hit to the track
+	  track.addHit(std::move(hit));
+
+	  // Total inactive MB
+	  total += hitMaterial;
+	  //total += testMaterial;
+	}
       }
     }
-    iter++;
+    return total;
   }
-  return res;
-}
 
 /**
  * The analysis function for inactive volumes loops through the given vector of elements, checking for collisions with
@@ -1854,6 +1794,7 @@ Material Analyzer::analyzeInactiveSurfaces(std::vector<InactiveElement>& element
  * @param isPixel Are we inside the Inner Tracker?
  * @return The scaled and summed up crossed material amount
  */
+/*
   Material Analyzer::findHitsInactiveSurfaces(std::vector<InactiveElement>& elements, Track& t, bool isPixel) {
     const XYZVector& trackOrig = t.getOrigin();
     XYZVector trackDir;
@@ -1883,17 +1824,11 @@ Material Analyzer::analyzeInactiveSurfaces(std::vector<InactiveElement>& element
 
 	// Total inactive MB
 	total += hitMaterial;
-
-	//        if (iter->isVertical()) hit->setOrientation(Hit::Vertical);
-	//        else hit->setOrientation(Hit::Horizontal);
-	//        hit->setObjectKind(Hit::Inactive);
-	//        hit->setPixel(isPixel);
-	//        t.addHit(hit);
       }
     }
     return total;
   }
-  
+*/ 
 
 void Analyzer::clearGraphsPt(int graphAttributes, const std::string& graphTag) {
   std::map<int, TGraph>& thisRhoGraphs_Pt      = graphTag.empty() ? myGraphBag.getGraphs(graphAttributes | GraphBag::RhoGraph_Pt      ) : myGraphBag.getTaggedGraphs(graphAttributes | GraphBag::RhoGraph_Pt     , graphTag);
@@ -2778,15 +2713,6 @@ void Analyzer::clearGeometryHistograms() {
   powerDensity.SetTitle("Power density;Total area [m^{2}];Power density [kW / m^{2}]");
 }
 
-/**
- * This convenience function sets all values in the internal array <i>cells</i> to zero.
- */
-void Analyzer::clearCells() {
-  for (unsigned int i = 0; i < cells.size(); i++) {
-    cells.at(i).clear();
-  }
-  cells.clear();
-}
 
 /**
  * This convenience function sets the number of bins and the lower and upper range for their contents for
@@ -2841,73 +2767,18 @@ void Analyzer::setHistogramBinsBoundaries(int bins, double min, double max) {
   mapInteractionCalib.SetBins(materialMapBinsX, 0.0, geom_max_length*geom_safety_factor, materialMapBinsY, 0.0, (geom_max_radius + geom_inactive_volume_width)*geom_safety_factor);
 }
 
-/**
- * This convenience function sets the number of bins and the lower and upper range for their contents for
- * each of the cells that make up the basis for the 2D histograms.
- * @param bins The number of bins in eta; the number of bins in r will be half that
- * @param minr The minimum radius that will be considered for tracking
- * @param maxr The maximum radius that will be considered for tracking
- * @param mineta The minimum value of eta that will be considered for tracking
- * @param maxeta The maximum value of eta that will be considered for tracking
- */
-void Analyzer::setCellBoundaries(int bins, double minr, double maxr, double mineta, double maxeta) {
-  double rstep, etastep;
-  rstep = 2 * (maxr - minr) / bins;
-  etastep = (maxeta - mineta) / bins;
-  Cell c;
-  c.rmin = 0.0;  // TODO: is this right?
-  c.rmax = 0.0;
-  c.etamin = 0.0;
-  c.etamax = 0.0;
-  c.rlength = 0.0;
-  c.ilength = 0.0;
-  cells.resize(bins);
-  for (unsigned int i = 0; i < cells.size(); i++) if (bins != 1) cells.at(i).resize(bins / 2, c);
-  for (unsigned int i = 0; i < cells.size(); i++) {
-    for (unsigned int j = 0; j < cells.at(i).size(); j++) {
-      cells.at(i).at(j).rmin = minr + j * rstep;
-      cells.at(i).at(j).rmax = minr + (j+1) * rstep;
-      cells.at(i).at(j).etamin = mineta + i * etastep;;
-      cells.at(i).at(j).etamax = mineta + (i+1) * etastep;
-    }
-  }
-}
-
 
 /**
- * Fills the material distribution maps
- * @param r The radius at which the hit was detected
- * @param theta The angle of the track used for meterial detection
- * @param rl The local radiation length
- * @param il The local interaction length
+ * Fills the 2D Material Budget maps.
  */
-void Analyzer::fillMapRT(const double& r, const double& theta, const Material& mat) {
-  double z = r /tan(theta);
-  if (mat.radiation>0){
-    mapRadiation.Fill(z,r,mat.radiation);
-    mapRadiationCount.Fill(z,r);
+void Analyzer::fillMapRZ(const double hitRho, const double hitZ, const Material& hitMaterial) {
+  if (hitMaterial.radiation > 0.){
+    mapRadiation.Fill(hitZ, hitRho, hitMaterial.radiation);
+    mapRadiationCount.Fill(hitZ, hitRho);
   } 
-  if (mat.interaction>0) {
-    mapInteraction.Fill(z,r,mat.interaction);
-    mapInteractionCount.Fill(z,r);
-  }
-}
-
-/**
- * Fills the material distribution maps
- * @param r The radius at which the hit was detected
- * @param z The z coordinate of the hit
- * @param rl The local radiation length
- * @param il The local interaction length
- */
-void Analyzer::fillMapRZ(const double& r, const double& z, const Material& mat) {
-  if (mat.radiation>0){
-    mapRadiation.Fill(z,r,mat.radiation);
-    mapRadiationCount.Fill(z,r);
-  } 
-  if (mat.interaction>0) {
-    mapInteraction.Fill(z,r,mat.interaction);
-    mapInteractionCount.Fill(z,r);
+  if (hitMaterial.interaction > 0.) {
+    mapInteraction.Fill(hitZ, hitRho, hitMaterial.interaction);
+    mapInteractionCount.Fill(hitZ, hitRho);
   }
 }
 
@@ -2945,142 +2816,6 @@ TH2D& Analyzer::getHistoMapInteraction() {
     //else if (count==0) mapInteractionCalib.SetBinContent(iBin, 0.);
   }
   return mapInteractionCalib;
-}
-
-
-/**
- * This function assigns the local radiation and interaction lengths of a detected hit to their position in the
- * (eta, r) space.
- * @param r The radius at which the hit was detected
- * @param eta The eta value of the current track
- * @param rl The local radiation length
- * @param il The local interaction length
- */
-void Analyzer::fillCell(double r, double eta, double theta, Material mat) {
-  double rl = mat.radiation;
-  double il = mat.interaction;
-  int rindex, etaindex;
-  if (cells.size() > 0) {
-    for (rindex = 0; (unsigned int) rindex < cells.at(0).size(); rindex++) {
-      if ((cells.at(0).at(rindex).rmin <= r) && (cells.at(0).at(rindex).rmax > r)) break;
-    }
-    if ((unsigned int) rindex < cells.at(0).size()) {
-      for (etaindex = 0; (unsigned int) etaindex < cells.size(); etaindex++) {
-        if ((cells.at(etaindex).at(rindex).etamin <= eta) && (cells.at(etaindex).at(rindex).etamax > eta)) break;
-      }
-      if ((unsigned int) etaindex < cells.size()) {
-        cells.at(etaindex).at(rindex).rlength = cells.at(etaindex).at(rindex).rlength + rl;
-        cells.at(etaindex).at(rindex).ilength = cells.at(etaindex).at(rindex).ilength + il;
-      }
-    }
-  }
-}
-
-/**
- * The integrated radiation and interaction lengths in (eta, r)
- * are converted to (z, r) coordinates and stored in <i>isor</i>
- * and <i>isoi</i> in this function.
- */
-void Analyzer::transformEtaToZ() {
-  int size_z, size_r, rindex, etaindex;
-  double z, r, eta, z_max, z_min, r_max, r_min, z_c, r_c;
-  // init: sizes and boundaries
-  size_z = isor.GetNbinsX();
-  size_r = isor.GetNbinsY();
-  z_max = isor.GetXaxis()->GetXmax();
-  z_min = isor.GetXaxis()->GetXmin();
-  r_max = isor.GetYaxis()->GetXmax();
-  r_min = isor.GetYaxis()->GetXmin();
-  // new number of bins in z and r
-  z_c = (z_max - z_min) / (2 * size_z);
-  r_c = (r_max - r_min) / (2 * size_r);
-  // radiation length loop
-  for (int i = 1; i <= size_z; i++) {
-    // calculate current z bin
-    z = z_min + 2 * (i - 1) * z_c + z_c;
-    for (int j = 1; j <= size_r; j++) {
-      // calculate current r bin
-      r = r_min + 2 * (j - 1) * r_c + r_c;
-      eta = -log(tan(atan(r / z) / 2.0));
-      // find corresponding r and eta positions
-      etaindex = findCellIndexEta(eta);
-      rindex = findCellIndexR(r);
-      // fill in radiation length in r and z
-      if ((etaindex >= 0) && (rindex >= 0)) isor.Fill(z, r, cells.at(etaindex).at(rindex).rlength);
-    }
-  }
-  // init: sizes and boundaries
-  size_z = isoi.GetNbinsX();
-  size_r = isoi.GetNbinsY();
-  z_max = isoi.GetXaxis()->GetXmax();
-  z_min = isoi.GetXaxis()->GetXmin();
-  r_max = isoi.GetYaxis()->GetXmax();
-  r_min = isoi.GetYaxis()->GetXmin();
-  // new number of bins in z and r
-  z_c = (z_max - z_min) / (2 * size_z);
-  r_c = (r_max - r_min) / (2 * size_r);
-  // interaction length loop
-  for (int i = 0; i < size_z; i++) {
-    // calculate current z bin
-    z = z_min + 2 * i * z_c + z_c;
-    for (int j = 0; j < size_r; j++) {
-      // calculate current r bin
-      r = r_min + 2 * j * r_c + r_c;
-      eta = -log(tan(atan(r / z) / 2.0));
-      // find corresponding r and eta positions
-      etaindex = findCellIndexEta(eta);
-      rindex = findCellIndexR(r);
-      // fill in interaction length in r and z
-      if ((etaindex >= 0) && (rindex >= 0)) isoi.Fill(z, r, cells.at(etaindex).at(rindex).ilength);
-    }
-  }
-}
-
-// private
-/**
- * This is a convenience function that converts a radius to an index into the second dimension of <i>cells</i>.
- * @param r The given radius value
- * @return The corresponding index into the vector
- */
-int Analyzer::findCellIndexR(double r) {
-  int index = -1;
-  if (r >= 0) {
-    if (cells.size() > 0) {
-      index = 0;
-      while (index < (int)cells.at(0).size()) {
-        if (cells.at(0).at(index).rmax < r) index++;
-        else break;
-      }
-      if (index == (int)cells.at(0).size()) index = -1;
-      return index;
-    }
-  }
-  return index;
-}
-
-/**
- * This is a convenience function that converts an eta value to an index into the first dimension of <i>cells</i>.
- * @param eta The given eta value
- * @return the corresponding index into the vector
- */
-int Analyzer::findCellIndexEta(double eta) {
-  int index = -1;
-  if (eta >= 0) {
-    index = 0;
-    while (index < (int)cells.size()) {
-      if (cells.at(index).size() > 0) {
-        if (cells.at(index).at(0).etamax < eta) index++;
-        else break;
-      }
-      else {
-        index = -1;
-        break;
-      }
-    }
-    if (index == (int)cells.size()) index = -1;
-    return index;
-  }
-  return index;
 }
 
 

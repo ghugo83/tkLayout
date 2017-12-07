@@ -60,6 +60,11 @@ namespace insur {
         // bureaucracy
         Category getCategory();
         void setCategory(Category c);
+        const bool isModule() const { return (cat == b_mod || cat == e_mod); };
+        // WARNING: Services are somehow tagged as no_cat when they are created. Their creation should hence be reviewed!
+        // Maybe there are other materials than services which are actually tagged in no_cat !!
+        const bool isService() const { return (cat == no_cat || cat == b_ser || cat == e_ser); };
+        const bool isSupport() const { return (cat == b_sup || cat == e_sup || cat == o_sup || cat == t_sup || cat == u_sup ); };
         // to be used by the subclasses
         virtual double getSurface() const;
         virtual double getLength() const;

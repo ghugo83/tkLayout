@@ -323,18 +323,6 @@ namespace insur {
 
     const std::string & getBillOfMaterials() { return billOfMaterials_ ; }
   protected:
-    /**
-     * @struct Cell
-     * @brief This struct contains the cumulative radiation and interaction lengths over the area described by r and z.
-     * @param rlength The cumulative radiation length
-     * @param ilength The cumulative interaction length
-     * @param rmin The minimal radius value of the cell
-     * @param rmax The maximal radius value of the cell
-     * @param etamin The minimal eta value of the cell
-     * @param etamax The maximal eta value of the cell
-     */
-    struct Cell { double rlength; double ilength; double rmin; double rmax; double etamin; double etamax; };
-    std::vector<std::vector<Cell> > cells;
     TH1D ractivebarrel, ractiveendcap, rserfbarrel, rserfendcap, rlazybarrel, rlazyendcap, rlazybtube, rlazytube, rlazyuserdef;
     TH1D iactivebarrel, iactiveendcap, iserfbarrel, iserfendcap, ilazybarrel, ilazyendcap, ilazybtube, ilazytube, ilazyuserdef;
     TH1D rbarrelall, rendcapall, ractiveall, rserfall, rlazyall;
@@ -462,9 +450,10 @@ namespace insur {
 
     virtual Material findModuleLayerRI(std::vector<ModuleCap>& layer, Track& track,
                                        std::map<std::string, Material>& sumComponentsRI, bool isPixel = false);
-    virtual Material analyzeInactiveSurfaces(std::vector<InactiveElement>& elements, Track& track,
-                                             std::map<std::string, Material>& sumServicesComponentsRI, MaterialProperties::Category cat = MaterialProperties::no_cat, bool isPixel = false);
-    virtual Material findHitsInactiveSurfaces(std::vector<InactiveElement>& elements, Track& t, bool isPixel = false);
+    const Material findHitInactiveElement(Track& track, std::vector<InactiveElement>& elements,
+					  const bool isPixel = false, const MaterialProperties::Category tag = MaterialProperties::no_cat,
+					  const bool isMaterialAnalysis = false);
+    //virtual Material findHitsInactiveSurfaces(std::vector<InactiveElement>& elements, Track& t, bool isPixel = false);
 
     void clearGraphsPt(int graphAttributes, const std::string& aTag);
     void clearGraphsP(int graphAttributes, const std::string& aTag);
@@ -486,20 +475,13 @@ namespace insur {
     void prepareTriggerPerformanceHistograms(const int& nTracks, const double& etaMax, const vector<double>& triggerMomenta, const vector<double>& thresholdProbabilities);
     void prepareTriggerProcessorHistograms();
     void clearGeometryHistograms();
-    void clearCells();
     void setHistogramBinsBoundaries(int bins, double min, double max);
-    void setCellBoundaries(int bins, double minr, double maxr, double minz, double maxz);
-    void fillCell(double r, double eta, double theta, Material mat);
-    void fillMapRT(const double& r, const double& theta, const Material& mat);
-    void fillMapRZ(const double& r, const double& z, const Material& mat);
-    void transformEtaToZ();
+    void fillMapRZ(const double hitRho, const double hitZ, const Material& hitMaterial);
     double findXThreshold(const TProfile& aProfile, const double& yThreshold, const bool& goForward );
     std::pair<double, double> computeMinMaxTracksEta(const Tracker& t) const;
   private:
     // A random number generator
-    TRandom3 myDice; 
-    int findCellIndexR(double r);
-    int findCellIndexEta(double eta);
+    TRandom3 myDice;
     int createResetCounters(Tracker& tracker, std::map <std::string, int> &modTypes);
     std::pair <XYZVector, double > shootDirection(double minEta, double maxEta);
     std::vector<std::pair<Module*, HitType>> trackHit(const XYZVector& origin, const XYZVector& direction, Tracker::Modules& properModules);

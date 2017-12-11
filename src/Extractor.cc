@@ -2271,6 +2271,7 @@ namespace insur {
 	    l.push_back(logic);
 
 	    pos.parent_tag = xml_pixbarident + ":" + trackerXmlTags.bar; //xml_tracker;
+        if ( isMTD ) { pos.parent_tag = xml_btlident + ":" + xml_BTL; }
 	    pos.child_tag = logic.shape_tag;
 	    pos.trans.dz = iter->getZOffset() + shape.dz;
 	    p.push_back(pos);
@@ -2307,6 +2308,7 @@ namespace insur {
 		l.push_back(logic);
 
 		pos.parent_tag = xml_pixbarident + ":" + trackerXmlTags.bar; //xml_tracker;
+        //        if ( isMTD ) { pos.parent_tag = xml_etlident + ":" + xml_ETL; } 
 		pos.child_tag = logic.shape_tag;
 		pos.trans.dz = iter->getZOffset() + shape.dz + xml_epsilon;
 		p.push_back(pos);
@@ -2333,6 +2335,7 @@ namespace insur {
 		l.push_back(logic);
 
 		pos.parent_tag = xml_pixfwdident + ":" + trackerXmlTags.fwd; // xml_tracker;
+        //        if ( isMTD ) { pos.parent_tag = xml_etlident + ":" + xml_ETL; } 
 		pos.child_tag = logic.shape_tag;
 		pos.trans.dz = startEndcaps + shape.dz + xml_epsilon - xml_z_pixfwd;
 		p.push_back(pos);
@@ -2356,8 +2359,9 @@ namespace insur {
 		l.push_back(logic);
 
 		pos.parent_tag = xml_pixfwdident + ":" + trackerXmlTags.fwd; // xml_tracker;
-		pos.child_tag = logic.shape_tag;
+        pos.child_tag = logic.shape_tag;
 		pos.trans.dz = iter->getZOffset() + shape.dz - xml_z_pixfwd;
+        if ( isMTD ) { pos.parent_tag = xml_etlident + ":" + xml_ETL; pos.trans.dz = shape.dz; } 
 		p.push_back(pos);
 	      }
 	    }
@@ -2462,6 +2466,7 @@ namespace insur {
 	    l.push_back(logic);
 
 	    pos.parent_tag = xml_pixbarident + ":" + trackerXmlTags.bar; //xml_tracker;
+        if ( isMTD ) { pos.parent_tag = xml_btlident + ":" + xml_BTL; }
 	    pos.child_tag = logic.shape_tag;
 	    pos.trans.dz = iter->getZOffset() + shape.dz;
 	    p.push_back(pos);
@@ -2487,6 +2492,7 @@ namespace insur {
 	      l.push_back(logic);
 
 	      pos.parent_tag = xml_pixfwdident + ":" + trackerXmlTags.fwd; // xml_tracker;
+          if ( isMTD ) { pos.parent_tag = xml_etlident + ":" + xml_ETL; } // position to be verified!!!
 	      pos.child_tag = logic.shape_tag;
 	      pos.trans.dz = iter->getZOffset() + shape.dz - xml_z_pixfwd;
 	      p.push_back(pos);

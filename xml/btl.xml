@@ -2,9 +2,10 @@
 <DDDefinition xmlns="http://www.cern.ch/cms/DDL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.cern.ch/cms/DDL ../../../DetectorDescription/Schema/DDLSchema.xsd">
 
   <ConstantsSection label="btl.xml" eval="true">
-    <Constant name="BTLrmin" value="1192.5*mm"/>
-    <Constant name="BTLrmax" value="1210.0*mm"/>
-    <Constant name="BTLz" value="2660.0*mm"/>
+    <Constant name="BTLrmin" value="1189.5*mm"/>
+    <Constant name="BTLrmax" value="1222.5*mm"/>
+    <!-- <Constant name="BTLz" value="2660.0*mm"/> -->
+    <Constant name="BTLz" value="2910.0*mm"/>
   </ConstantsSection>
 
   <SolidSection label="btl.xml">

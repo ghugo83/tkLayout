@@ -156,7 +156,7 @@ public:
 
   void setCablingMap(std::unique_ptr<const CablingMap> map) { myCablingMap_ = std::move(map); }
   const CablingMap* getCablingMap() const {
-    if (!myCablingMap_) throw PathfulException("Tracker has no cabling map, but one tries to access it.");
+    //if (!myCablingMap_) throw PathfulException("Tracker has no cabling map, but one tries to access it.");
     return myCablingMap_.get();
   }
 

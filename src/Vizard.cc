@@ -7416,8 +7416,9 @@ namespace insur {
 
   std::string Vizard::createSensorsDetIdListCsv() {
     std::stringstream header;
-    header << "DetId/U, BinaryDetId/B, Section/C, Layer/I, Ring/I, r_mm/D, z_mm/D, phi_deg/D" << std::endl;
-    std::string detIdsListCsv = header.str();
+    //header << "DetId/U, BinaryDetId/B, Section/C, Layer/I, Ring/I, r_mm/D, z_mm/D, phi_deg/D" << std::endl;
+    //std::string detIdsListCsv = header.str();
+    std::string detIdsListCsv = "";
 
     for (unsigned int i=0; i< trackers_.size(); ++i) {
       Tracker& tracker = *(trackers_.at(i));

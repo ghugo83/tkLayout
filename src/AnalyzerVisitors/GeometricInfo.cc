@@ -431,37 +431,37 @@ std::string EndcapVisitor::output() const { return output_.str(); }
     //*            Sensors DetIds         //
     //*                                   //
     //************************************//
-void TrackerSensorVisitor::visit(Barrel& b) {
-  sectionName_ = b.myid();
-}
-
-void TrackerSensorVisitor::visit(Endcap& e) {
-  sectionName_ = e.myid();
-}
-
-void TrackerSensorVisitor::visit(Layer& l)  {
-  layerId_ = l.myid();
-}
-
-void TrackerSensorVisitor::visit(Disk& d)  {
-  layerId_ = d.myid();
+void TrackerSensorVisitor::visit(Tracker& t) {
+  hasCablingMap = false;
+  const CablingMap* myCablingMap = t.getCablingMap();
+  if (myCablingMap != nullptr) {
+    hasCablingMap = true;
+  }
 }
 
 void TrackerSensorVisitor::visit(Module& m)  {
-  moduleRing_ = m.moduleRing();
+  numStripsInner_ = m.innerSensor().numStripsAcrossEstimate();
+  numSegmentsInner_ = m.innerSensor().numSegmentsEstimate();
+  numStripsOuter_ = m.outerSensor().numStripsAcrossEstimate();
+  numSegmentsOuter_ = m.outerSensor().numSegmentsEstimate();
+
+  if (hasCablingMap) {
+    const DTC* myDTC = m.getDTC();
+    if (myDTC != nullptr) {
+      dtcName = myDTC->name();
+    }
+  } 
 }
 
 void TrackerSensorVisitor::visit(Sensor& s) {
-  output_ << s.myDetId() << ","
-	  << s.myBinaryDetId() << ","
-	  << sectionName_ << ", "
-	  << layerId_ << ", "
-	  << moduleRing_ << ", "
-	  << std::fixed << std::setprecision(6)
-	  << s.hitPoly().getCenter().Rho() << ", "
-	  << s.hitPoly().getCenter().Z() << ", "
-	  << s.hitPoly().getCenter().Phi() * 180. / M_PI
-	  << std::endl;
+  const int numStrips = (s.innerOuter() == SensorPosition::LOWER ? numStripsInner_ : numStripsOuter_);
+  const int numSegments = (s.innerOuter() == SensorPosition::LOWER ? numSegmentsInner_ : numSegmentsOuter_);
+
+  output_ << s.myDetId() << " "
+	  << numSegments << " "
+	  << numStrips;
+  if (hasCablingMap) output_ << " " << any2str(dtcName);
+  output_ << std::endl;
 }
 
 std::string TrackerSensorVisitor::output() const { return output_.str(); }

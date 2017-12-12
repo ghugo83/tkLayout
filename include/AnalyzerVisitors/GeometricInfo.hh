@@ -174,15 +174,15 @@ public:
     //************************************//
 class TrackerSensorVisitor : public SensorGeometryVisitor {
   std::stringstream output_;
-  string sectionName_;
-  int layerId_;
-  int moduleRing_;
+  bool hasCablingMap;
+  int numStripsInner_; // local X
+  int numSegmentsInner_; // local Y
+  int numStripsOuter_; // local X
+  int numSegmentsOuter_; // local Y
+  std::string dtcName;
 
 public:
-  void visit(Barrel& b);
-  void visit(Endcap& e);
-  void visit(Layer& l);
-  void visit(Disk& d);
+  void visit(Tracker& t);
   void visit(Module& m);
   void visit(Sensor& s);
 

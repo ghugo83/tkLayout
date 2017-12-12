@@ -1105,11 +1105,19 @@ namespace insur {
 		      pos.child_tag = trackerXmlTags.nspace + ":" + crystalName;
 		      int crystalIndex = j * numCrystalsX + i + 1;
 		      pos.copy = crystalIndex;
+
+		      // these shifts just place the crystal where it should
+		      // be in the module in units of crystal size 
 		      double midX = numCrystalsX / 2 - 0.5;
 		      pos.trans.dx = (i - midX) * alveolaWidth;
 		      double midY = numCrystalsY / 2 - 0.5;
 		      pos.trans.dy = (j - midY) * alveolaLength;
-		      pos.trans.dz = pow(-1., i + j) * alveolaShift;
+
+		      // alternative geometry -- josh edit
+		      // here z is the arrow pointing into the plane of the module
+		      // pos.trans.dz = pow(-1., i + j) * alveolaShift;		      
+		      pos.trans.dz = pow(-1., j+1) * alveolaShift;
+
 
 		      addTiltedModuleRot(r, crystalTiltAngle);
 		      std::ostringstream tilt;

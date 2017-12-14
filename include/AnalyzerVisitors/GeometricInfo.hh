@@ -174,12 +174,13 @@ public:
     //************************************//
 class TrackerSensorVisitor : public SensorGeometryVisitor {
   std::stringstream output_;
-  bool hasCablingMap;
+  bool isPixel_;
+  bool hasCablingMap_;
   int numStripsInner_; // local X
   int numSegmentsInner_; // local Y
   int numStripsOuter_; // local X
   int numSegmentsOuter_; // local Y
-  std::string dtcName;
+  int dtcId_;
 
 public:
   void visit(Tracker& t);

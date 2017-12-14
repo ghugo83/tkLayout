@@ -432,10 +432,12 @@ std::string EndcapVisitor::output() const { return output_.str(); }
     //*                                   //
     //************************************//
 void TrackerSensorVisitor::visit(Tracker& t) {
-  hasCablingMap = false;
+  //isPixel_ = t.isPixel();
+
+  hasCablingMap_ = false;
   const CablingMap* myCablingMap = t.getCablingMap();
   if (myCablingMap != nullptr) {
-    hasCablingMap = true;
+    hasCablingMap_ = true;
   }
 }
 
@@ -445,23 +447,29 @@ void TrackerSensorVisitor::visit(Module& m)  {
   numStripsOuter_ = m.outerSensor().numStripsAcrossEstimate();
   numSegmentsOuter_ = m.outerSensor().numSegmentsEstimate();
 
-  if (hasCablingMap) {
+  if (hasCablingMap_) {
     const DTC* myDTC = m.getDTC();
     if (myDTC != nullptr) {
-      dtcName = myDTC->name();
+      
+      const int plotColor = myDTC->plotColor();
+      const bool side = myDTC->isPositiveCablingSide();
+      dtcId_ = (side ? plotColor : -plotColor);
+
     }
   } 
 }
 
 void TrackerSensorVisitor::visit(Sensor& s) {
-  const int numStrips = (s.innerOuter() == SensorPosition::LOWER ? numStripsInner_ : numStripsOuter_);
-  const int numSegments = (s.innerOuter() == SensorPosition::LOWER ? numSegmentsInner_ : numSegmentsOuter_);
+  //if (!isPixel_) {
+    const int numStrips = (s.innerOuter() == SensorPosition::LOWER ? numStripsInner_ : numStripsOuter_);
+    const int numSegments = (s.innerOuter() == SensorPosition::LOWER ? numSegmentsInner_ : numSegmentsOuter_);
 
-  output_ << s.myDetId() << " "
-	  << numSegments << " "
-	  << numStrips;
-  if (hasCablingMap) output_ << " " << any2str(dtcName);
-  output_ << std::endl;
+    output_ << s.myDetId() << " "
+	    << numSegments << " "
+	    << numStrips;
+    if (hasCablingMap_) output_ << " " << dtcId_;
+    output_ << std::endl;
+    //}
 }
 
 std::string TrackerSensorVisitor::output() const { return output_.str(); }

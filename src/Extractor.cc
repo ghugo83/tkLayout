@@ -1116,7 +1116,7 @@ namespace insur {
 		      // alternative geometry -- josh edit
 		      // here z is the arrow pointing into the plane of the module
 		      // pos.trans.dz = pow(-1., i + j) * alveolaShift;		      
-		      pos.trans.dz = pow(-1., j+1) * alveolaShift;
+		      pos.trans.dz = pow(-1., i+1) * alveolaShift;
 
 
 		      addTiltedModuleRot(r, crystalTiltAngle);

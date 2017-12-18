@@ -432,7 +432,7 @@ std::string EndcapVisitor::output() const { return output_.str(); }
     //*                                   //
     //************************************//
 void TrackerSensorVisitor::visit(Tracker& t) {
-  //isPixel_ = t.isPixel();
+  isPixel_ = t.isPixelTracker();
 
   hasCablingMap_ = false;
   const CablingMap* myCablingMap = t.getCablingMap();
@@ -460,7 +460,7 @@ void TrackerSensorVisitor::visit(Module& m)  {
 }
 
 void TrackerSensorVisitor::visit(Sensor& s) {
-  //if (!isPixel_) {
+  if (!isPixel_) {
     const int numStrips = (s.innerOuter() == SensorPosition::LOWER ? numStripsInner_ : numStripsOuter_);
     const int numSegments = (s.innerOuter() == SensorPosition::LOWER ? numSegmentsInner_ : numSegmentsOuter_);
 
@@ -469,7 +469,7 @@ void TrackerSensorVisitor::visit(Sensor& s) {
 	    << numStrips;
     if (hasCablingMap_) output_ << " " << dtcId_;
     output_ << std::endl;
-    //}
+    }
 }
 
 std::string TrackerSensorVisitor::output() const { return output_.str(); }

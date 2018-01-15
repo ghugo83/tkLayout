@@ -1068,6 +1068,8 @@ namespace insur {
 	      else {
 		if (iiter->getModule().numSensors() > 0) {
 
+          int crystalLayout = iiter->getModule().sensors().front().crystalLayout();
+
 		  int numCrystalsX = iiter->getModule().sensors().front().numCrystalsX();
 		  int numCrystalsY = iiter->getModule().sensors().front().numCrystalsY();
 
@@ -1113,11 +1115,15 @@ namespace insur {
 		      double midY = numCrystalsY / 2 - 0.5;
 		      pos.trans.dy = (j - midY) * alveolaLength;
 
-		      // alternative geometry -- josh edit
 		      // here z is the arrow pointing into the plane of the module
-		      // pos.trans.dz = pow(-1., i + j) * alveolaShift;		      
-		      pos.trans.dz = pow(-1., i+1) * alveolaShift;
-
+              // crystal position ordering according to predefined flag
+              if ( crystalLayout == 1 ) { 
+                pos.trans.dz = pow(-1., i + j) * alveolaShift; 
+              } else if ( crystalLayout == 2 ) {
+                pos.trans.dz = pow(-1., i+1) * alveolaShift;
+              } else {
+                std::cout << "MISSING CRYSTAL LAYOUT, CRYSTALS NOT POSITIONED !!!" << std::endl;
+              }
 
 		      addTiltedModuleRot(r, crystalTiltAngle);
 		      std::ostringstream tilt;

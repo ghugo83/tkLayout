@@ -37,6 +37,7 @@ public:
   ReadonlyProperty<double, Computable> minZ, maxZ;
   ReadonlyProperty<double, AutoDefault> powerPerChannel;
   // Timing barrel module : approximated as 1 single sensor made of crystals (for the XML export)
+  ReadonlyProperty<int, AutoDefault> crystalLayout;
   ReadonlyProperty<int, AutoDefault> numCrystalsX;
   ReadonlyProperty<int, AutoDefault> numCrystalsY;
   ReadonlyProperty<double, AutoDefault> alveolaShift;
@@ -55,6 +56,7 @@ public:
     sensorThickness("sensorThickness", parsedAndChecked()),
     type("sensorType", parsedOnly(), SensorType::None),
     powerPerChannel("powerPerChannel", parsedOnly()),
+    crystalLayout("crystalLayout", parsedOnly()),
     numCrystalsX("numCrystalsX", parsedOnly()),
     numCrystalsY("numCrystalsY", parsedOnly()),
     alveolaShift("alveolaShift", parsedOnly()),
@@ -83,6 +85,7 @@ public:
   int numROCCols() const { return numSegmentsEstimate() / numROCY(); }
 
   int totalROCs() const { return numROCX() * numROCY(); }
+
 
   int numCrystals() const { return numCrystalsX() * numCrystalsY(); }
   double alveolaWidth() const;

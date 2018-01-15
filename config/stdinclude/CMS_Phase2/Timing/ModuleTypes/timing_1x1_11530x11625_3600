@@ -26,6 +26,8 @@ sensorThickness 10.0    // crystalsContainer thickness
 
 Sensor 1 {
   sensorType largepix
+
+  crystalLayout 1      
   
   numROCX 1             // Only one chip in total
   numROCY 1

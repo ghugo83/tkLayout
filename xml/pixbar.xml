@@ -150,16 +150,16 @@
   </RotationSection>
   <SolidSection label="pixbar.xml">
     <Polycone name="Barrel" startPhi="0*deg" deltaPhi="360*deg">  <!-- TEMPORARY!! Should be defined automatically -->
-      <ZSection z="-291.0*cm" rMin="118.0*cm" rMax="123.3*cm"/>
-      <ZSection z="-125.0*cm" rMin="118.0*cm" rMax="123.3*cm"/>
-      <ZSection z="-125.0*cm" rMin="19.65*cm" rMax="123.3*cm"/>
-      <ZSection z="-[Zv1]" rMin="19.65*cm" rMax="123.3*cm"/>
-      <ZSection z="-[Zv1]" rMin="[Rin1]" rMax="123.3*cm"/>
-      <ZSection z="[Zv1]" rMin="[Rin1]" rMax="123.3*cm"/>
-      <ZSection z="[Zv1]" rMin="19.65*cm" rMax="123.3*cm"/>
-      <ZSection z="125.0*cm" rMin="19.65*cm" rMax="123.3*cm"/>
-      <ZSection z="125.0*cm" rMin="118.0*cm" rMax="123.3*cm"/>
-      <ZSection z="291.0*cm" rMin="118.0*cm" rMax="123.3*cm"/>
+      <ZSection z="-291.0*cm" rMin="118.0*cm" rMax="118.9*cm"/>
+      <ZSection z="-125.0*cm" rMin="118.0*cm" rMax="118.9*cm"/>
+      <ZSection z="-125.0*cm" rMin="19.65*cm" rMax="118.9*cm"/>
+      <ZSection z="-[Zv1]" rMin="19.65*cm" rMax="118.9*cm"/>
+      <ZSection z="-[Zv1]" rMin="[Rin1]" rMax="118.9*cm"/>
+      <ZSection z="[Zv1]" rMin="[Rin1]" rMax="118.9*cm"/>
+      <ZSection z="[Zv1]" rMin="19.65*cm" rMax="118.9*cm"/>
+      <ZSection z="125.0*cm" rMin="19.65*cm" rMax="118.9*cm"/>
+      <ZSection z="125.0*cm" rMin="118.0*cm" rMax="118.9*cm"/>
+      <ZSection z="291.0*cm" rMin="118.0*cm" rMax="118.9*cm"/>
     </Polycone>
     <Polycone name="Phase2PixelBarrel" startPhi="0*deg" deltaPhi="360*deg">
       <ZSection z="-[Zv1]"         rMin="[Rin1]"          rMax="[Rout1]" />

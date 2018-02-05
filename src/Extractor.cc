@@ -2181,7 +2181,7 @@ namespace insur {
         pos.child_tag = trackerXmlTags.nspace + ":" + logic.name_tag;
         //pos.trans.dz = (zmax + zmin) / 2.0 - xml_z_pixfwd;
         pos.trans.dz = diskZ - xml_z_pixfwd;
-        if (isTimingLayer) { pos.parent_tag = xml_etlident + ":" + xml_ETL; pos.trans.dz = 0.; } 
+        if (isTimingLayer) { pos.parent_tag = xml_etlident + ":" + xml_ETL; pos.trans.dz = diskZ - xml_z_etloffset; } 
         p.push_back(pos);
 
         dspec.partselectors.push_back(logic.name_tag);
@@ -2375,7 +2375,7 @@ namespace insur {
 		pos.parent_tag = xml_pixfwdident + ":" + trackerXmlTags.fwd; // xml_tracker;
         pos.child_tag = logic.shape_tag;
 		pos.trans.dz = iter->getZOffset() + shape.dz - xml_z_pixfwd;
-        if ( isMTD ) { pos.parent_tag = xml_etlident + ":" + xml_ETL; pos.trans.dz = shape.dz; } 
+        if ( isMTD ) { pos.parent_tag = xml_etlident + ":" + xml_ETL; pos.trans.dz = iter->getZOffset() + shape.dz - xml_z_etloffset; } 
 		p.push_back(pos);
 	      }
 	    }

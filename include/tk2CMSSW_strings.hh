@@ -17,6 +17,7 @@ namespace insur {
     static const double xml_epsilon = 0.01; // Added to virtual geometrical mother volume to avoid extrusion of what it contains.
     static const double xml_composite_density_tolerance = 1E-07;
     static const double xml_composite_ratio_tolerance = 1E-07;
+  static const double xml_z_etloffset = 2650.0; // MTD VERY IMPORTANT: the global offset of ETL tkLayout vs XML.
     /**
      * XML tags and attributes
      */

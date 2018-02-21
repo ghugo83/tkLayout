@@ -7,7 +7,7 @@ Component {
   Element {
     elementName SenSi
     //quantity 0.2
-    quantity 0.1 
+    quantity 0.166667
     // dirty hack because the SenSi is also multiplied by scalingFactor
     unit mm
   }
@@ -22,7 +22,7 @@ Component {
   Element {
     elementName SenSi
     //quantity 0.2
-    quantity 0.1 
+    quantity 0.166667
     // dirty hack because the SenSi is also multiplied by scalingFactor
     unit mm
   }

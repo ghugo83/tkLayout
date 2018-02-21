@@ -13,7 +13,7 @@
 namespace insur {
   //static const double magnetic_field = 3.8;                // Tesla; CMS magnet field strength -> Use definition in SimParms file
 
-  static const double scale_all_material_budget_factor = 2.;
+  static const double scale_all_material_budget_factor = 1.2;
 
   static const double boltzmann_constant = 8.6173303E-05;  // eV/K
   static const double celsius_to_kelvin = 273.15;          // T(K) = T(°C) + celsius_to_kelvin

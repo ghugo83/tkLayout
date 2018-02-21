@@ -32,7 +32,7 @@ namespace insur {
   static const double geom_conversion_station_width   = 2.0;     // mm
   static const double geom_inner_pixel_radius         = 30.0;    // mm
   static const double geom_inner_strip_radius         = 150.0;   // mm
-  static const double geom_outer_strip_radius         = 1189.0;  // mm
+  static const double geom_outer_strip_radius         = 1161.0;  // mm
   static const double geom_z_threshold_service_zigzag = 100.0;
   static const double geom_top_volume_pad             = 200;     // mm
 

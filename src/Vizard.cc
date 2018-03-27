@@ -7891,7 +7891,7 @@ namespace insur {
 
   void Vizard::drawInactiveSurfacesSummary(MaterialBudget& materialBudget, RootWPage& myPage) {
     Tracker& myTracker = materialBudget.getTracker();
-    //const bool isIT = myTracker.isPixelTracker();
+    const bool isIT = myTracker.isPixelTracker();
     std::string myTrackerName = myTracker.myid();
     RootWContent& myContent = myPage.addContent("Service details");
 
@@ -7923,6 +7923,8 @@ namespace insur {
     std::vector<InactiveElement> allServices = materialBudget.getAllServices();
     std::map<std::string, double> servicesTotal;
 
+    std::map<std::string, double> cutSubdetectorMass;
+
     // SERVICES
     for (auto& iter : allServices) {
       z1 = iter.getZOffset();
@@ -7949,16 +7951,17 @@ namespace insur {
 
       for (const auto& subdetectorIt : massPerSubdetectorAndElement) {
 	const std::string subdetectorName =  subdetectorIt.first;
-	if ( commonSubdetectorNameThird != "" && subdetectorName != commonSubdetectorName && subdetectorName != commonSubdetectorNameSecond && subdetectorName != commonSubdetectorNameThird) { std::cout << "!!! More than 3 subdetectors assigned to a materials volume." << std::endl; }
+	/*if ( commonSubdetectorNameThird != "" && subdetectorName != commonSubdetectorName && subdetectorName != commonSubdetectorNameSecond && subdetectorName != commonSubdetectorNameThird) { std::cout << "!!! More than 3 subdetectors assigned to a materials volume." << std::endl; }
 	else if ( commonSubdetectorNameSecond != "" && subdetectorName != commonSubdetectorName && subdetectorName != commonSubdetectorNameSecond) { commonSubdetectorNameThird = subdetectorName; }
 	else if ( commonSubdetectorName != "" && subdetectorName != commonSubdetectorName) { commonSubdetectorNameSecond = subdetectorName; }
-	else { commonSubdetectorName = subdetectorName; }
+	else { commonSubdetectorName = subdetectorName; }*/
 
 	const std::map<std::string, double>&  massPerElement = subdetectorIt.second;
 
 	int elementId=0;
 	//for (auto& massIt : localMasses) {
 	for (const auto& massIt : massPerElement) {
+	  std::string cutSubdetectorName;
 	  mass = massIt.second;
 	  if (mass!=0) isEmpty=false;
 	  servicesTotal[subdetectorName] += mass;
@@ -7975,8 +7978,35 @@ namespace insur {
 			 << mass/length << ","
 			 << rl << ","
 			 << il << std::endl;
+
+	  const double meanZ = (z1+z2)/2.;
+	  const double meanR = (r1+r2)/2.;
+	  if (subdetectorName == "OTST" || subdetectorName == "ITST" || subdetectorName == "SERVICE_CYLINDER_FPIX_1" || subdetectorName == "SERVICE_CYLINDER_FPIX_2") cutSubdetectorName = subdetectorName;
+	  else {
+	    if (!isIT) {  
+	      if (fabs(meanZ) < 1270.) {
+		if (fabs(meanR) < 630.) cutSubdetectorName = "TBPS";
+		else cutSubdetectorName = "TB2S";
+	      }
+	      else cutSubdetectorName = "TEDD";
+	    }
+	    else {
+	      if (fabs(meanZ) < 230.) cutSubdetectorName = "BPIX";
+	      else if (fabs(meanZ) >= 230. && fabs(meanZ) < 1700.) cutSubdetectorName = "FPIX_1";
+	      else cutSubdetectorName = "FPIX_2";
+	    }
+	  }
+	  cutSubdetectorMass[cutSubdetectorName] += mass;
+
+	  if ( commonSubdetectorNameThird != "" && cutSubdetectorName != commonSubdetectorName && cutSubdetectorName != commonSubdetectorNameSecond && cutSubdetectorName != commonSubdetectorNameThird) { std::cout << "!!! More than 3 subdetectors assigned to a materials volume." << std::endl; }
+	  else if ( commonSubdetectorNameSecond != "" && cutSubdetectorName != commonSubdetectorName && cutSubdetectorName != commonSubdetectorNameSecond) { commonSubdetectorNameThird = cutSubdetectorName; }
+	  else if ( commonSubdetectorName != "" && cutSubdetectorName != commonSubdetectorName) { commonSubdetectorNameSecond = cutSubdetectorName; }
+	  else { commonSubdetectorName = cutSubdetectorName; }
 	}
       }
+
+
+     
 
 
       /*std::string displayedSubdetectorName  = commonSubdetectorName;
@@ -8046,6 +8076,7 @@ namespace insur {
 
       serviceId++;
     }
+
 
 
 
@@ -8134,7 +8165,7 @@ namespace insur {
 
     // TOTAL
     myStringStream << "SERVICES (KG)" << std::endl;
-    for (const auto& serviceIt : servicesTotal ) {
+    for (const auto& serviceIt : cutSubdetectorMass ) {
       myStringStream << serviceIt.first << "," << std::round(serviceIt.second/1000.) << std::endl;
     }
     myStringStream << std::endl;
@@ -8145,7 +8176,7 @@ namespace insur {
 
     myStringStream << std::endl << std::endl << std::endl;
     myStringStream << "TOTAL (KG)" << std::endl;
-    for (const auto& serviceIt : servicesTotal ) {
+    for (const auto& serviceIt : cutSubdetectorMass ) {
       double totalMass = serviceIt.second;
       if (modulesTotal.find(serviceIt.first) != modulesTotal.end()) totalMass += modulesTotal.at(serviceIt.first);
       myStringStream << serviceIt.first << "," << std::round(totalMass/1000.) << std::endl;

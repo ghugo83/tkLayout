@@ -7943,18 +7943,21 @@ namespace insur {
 
       //const std::map<std::string, double>& localMasses = iter.getLocalMasses();
       const std::map<std::string, std::map<std::string, double> >& massPerSubdetectorAndElement = iter.getMassPerSubdetectorAndElement();
-      std::string commonSubdetectorName;
-      std::string commonSubdetectorNameSecond;
-      std::string commonSubdetectorNameThird;
+      //std::string commonSubdetectorName;
+      //std::string commonSubdetectorNameSecond;
+      //std::string commonSubdetectorNameThird;
 
       for (const auto& subdetectorIt : massPerSubdetectorAndElement) {
 	const std::string subdetectorName =  subdetectorIt.first;
-	if ( commonSubdetectorNameThird != "" && subdetectorName != commonSubdetectorName && subdetectorName != commonSubdetectorNameSecond && subdetectorName != commonSubdetectorNameThird) { std::cout << "!!! More than 3 subdetectors assigned to a materials volume." << std::endl; }
+	/*if ( commonSubdetectorNameThird != "" && subdetectorName != commonSubdetectorName && subdetectorName != commonSubdetectorNameSecond && subdetectorName != commonSubdetectorNameThird) { std::cout << "!!! More than 3 subdetectors assigned to a materials volume." << std::endl; }
 	else if ( commonSubdetectorNameSecond != "" && subdetectorName != commonSubdetectorName && subdetectorName != commonSubdetectorNameSecond) { commonSubdetectorNameThird = subdetectorName; }
 	else if ( commonSubdetectorName != "" && subdetectorName != commonSubdetectorName) { commonSubdetectorNameSecond = subdetectorName; }
-	else { commonSubdetectorName = subdetectorName; }
+	else { commonSubdetectorName = subdetectorName; }*/
 
 	const std::map<std::string, double>&  massPerElement = subdetectorIt.second;
+
+	if (subdetectorName == "OTST" || subdetectorName == "ITST" || subdetectorName == "MODULE_SUPPORT" || subdetectorName == "ROD_SUPPORT" || subdetectorName == "DISK_SUPPORT" || subdetectorName == "SUPPORT") {
+
 
 	int elementId=0;
 	//for (auto& massIt : localMasses) {
@@ -7976,6 +7979,28 @@ namespace insur {
 			 << rl << ","
 			 << il << std::endl;
 	}
+
+
+	
+	  const int color = computeSubdetectorColor(subdetectorName, isEmpty);
+
+	  myBox = new TBox(z1, r1, z2, r2);
+	  myBox->SetLineColor(color);
+	  myBox->SetFillStyle(3003);
+	  myBox->SetFillColor(color);
+	  myBox->Draw("l");
+
+	  /*
+	    myText = new TText((z1+z2)/2, (r1+r2)/2, Form("%s", subdetectorName.c_str()));
+	    myText->SetTextAlign(22);
+	    myText->SetTextSize(2e-2);
+	    myText->SetTextColor(color);
+	    myText->Draw();*/
+	}
+
+
+
+
       }
 
 
@@ -7989,60 +8014,6 @@ namespace insur {
 	hasSeveralSubdetectors = true;
 	displayedSubdetectorName +=  " + " + commonSubdetectorNameThird;
 	}*/
-
-      const int color = computeSubdetectorColor(commonSubdetectorName, isEmpty);
-
-      myBox = new TBox(z1, r1, z2, r2);
-      myBox->SetLineColor(color);
-      myBox->SetFillStyle(3003);
-      myBox->SetFillColor(color);
-      myBox->Draw("l");
-
-      /*
-      myText = new TText((z1+z2)/2, (r1+r2)/2, Form("%s", commonSubdetectorName.c_str()));
-      myText->SetTextAlign(22);
-      myText->SetTextSize(2e-2);
-      myText->SetTextColor(color);
-      myText->Draw();*/
-
-      // BONUS
-      if (commonSubdetectorNameSecond != "") {
-	const int colorSecond = computeSubdetectorColor(commonSubdetectorNameSecond, isEmpty);
-	r1 += 2;
-	r2 += 2;
-
-	myBox = new TBox(z1, r1, z2, r2);
-	myBox->SetLineColor(colorSecond);
-	myBox->SetFillStyle(3003);
-	myBox->SetFillColor(colorSecond);
-	myBox->Draw("l");
-
-	/*
-	myText = new TText((z1+z2)/2, (r1+r2)/2, Form("%s", commonSubdetectorNameSecond.c_str()));
-	myText->SetTextAlign(22);
-	myText->SetTextSize(2e-2);
-	myText->SetTextColor(colorSecond);
-	myText->Draw();*/
-      }
-      // BONUS
-      if (commonSubdetectorNameThird != "") {
-	const int colorThird = computeSubdetectorColor(commonSubdetectorNameThird, isEmpty);
-	r1 += 2;
-	r2 += 2;
-
-	myBox = new TBox(z1, r1, z2, r2);
-	myBox->SetLineColor(colorThird);
-	myBox->SetFillStyle(3003);
-	myBox->SetFillColor(colorThird);
-	myBox->Draw("l");
-
-	/*
-	myText = new TText((z1+z2)/2, (r1+r2)/2, Form("%s", commonSubdetectorNameThird.c_str()));
-	myText->SetTextAlign(22);
-	myText->SetTextSize(2e-2);
-	myText->SetTextColor(colorThird);
-	myText->Draw();*/
-      }
 
 
 
@@ -8080,13 +8051,20 @@ namespace insur {
 
       //const std::map<std::string, double>& localMasses = iter.getLocalMasses();
       const std::map<std::string, std::map<std::string, double> >& massPerSubdetectorAndElement = iter.getMassPerSubdetectorAndElement();
-      std::string commonSubdetectorName;
+      //std::string commonSubdetectorName;
 
       for (const auto& subdetectorIt : massPerSubdetectorAndElement) {
 	const std::string subdetectorName =  subdetectorIt.first;
 	const std::map<std::string, double>&  massPerElement = subdetectorIt.second;
-	if ( commonSubdetectorName != "" && subdetectorName != commonSubdetectorName) { std::cout << "!!! Materials module volume has more than 1 subdetector assigned." << std::endl; }
-	else { commonSubdetectorName = subdetectorName; }
+	/*if ( commonSubdetectorName != "" && subdetectorName != commonSubdetectorName) { 
+	  std::cout << "!!! Materials module volume has more than 1 subdetector assigned." << std::endl; 
+	  std::cout << "commonSubdetectorName = " << commonSubdetectorName << " subdetectorName = " << subdetectorName << std::endl;
+	}
+	else { commonSubdetectorName = subdetectorName; }*/
+
+
+	if (subdetectorName == "OTST" || subdetectorName == "ITST" || subdetectorName == "MODULE_SUPPORT" || subdetectorName == "ROD_SUPPORT" || subdetectorName == "DISK_SUPPORT" || subdetectorName == "SUPPORT") {
+
 
 	int elementId=0;
 	//for (auto& massIt : localMasses) {
@@ -8108,6 +8086,26 @@ namespace insur {
 			 << rl << ","
 			 << il << std::endl;
 	}
+
+	  const int color = computeSubdetectorColor(subdetectorName, isEmpty);
+
+	  if (detectorModule.isTilted() && fabs(detectorModule.tiltAngle() - M_PI / 2.) > 0.001 ) {
+	    const double rhoAtMinZ = (z1 > 0. ? r2 : r1); 
+	    const double rhoAtMaxZ = (z1 > 0. ? r1 : r2); 
+	    TLine* myLine = new TLine(z1, rhoAtMinZ, z2, rhoAtMaxZ);
+	    myLine->SetLineColor(color);
+	    myLine->Draw("l");
+	  }
+	  else {
+	    myBox = new TBox(z1, r1, z2, r2);
+	    myBox->SetLineColor(color);
+	    myBox->SetFillStyle(3003);
+	    myBox->SetFillColor(color);
+	    myBox->Draw("l");	
+	  }
+	}
+
+
       }
       /*if (commonSubdetectorName != detectorModule.uniRef().subdetectorName) {
 	std::cout << "!!!!!!!! Module cap: material subdetectorName does not match the geometry DetectorModule hierarchy." << std::endl;
@@ -8115,23 +8113,6 @@ namespace insur {
 	std::cout << "detectorModule.UniRef().subdetectorName = " << detectorModule.uniRef().subdetectorName << std::endl;
 	std::cout << "id = " << serviceId << ", z1 = " << z1 << ", z2 = " << z2 << ", r1 = " << r1 << ", r2 = " << r2 << std::endl;
 	}*/
-
-      const int color = computeSubdetectorColor(commonSubdetectorName, isEmpty);
-
-      if (detectorModule.isTilted() && commonSubdetectorName != "TEDD") {
-	const double rhoAtMinZ = (z1 > 0. ? r2 : r1); 
-	const double rhoAtMaxZ = (z1 > 0. ? r1 : r2); 
-	TLine* myLine = new TLine(z1, rhoAtMinZ, z2, rhoAtMaxZ);
-	myLine->SetLineColor(color);
-	myLine->Draw("l");
-      }
-      else {
-	myBox = new TBox(z1, r1, z2, r2);
-	myBox->SetLineColor(color);
-	myBox->SetFillStyle(3003);
-	myBox->SetFillColor(color);
-	myBox->Draw("l");	
-      }
       
       
 
@@ -8188,11 +8169,17 @@ namespace insur {
     int color;
 
     if (!isEmpty) {
-      if (subdetectorName == "TBPS" || subdetectorName == "BPIX") color = kBlue;
-      else if (subdetectorName == "TB2S" || subdetectorName == "FPIX_1") color = kRed;
-      else if (subdetectorName == "TEDD" || subdetectorName == "FPIX_2") color = kOrange;
-      else if (subdetectorName == "OTST" || subdetectorName == "ITST") color = kMagenta;
-      else color = kGreen;
+      /*if (subdetectorName == "TBPS" || subdetectorName == "BPIX") color = kBlue;
+	else if (subdetectorName == "TB2S" || subdetectorName == "FPIX_1") color = kRed;
+	else if (subdetectorName == "TEDD" || subdetectorName == "FPIX_2") color = kOrange;
+	else if (subdetectorName == "OTST" || subdetectorName == "ITST") color = kMagenta;
+	else color = kGreen;*/
+
+      if (subdetectorName == "OTST" || subdetectorName == "ITST") color = kMagenta;
+      else if (subdetectorName == "MODULE_SUPPORT") color = kOrange;
+      else if (subdetectorName == "ROD_SUPPORT" || subdetectorName == "DISK_SUPPORT") color = kRed;
+      else if (subdetectorName == "SUPPORT") color = kGreen;
+      else { std::cout << "color = kGreen : subdetectorName = " << subdetectorName << std::endl; color = kBlue; }
     }
     else { color = kBlack; }
 

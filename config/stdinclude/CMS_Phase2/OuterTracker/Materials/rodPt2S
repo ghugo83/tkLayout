@@ -56,6 +56,7 @@ Materials rodPt2S {
   //Mechanics
   Component {
     componentName Mechanics
+    matSubdetectorName ROD_SUPPORT
     service false
     scaleOnSensor 0
     Element {

@@ -2,6 +2,7 @@
 
 Component {
   componentName "PS Support plate (below hybrids)"
+  matSubdetectorName MODULE_SUPPORT
   service false
   scaleOnSensor 0
   targetVolume 0
@@ -19,6 +20,7 @@ Component {
 
 Component {
   componentName "PS Support plate (below sensor)"
+  matSubdetectorName MODULE_SUPPORT
   service false
   scaleOnSensor 0
   targetVolume 8

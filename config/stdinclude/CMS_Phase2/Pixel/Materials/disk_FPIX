@@ -135,6 +135,7 @@ Materials FPIX_disk {
   //Mechanics
   Component {
     componentName "Disk support mechanics"
+    matSubdetectorName DISK_SUPPORT
     service false
     scaleOnSensor 0
     Element {

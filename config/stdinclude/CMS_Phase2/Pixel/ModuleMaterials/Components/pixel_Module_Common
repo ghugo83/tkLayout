@@ -38,6 +38,7 @@ Component {
 
 Component {
   componentName "Pixel Support plate"
+  matSubdetectorName MODULE_SUPPORT
   service false
   scaleOnSensor 0
   // Support

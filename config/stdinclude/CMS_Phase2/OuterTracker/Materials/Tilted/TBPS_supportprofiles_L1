@@ -2,6 +2,7 @@
   // Mechanics
   Component {
     componentName Mechanics
+    matSubdetectorName MODULE_SUPPORT
     service false
     scaleOnSensor 0
     targetVolume 0

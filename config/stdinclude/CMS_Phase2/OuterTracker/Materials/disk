@@ -96,6 +96,7 @@ Materials disk {
   //Mechanics
   Component {
     componentName Mechanics
+    matSubdetectorName DISK_SUPPORT
     service false
     scaleOnSensor 0
     Element {

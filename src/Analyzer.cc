@@ -1473,9 +1473,9 @@ void Analyzer::computeWeightSummary(MaterialBudget& mb) {
 
 
 
-  std::map<std::string, std::map<std::string, std::map<std::string, double> > > Analyzer::computeWeightBySubdetector(MaterialBudget& materialBudget) {
+  std::map<LocalMass, double, ComponentNameCompare> Analyzer::computeWeightBySubdetector(MaterialBudget& materialBudget) {
     
-    std::map<std::string, std::map<std::string, std::map<std::string, double> > > weightsPerSubdetectorAndComponents;
+    std::map<LocalMass, double, ComponentNameCompare> weightsPerSubdetectorAndComponents;
 
     // to avoid having these maps of maps: try using LocalMass as a map key
     //struct Class1Compare
@@ -1497,16 +1497,16 @@ void Analyzer::computeWeightSummary(MaterialBudget& mb) {
       const std::vector<LocalMass>& allMasses = serviceIt.getLocalMassesDetails();
   
       for (const auto& massIt : allMasses) {
-	const std::string subdetectorName = massIt.matSubdetectorName();
-	const MechanicalCategory& category = massIt.mechanicalCategory();
-	std::string mechanicalCategory = any2str(category);
-	if (category == MechanicalCategory::COOLING || category == MechanicalCategory::SUPPORT) mechanicalCategory = "SUPPORTS & COOLING";
-	const std::string componentName = massIt.componentName();
-	const std::string elementName = massIt.elementName();
+	//const std::string subdetectorName = massIt.matSubdetectorName();
+	//const MechanicalCategory& category = massIt.mechanicalCategory();
+	//std::string mechanicalCategory = any2str(category);
+	//if (category == MechanicalCategory::COOLING || category == MechanicalCategory::SUPPORT) mechanicalCategory = "SUPPORTS & COOLING";
+	//const std::string componentName = massIt.componentName();
+	//const std::string elementName = massIt.elementName();
 	const double mass = massIt.mass();
 
 	// calculate totals
-	weightsPerSubdetectorAndComponents[subdetectorName][mechanicalCategory][componentName] += mass;
+	weightsPerSubdetectorAndComponents[massIt] += mass;
       }
     }
 
@@ -1524,16 +1524,17 @@ void Analyzer::computeWeightSummary(MaterialBudget& mb) {
       const std::vector<LocalMass>& allMasses = moduleIt.getLocalMassesDetails();
   
       for (const auto& massIt : allMasses) {
-	const std::string subdetectorName = massIt.matSubdetectorName();
-	const MechanicalCategory& category = massIt.mechanicalCategory();
-	std::string mechanicalCategory = any2str(category);
-	if (category == MechanicalCategory::COOLING || category == MechanicalCategory::SUPPORT) mechanicalCategory = "SUPPORTS & COOLING";
-	const std::string componentName = massIt.componentName();
-	const std::string elementName = massIt.elementName();
+	//const std::string subdetectorName = massIt.matSubdetectorName();
+	//const MechanicalCategory& category = massIt.mechanicalCategory();
+	//std::string mechanicalCategory = any2str(category);
+	//if (category == MechanicalCategory::COOLING || category == MechanicalCategory::SUPPORT) mechanicalCategory = "SUPPORTS & COOLING";
+	//const std::string componentName = massIt.componentName();
+	//const std::string elementName = massIt.elementName();
 	const double mass = massIt.mass();
 
 	// calculate totals
-	weightsPerSubdetectorAndComponents[subdetectorName][mechanicalCategory][componentName] += mass;
+	//weightsPerSubdetectorAndComponents[subdetectorName][mechanicalCategory][componentName] += mass;
+	weightsPerSubdetectorAndComponents[massIt] += mass;
       }
     }
 

@@ -38,7 +38,7 @@ namespace insur {
   static const std::string mechanical_cooling = "Cooling";
   static const std::string mechanical_support = "Supports Mechanics:";
 
-  enum MechanicalCategory { UNKNOWN, MODULE, CABLING, SUPPORT, COOLING };
+  enum MechanicalCategory { UNKNOWN, MODULE, CABLING, SUPPORT, COOLING, SUPPORT_AND_COOLING };
 
   class LocalMass {
   public:
@@ -59,6 +59,13 @@ namespace insur {
       else if (componentName_.find(mechanical_cooling) != std::string::npos) return MechanicalCategory::SUPPORT;
       else if (componentName_.find(mechanical_support) != std::string::npos) return MechanicalCategory::COOLING;
       else return MechanicalCategory::UNKNOWN;
+    }
+
+    const MechanicalCategory mechanicalBigCategory() const {
+      const MechanicalCategory& category = mechanicalCategory();
+      MechanicalCategory bigCategory = category;
+      if (category == MechanicalCategory::COOLING || category == MechanicalCategory::SUPPORT) bigCategory = MechanicalCategory::SUPPORT_AND_COOLING;
+      return bigCategory;
     }
 
   protected:

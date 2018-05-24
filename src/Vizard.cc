@@ -426,9 +426,13 @@ namespace insur {
 
 
     // TOTAL WEIGHT
-    const std::map<std::string, std::map<std::string, std::map<std::string, double> > > weightsPerSubdetectorAndComponent = a.getWeightBySubdetector();
+    const std::map<LocalMass, double, ComponentNameCompare> weightsPerSubdetectorAndComponent = a.getWeightBySubdetector();
 
     for (const auto& subdetectorIt : weightsPerSubdetectorAndComponent) {
+
+      std::cout << subdetectorIt.first.matSubdetectorName() << subdetectorIt.first.mechanicalBigCategory() << subdetectorIt.first.componentName() << std::endl;
+
+      /*
       const std::string subdetectorName = subdetectorIt.first;
       RootWContent& myContent = myPage.addContent(subdetectorName, true);
       RootWTable& myTable = myContent.addTable();
@@ -479,7 +483,7 @@ namespace insur {
       } // mechanical category
       
       myTable.setContent(rowCounter, 0, "TOTAL " + subdetectorName, boldCell);
-      myTable.setContent(rowCounter, 1, totalWeightInSubdetector, weightPrecision, boldCell);
+      myTable.setContent(rowCounter, 1, totalWeightInSubdetector, weightPrecision, boldCell);*/
     } // subdetector
 
   }

@@ -103,6 +103,18 @@ namespace insur {
   typedef std::map<int, TrackCollection> TrackCollectionMap;
 
 
+  struct ComponentNameCompare {
+    bool operator() (const LocalMass& localA, const LocalMass& localB) const {
+      if (localA.matSubdetectorName() != localB.matSubdetectorName()) return (localA.matSubdetectorName() < localB.matSubdetectorName());
+      else {
+	if (localA.mechanicalBigCategory() != localB.mechanicalBigCategory()) return (localA.mechanicalCategory() < localB.mechanicalCategory());
+	else return (localA.componentName() < localB.componentName());
+      }
+    }
+  };
+   
+
+
   class Analyzer : private AnalyzerTools {
   public:
     Analyzer();
@@ -275,7 +287,7 @@ namespace insur {
     std::map<std::string, SummaryTable>& getEndcapWeightComponentSummary() { return endcapComponentWeights;};
     std::map<std::string, double>& getTypeWeigth() { return typeWeight; };
     std::map<std::string, double>& getTagWeigth() { return tagWeight; };
-    std::map<std::string, std::map<std::string, std::map<std::string, double> > > getWeightBySubdetector() const { return weightBySubdetector_; }
+    std::map<LocalMass, double, ComponentNameCompare> getWeightBySubdetector() const { return weightBySubdetector_; }
     //std::map<std::string, SummaryTable>& getWeightBySubdetectorAndElement() const { return weightBySubdetectorAndElement_; }
     //std::map<std::string, SummaryTable>& getWeightBySubdetectorAndComponent() const { return weightBySubdetectorAndComponent_; }
 
@@ -379,7 +391,7 @@ namespace insur {
     std::map<std::string, SummaryTable> endcapComponentWeights;
     std::map<std::string, double> typeWeight;
     std::map<std::string, double> tagWeight;
-    std::map<std::string, std::map<std::string, std::map<std::string, double> > > weightBySubdetector_;
+    std::map<LocalMass, double, ComponentNameCompare> weightBySubdetector_;
     //std::map<std::string, SummaryTable> weightBySubdetectorAndElement_;
     //std::map<std::string, SummaryTable> weightBySubdetectorAndComponent_;
 
@@ -464,7 +476,7 @@ namespace insur {
     void computeDetailedWeights(std::vector<std::vector<ModuleCap> >& tracker, std::map<std::string, SummaryTable>& weightTables, bool byMaterial);
     //std::map<std::string, SummaryTable> computeWeightBySubdetectorAndElement(MaterialBudget& mb);
     //std::map<std::string, SummaryTable> computeWeightBySubdetectorAndComponent(MaterialBudget& mb);
-    std::map<std::string, std::map<std::string, std::map<std::string, double> > > computeWeightBySubdetector(MaterialBudget& mb);
+    std::map<LocalMass, double, ComponentNameCompare> computeWeightBySubdetector(MaterialBudget& mb);
 
     virtual Material analyzeModules(std::vector<std::vector<ModuleCap> >& tr, Track& track,
                                     std::map<std::string, Material>& sumComponentsRI, bool isPixel = false);

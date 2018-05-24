@@ -23,7 +23,7 @@ const RILength RILength::operator+(const RILength &other) const {
 
 namespace insur {
 
-  define_enum_strings(MechanicalCategory) = { "UNKNOWN", "MODULE", "CABLING", "SUPPORT", "COOLING" };
+  define_enum_strings(MechanicalCategory) = { "UNKNOWN", "MODULE", "CABLING", "SUPPORT", "COOLING", "SUPPORTS & COOLING" };
 
     /*-----public functions-----*/
     /**

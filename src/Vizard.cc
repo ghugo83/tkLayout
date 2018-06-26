@@ -2048,7 +2048,7 @@ namespace insur {
     moduleTable->setContent(rphiResolutionTriggerRow, 0, "R/Phi resolution [pt] ("+muLetter+"m)");
     moduleTable->setContent(yResolutionTriggerRow, 0, "Y resolution [pt] ("+muLetter+"m)");
     moduleTable->setContent(pitchpairsRow, 0, "Pitch (min/max) ("+muLetter+"m)");
-    moduleTable->setContent(striplengthRow, 0, "Strip length (mm)");
+    moduleTable->setContent(striplengthRow, 0, "Strip length ("+muLetter+"m)");
     moduleTable->setContent(segmentsRow, 0, "Segments x Chips");
     moduleTable->setContent(nstripsRow, 0, "Chan/Sensor");
     moduleTable->setContent(numbermodsRow, 0, "N. mod");
@@ -2193,9 +2193,10 @@ namespace insur {
       aPitchPair.str("");
       loPitch=int((*tagMapIt).second->outerSensor().minPitch() / Units::um); // mm -> um
       hiPitch=int((*tagMapIt).second->outerSensor().maxPitch() / Units::um); // mm -> um
+      const double pitch = tagMapIt->second->pitch() / Units::um; // mm -> um
 
       if (loPitch==hiPitch) {
-        aPitchPair << std::dec << std::fixed << std::setprecision(pitchPrecision) << loPitch;
+        aPitchPair << std::dec << std::fixed << std::setprecision(pitchPrecision) << pitch;
       } else {
         aPitchPair << std::dec << std::fixed << std::setprecision(pitchPrecision)<< loPitch
           << "/" << std::fixed << std::setprecision(pitchPrecision) << hiPitch;
@@ -2207,16 +2208,16 @@ namespace insur {
       // One number only if all the same
       if ((*tagMapIt).second->minSegments() == (*tagMapIt).second->maxSegments()) {
         // Strip length
-        aStripLength << std::fixed << std::setprecision(stripLengthPrecision)
-          << (*tagMapIt).second->length()/(*tagMapIt).second->minSegments();  // CUIDADO!!!! what happens with single sided modules????
+	const double stripLength = tagMapIt->second->stripLength() / Units::um; // mm -> um
+        aStripLength << std::fixed << std::setprecision(stripLengthPrecision) << stripLength;
         // Segments
         aSegment << std::dec << (*tagMapIt).second->minSegments()
           << "x" << (*tagMapIt).second->outerSensor().numROCX();
       } else { // They are different
         for (int iFace=0; iFace<(*tagMapIt).second->numSensors(); ++iFace) {
           // Strip length
-          aStripLength << std::fixed << std::setprecision(stripLengthPrecision)
-            << (*tagMapIt).second->length()/(*tagMapIt).second->sensors().at(iFace).numSegmentsEstimate();
+	  const double stripLength = tagMapIt->second->sensors().at(iFace).stripLength() / Units::um; // mm -> um
+          aStripLength << std::fixed << std::setprecision(stripLengthPrecision) << stripLength;
           // Segments
           aSegment << std::dec << (*tagMapIt).second->sensors().at(iFace).numSegmentsEstimate()
             << "x" << (*tagMapIt).second->sensors().at(iFace).numROCX();

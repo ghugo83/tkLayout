@@ -20,6 +20,7 @@ Sensor 1 {
   stripLengthEstimate 0.100
   numROCX 1 
   numROCY 2
+  spaceBetweenROCs 0.2
   powerPerChannel 0.0 // mW
 }
 

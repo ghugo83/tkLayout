@@ -64,20 +64,51 @@ std::pair<XYZVector, int> Sensor::checkHitSegment(const XYZVector& trackOrig, co
   } else return std::make_pair(p, -1);
 }
 
+
+
+const double Sensor::activeMeanWidth() const { 
+  return computeActiveDimension(parent_->meanWidth(), numROCX(), spaceBetweenROCs());
+}
+const double Sensor::activeMinWidth() const {
+  return computeActiveDimension(parent_->minWidth(), numROCX(), spaceBetweenROCs());
+}
+const double Sensor::activeMaxWidth() const {
+  return computeActiveDimension(parent_->maxWidth(), numROCX(), spaceBetweenROCs());
+}
+const double Sensor::activeLength() const {
+  return computeActiveDimension(parent_->length(), numROCY(), spaceBetweenROCs());
+}
 int Sensor::numStripsAcrossEstimate() const {
-  if (numStripsAcross.state()) return numStripsAcross();
-  else return floor(parent_->meanWidth() / pitchEstimate() + 0.5);
+  if (numStripsAcross.state()) { return numStripsAcross(); }
+  else {
+    //std::cout << "activeMeanWidth() = " << activeMeanWidth() << std::endl;
+    return round(activeMeanWidth() / pitchEstimate()); }
 }
 int Sensor::numSegmentsEstimate() const {
-  if (numSegments.state()) return numSegments();
-  else return floor(parent_->length() / stripLengthEstimate() + 0.5);
+  if (numSegments.state()) { return numSegments(); }
+  else { 
+    //std::cout << "activeLength() = " << activeLength() << std::endl;
+    return round(activeLength() / stripLengthEstimate()); }
 }
-double Sensor::minPitch() const { return parent_->minWidth() / (double)numStripsAcrossEstimate(); }
-double Sensor::maxPitch() const { return parent_->maxWidth() / (double)numStripsAcrossEstimate(); }
-double Sensor::pitch() const { return parent_->meanWidth() / (double)numStripsAcrossEstimate(); }
-double Sensor::stripLength() const { return parent_->length() / numSegmentsEstimate(); }
+double Sensor::minPitch() const { return activeMinWidth() / numStripsAcrossEstimate(); }
+double Sensor::maxPitch() const { return activeMaxWidth() / numStripsAcrossEstimate(); }
+double Sensor::pitch() const {
+  if (pitchEstimate.state()) { return pitchEstimate(); }
+  else { return activeMeanWidth() / numStripsAcrossEstimate(); }
+}
+double Sensor::stripLength() const { 
+  if (stripLengthEstimate.state()) { return stripLengthEstimate(); }
+  else { return activeLength() / numSegmentsEstimate(); }
+}
 
-double Sensor::alveolaWidth() const { return parent_->meanWidth() / (double)numCrystalsX(); }
-double Sensor::alveolaLength() const { return parent_->length() / (double)numCrystalsY(); }
+double Sensor::alveolaWidth() const { return parent_->meanWidth() / numCrystalsX(); }
+double Sensor::alveolaLength() const { return parent_->length() / numCrystalsY(); }
+
+
+const double Sensor::computeActiveDimension(const double dimension, const int numROCs, const double spaceBetweenROCs) const {
+  double activeDimension = dimension;
+  if (numROCs >= 2) activeDimension -= (numROCs - 1) * spaceBetweenROCs;
+  return activeDimension;
+}
 
 define_enum_strings(SensorType) = { "pixel", "largepix", "strip" };

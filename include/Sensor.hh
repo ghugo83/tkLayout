@@ -31,6 +31,7 @@ public:
   ReadonlyProperty<int, NoDefault> numSegments;
   ReadonlyProperty<double, NoDefault> stripLengthEstimate;
   ReadonlyProperty<int, NoDefault> numROCX, numROCY;
+  ReadonlyProperty<double, AutoDefault> spaceBetweenROCs;
   ReadonlyProperty<double, NoDefault> sensorThickness;
   ReadonlyProperty<SensorType, Default> type;
   ReadonlyProperty<double, Computable> minR, maxR;
@@ -52,6 +53,7 @@ public:
     stripLengthEstimate("stripLengthEstimate", parsedOnly()),
     numROCX("numROCX", parsedOnly()),
     numROCY("numROCY", parsedOnly()),
+    spaceBetweenROCs("spaceBetweenROCs", parsedOnly()),
     sensorThickness("sensorThickness", parsedAndChecked()),
     type("sensorType", parsedOnly(), SensorType::None),
     powerPerChannel("powerPerChannel", parsedOnly()),
@@ -70,6 +72,11 @@ public:
   ModuleSubdetector subdet() const { return subdet_; }
   SensorPosition innerOuter(SensorPosition pos) { innerOuter_ = pos; }
   SensorPosition innerOuter() const { return innerOuter_; }
+
+  const double activeMeanWidth() const;
+  const double activeMinWidth() const;
+  const double activeMaxWidth() const;
+  const double activeLength() const;
 
   int numStripsAcrossEstimate() const;
   int numSegmentsEstimate() const;
@@ -117,6 +124,9 @@ public:
   void accept(SensorGeometryVisitor& v) { 
     v.visit(*this);
   }
+
+private:
+  const double computeActiveDimension(const double dimension, const int numROCs, const double spaceBetweenROCs) const;
 };
 
 #endif

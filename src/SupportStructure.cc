@@ -323,7 +323,7 @@ namespace material {
     elementName ("elementName", parsedAndChecked()),
     quantity ("quantity", parsedAndChecked()),
     unit ("unit", parsedAndChecked()),
-    debugInactivate ("debugInactivate", parsedOnly(), false),
+    debugInactivate ("debugInactivate", parsedOnly(), true),
     materialTab_ (MaterialTab::instance()) {}
     
   const std::string SupportStructure::Element::msg_no_valid_unit = "No valid unit: ";

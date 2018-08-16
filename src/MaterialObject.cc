@@ -315,7 +315,7 @@ namespace material {
     scaleOnSensor ("scaleOnSensor", parsedOnly(), false),
     quantity ("quantity", parsedAndChecked()),
     unit ("unit", parsedAndChecked()),
-    debugInactivate ("debugInactivate", parsedOnly(), false),
+    debugInactivate ("debugInactivate", parsedOnly(), true),
     destination ("destination", parsedOnly()),
     targetVolume ("targetVolume", parsedOnly(), 0),
     referenceSensorNode ("ReferenceSensor", parsedOnly()),

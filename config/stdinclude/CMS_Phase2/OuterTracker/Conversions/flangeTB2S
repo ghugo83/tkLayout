@@ -122,20 +122,23 @@ Station {
     }
     Output {
       Element {
+        debugInactivate false
         elementName Steel
-        quantity 17.2
+        quantity 0
         unit g/m
         service true
       }
       Element {
+        debugInactivate false
         elementName Steel
-        quantity 4.2
+        quantity 0
         unit g
         service false
       }
       Element {
+        debugInactivate false
         elementName Al
-        quantity 7.4
+        quantity 0
         unit g
         service false
       }

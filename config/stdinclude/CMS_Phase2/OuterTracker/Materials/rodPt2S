@@ -13,6 +13,7 @@ Materials rodPt2S {
     service true
     scaleOnSensor 0
     Element {
+      debugInactivate false
       elementName Steel
       quantity 10.29
       unit g/m

@@ -187,11 +187,13 @@ namespace insur {
     void createSummaryCanvasNicer(Tracker& tracker, std::unique_ptr<TCanvas> &YZCanvas, std::unique_ptr<TCanvas> &YZCanvasBarrel, std::unique_ptr<TCanvas> &XYCanvas, std::vector<std::unique_ptr<TCanvas> > &XYCanvasEC);
 
     // OT CABLING
-    void createOuterCablingPlotsBundles(const Tracker& tracker, std::unique_ptr<TCanvas> &YZCanvas, std::unique_ptr<TCanvas> &XYCanvas, std::unique_ptr<TCanvas> &XYNegCanvas, 
-					       std::vector<std::unique_ptr<TCanvas> > &XYPosBundlesDisks, std::vector<std::unique_ptr<TCanvas> > &XYPosBundlesDiskSurfaces,
-					       std::vector<std::unique_ptr<TCanvas> > &XYNegBundlesDisks, std::vector<std::unique_ptr<TCanvas> > &XYNegBundlesDiskSurfaces);
+    void createOuterCablingPlotsBundles(const Tracker& tracker, std::unique_ptr<TCanvas> &YZCanvas,					 
+					std::unique_ptr<TCanvas> &XYNegCanvas, std::unique_ptr<TCanvas> &XYNegFlatCanvas,
+					std::unique_ptr<TCanvas> &XYCanvas, std::unique_ptr<TCanvas> &XYFlatCanvas,
+					std::vector<std::unique_ptr<TCanvas> > &XYPosBundlesDisks, std::vector<std::unique_ptr<TCanvas> > &XYPosBundlesDiskSurfaces,
+					std::vector<std::unique_ptr<TCanvas> > &XYNegBundlesDisks, std::vector<std::unique_ptr<TCanvas> > &XYNegBundlesDiskSurfaces);
     void createOuterCablingPlotsDTCs(Tracker& tracker, std::unique_ptr<TCanvas> &YZCanvas, std::unique_ptr<TCanvas> &XYNegCanvas, std::unique_ptr<TCanvas> &XYNegFlatCanvas, 
-					    std::unique_ptr<TCanvas> &XYCanvas, std::unique_ptr<TCanvas> &XYFlatCanvas, std::vector<std::unique_ptr<TCanvas> > &XYCanvasEC);
+				     std::unique_ptr<TCanvas> &XYCanvas, std::unique_ptr<TCanvas> &XYFlatCanvas, std::vector<std::unique_ptr<TCanvas> > &XYCanvasEC);
     void createOuterCablingPlotsServicesChannelsOptical(Tracker& tracker, const OuterCablingMap* myCablingMap, std::unique_ptr<TCanvas> &XYNegCanvas, std::unique_ptr<TCanvas> &XYNegFlatCanvas, std::unique_ptr<TCanvas> &XYCanvas, std::unique_ptr<TCanvas> &XYFlatCanvas, std::vector<std::unique_ptr<TCanvas> > &XYCanvasEC);
     void createOuterCablingPlotsServicesChannelsPower(Tracker& tracker, const OuterCablingMap* myCablingMap,
 						     std::unique_ptr<TCanvas> &XYNegCanvas, std::unique_ptr<TCanvas> &XYNegFlatCanvas, std::unique_ptr<TCanvas> &XYCanvas, std::unique_ptr<TCanvas> &XYFlatCanvas, 

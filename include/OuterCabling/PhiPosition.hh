@@ -7,9 +7,7 @@
 /* This class contains several useful Phi identifiers.
    A phi Slice is used to name a phiSegment, a phiRegion, or a phiSector.
    * phiSegment : Phi slice delimited by 2 consecutive (centers of) modules in Phi.
-   * phiRegion : Phi slice of size defined in constructor. It is used for the following:
-   Barrel : Phi slice containing bundles which can be connected to the same DTC.
-   Endcap : Phi Slice contaning modules which can be connected to the same bundle.
+   * phiRegion : Phi Slice contaning modules which can be connected to the same bundle.
    * phiSector : Phi slice of size outer_cabling_nonantWidth.
 
    There is the following classification, by the phi angle which is covered : phiSegment < phiRegion < phiSector.
@@ -20,16 +18,12 @@
 */
 class PhiPosition {
 public:
-  PhiPosition(const double phi, const int numPhiSegments, const bool isBarrel, const int layerDiskNumber, const std::string subDetectorName = "", const Category& bundleType = Category::UNDEFINED);
+  PhiPosition(const double phi, const int numPhiSegments, const bool isBarrel, const int layerDiskNumber, const std::string subDetectorName = "", const Category& bundleType = Category::UNDEFINED, const bool isTilted = false, const bool isPositiveCablingSide = true);
 
   // PHI SEGMENT
   const double phiSegmentWidth() const { return phiSegmentWidth_; }
   const double phiSegmentStart() const { return phiSegmentStart_; }
   const int phiSegmentRef() const { return phiSegmentRef_; }
-
-  // STEREO PHI SEGMENT
-  const double stereoPhiSegmentStart() const { return stereoPhiSegmentStart_; }
-  const int stereoPhiSegmentRef() const { return stereoPhiSegmentRef_; }
   
   // PHI REGION
   const double phiRegionWidth() const { return phiRegionWidth_; }
@@ -41,15 +35,31 @@ public:
   const double phiSectorStart() const { return phiSectorStart_; }
   const int phiSectorRef() const { return phiSectorRef_; }
 
+
+  // STEREO PHI SEGMENT
+  const double stereoPhiSegmentStart() const { return stereoPhiSegmentStart_; }
+  const int stereoPhiSegmentRef() const { return stereoPhiSegmentRef_; }
+
+  // STEREO PHI REGION
+  const double stereoPhiRegionStart() const { return stereoPhiRegionStart_; }
+  const int stereoPhiRegionRef() const { return stereoPhiRegionRef_; }
+
+  // STEREO PHI SECTOR
+  const double stereoPhiSectorStart() const { return stereoPhiSectorStart_; }
+  const int stereoPhiSectorRef() const { return stereoPhiSectorRef_; }
+
 private:
+  const std::pair<int, double> computePhiRegionRefAndWidth (const int numRods,
+							    const int phiSegmentRef, const double phiSegmentWidth,  
+							    const int phiSectorRef, 
+							    const std::string subDetectorName, const int layerDiskNumber, const bool isTilted,
+							    const bool isPositiveCablingSide
+							    ) const;
+
   // PHI SEGMENT
   double phiSegmentWidth_;
   double phiSegmentStart_;
   int phiSegmentRef_;
-
-  // STEREO PHI SEGMENT
-  double stereoPhiSegmentStart_;
-  int stereoPhiSegmentRef_;
 
   // PHI REGION
   double phiRegionWidth_;
@@ -60,6 +70,20 @@ private:
   const double phiSectorWidth_ = outer_cabling_nonantWidth;
   double phiSectorStart_;
   int phiSectorRef_;
+
+
+  // STEREO PHI SEGMENT
+  double stereoPhiSegmentStart_;
+  int stereoPhiSegmentRef_;
+
+  // STEREO PHI REGION
+  double stereoPhiRegionWidth_;
+  double stereoPhiRegionStart_;
+  int stereoPhiRegionRef_;
+
+  // STEREO PHI SECTOR
+  double stereoPhiSectorStart_;
+  int stereoPhiSectorRef_;
 };
 
 

@@ -25,50 +25,14 @@ void ModulesToBundlesConnector::visit(RodPair& r) {
 void ModulesToBundlesConnector::visit(BarrelModule& m) {
   side_ = (m.uniRef().side > 0.);      // geometrical Z-side
 
-  bool isPositiveCablingSide = side_;  // By default.
-  bool isTilted = false;               // Is the layer tilted ?
-  bool isExtraFlatPart = false;        // Used for Layer 3 flat part only, to add an extra bundle.
-
-  // Here the idea is to compute the cabling side, the isTilted and isExtraFlatPart booleans.
-  // 2S BUNDLES
-  if (barrelName_ == outer_cabling_tb2s) {
-
-    isPositiveCablingSide = side_;
-    isTilted = false;
-    isExtraFlatPart = false;
-  }
-
-  // PS BUNDLES
-  else if (barrelName_ == outer_cabling_tbps) {
-
-    // FLAT PART
-    if (!m.isTilted()) {
-      double phiSegmentWidth = (2.*M_PI) / numRods_;
-      // This is the case where the cabling side can be different from the geometrical side.
-      // The full flat rod (both -Z and +Z modules) is assigned to one cabling side only.
-      isPositiveCablingSide = computeBarrelFlatPartRodCablingSide(rodPhi_, phiSegmentWidth);
-      isTilted = false;
-      isExtraFlatPart = false;
-
-      // For layer 3, need to add a second bundle for flat part
-      if (isPositiveCablingSide && (totalNumFlatRings_ > outer_cabling_maxNumModulesPerBundle) && !side_) isExtraFlatPart = true;
-      if (!isPositiveCablingSide && (totalNumFlatRings_ > outer_cabling_maxNumModulesPerBundle) && side_) isExtraFlatPart = true;
-    }
-
-    // TILTED PART
-    else if (m.isTilted()) {
-
-      isPositiveCablingSide = side_;
-      isTilted = true;
-      isExtraFlatPart = false;
-    }       
-  }
+  const bool isPositiveCablingSide = computeBarrelModuleCablingSide(side_, m.uniRef().ring, barrelName_, layerNumber_);
+  const bool isTilted = m.isTilted();               // Is the layer tilted ?
 
   // NOW THAT ALL INFORMATION HAS BEEN GATHERED, COMPUTE PHIPOSITION.
-  const PhiPosition& modulePhiPosition = PhiPosition(rodPhi_, numRods_, isBarrel_, layerNumber_);
+  const PhiPosition& modulePhiPosition = PhiPosition(rodPhi_, numRods_, isBarrel_, layerNumber_, barrelName_, Category::UNDEFINED, isTilted, isPositiveCablingSide);
 
   // BUILD BUNDLE IF NECESSARY, AND CONNECT MODULE TO BUNDLE
-  buildBundle(m, bundles_, negBundles_, bundleType_, isBarrel_, barrelName_, layerNumber_, modulePhiPosition, isPositiveCablingSide, totalNumFlatRings_, isTilted, isExtraFlatPart);
+  buildBundle(m, bundles_, negBundles_, bundleType_, isBarrel_, barrelName_, layerNumber_, modulePhiPosition, isPositiveCablingSide, totalNumFlatRings_, isTilted);
 }
 
 
@@ -95,7 +59,7 @@ void ModulesToBundlesConnector::visit(Ring& r)   {
 void ModulesToBundlesConnector::visit(EndcapModule& m) {
   double modPhi = m.center().Phi();
 
-  bool isPositiveCablingSide = side_;    // Alyways true in the Endcaps : cabling side and geometrical side are the same.
+  const bool isPositiveCablingSide = side_;    // Alyways true in the Endcaps : cabling side and geometrical side are the same.
 
   // NOW THAT ALL INFORMATION HAS BEEN GATHERED, COMPUTE PHIPOSITION.
   const PhiPosition& modulePhiPosition = PhiPosition(modPhi, numModulesInRing_, isBarrel_, diskNumber_, endcapName_, bundleType_);
@@ -121,16 +85,20 @@ void ModulesToBundlesConnector::postVisit() {
 
 
 /* Compute the cabling side, for flat parts of Barrel rods.
-   The full flat rod (both -Z and +Z modules) is assigned to one cabling side only.
-   Hence here, the cabling side can be different from the actual geometrical side.
-   Modules are alternatively connected to the positive cabling side or the negative cabling side, depending on the Phi of the rod.
 */
-const bool ModulesToBundlesConnector::computeBarrelFlatPartRodCablingSide(const double rodPhi, const double phiSegmentWidth) const {
-  // Compute the phi position of the rod (in one cabling side frame of reference).
-  const double phiSegmentStartOneCablingSide = computePhiSegmentStart(rodPhi, phiSegmentWidth);
-  const int phiSegmentRefOneCablingSide = computePhiSegmentRef(rodPhi, phiSegmentStartOneCablingSide, phiSegmentWidth);
-  // Assign the full rod to the positive cabling side or the negative cabling side alternatively.
-  const bool isPositiveCablingSide = ((phiSegmentRefOneCablingSide % 2) == 1);
+const bool ModulesToBundlesConnector::computeBarrelModuleCablingSide(const bool side, const int ring, const std::string subDetectorName, const int layerNumber) const {
+  bool isPositiveCablingSide;
+
+   // TBPS Central ring
+  if (subDetectorName == outer_cabling_tbps && ring == 1) {
+    const bool isOddLayer = ((layerNumber % 2) == 1);
+    isPositiveCablingSide = isOddLayer;
+  }
+  // All other rings
+  else {
+    isPositiveCablingSide = side;      // geometrical Z-side
+  }
+
   return isPositiveCablingSide;
 }
 
@@ -182,17 +150,16 @@ const Category ModulesToBundlesConnector::computeBundleType(const bool isBarrel,
  * Then, the bundle is created, and stored in the bundles_ or negBundles_ containers.
  * Lastly, each module is connected to its bundle, and vice-versa.
  */
-void ModulesToBundlesConnector::buildBundle(DetectorModule& m, std::map<int, OuterBundle*>& bundles, std::map<int, OuterBundle*>& negBundles, const Category& bundleType, const bool isBarrel, const std::string subDetectorName, const int layerDiskNumber, const PhiPosition& modulePhiPosition, const bool isPositiveCablingSide, const int totalNumFlatRings, const bool isTiltedPart, const bool isExtraFlatPart) {
+void ModulesToBundlesConnector::buildBundle(DetectorModule& m, std::map<int, OuterBundle*>& bundles, std::map<int, OuterBundle*>& negBundles, const Category& bundleType, const bool isBarrel, const std::string subDetectorName, const int layerDiskNumber, const PhiPosition& modulePhiPosition, const bool isPositiveCablingSide, const int totalNumFlatRings, const bool isTiltedPart) {
   
   // COMPUTE BUNDLE ID
-  const int bundleTypeIndex = computeBundleTypeIndex(isBarrel, bundleType, totalNumFlatRings, isTiltedPart, isExtraFlatPart);
-  const int phiSliceRef = (isBarrel ? modulePhiPosition.phiSegmentRef() : modulePhiPosition.phiRegionRef());
-  const int bundleId = computeBundleId(isBarrel, isPositiveCablingSide, layerDiskNumber, phiSliceRef, bundleTypeIndex);
+  const int bundleTypeIndex = computeBundleTypeIndex(bundleType, isBarrel, isTiltedPart);
+  const int bundleId = computeBundleId(isBarrel, isPositiveCablingSide, layerDiskNumber, modulePhiPosition.phiRegionRef(), bundleTypeIndex);
 
   // COMPUTE STEREO BUNDLE ID (BARREL ONLY, NOT NEEDED FOR THE ENDCAPS SO FAR)
   // The stereo bundle is the bundle located on the other cabling side, by rotation of 180° around CMS_Y.
-  const int stereoPhiSliceRef = (isBarrel ? modulePhiPosition.stereoPhiSegmentRef() : 0); // modulePhiPosition.stereoPhiRegionRef());
-  const int stereoBundleId = computeStereoBundleId(isBarrel, isPositiveCablingSide, layerDiskNumber, stereoPhiSliceRef, bundleTypeIndex);
+  const int stereoPhiRegionRef = (isBarrel ? modulePhiPosition.stereoPhiRegionRef() : 0);
+  const int stereoBundleId = computeStereoBundleId(isBarrel, isPositiveCablingSide, layerDiskNumber, stereoPhiRegionRef, bundleTypeIndex);
 
   // All Bundles from one cabling side
   const std::map<int, OuterBundle*>& bundlesOneSide = (isPositiveCablingSide ? bundles : negBundles);
@@ -214,21 +181,12 @@ void ModulesToBundlesConnector::buildBundle(DetectorModule& m, std::map<int, Out
 
 /* Compute the index associated to each bundle type.
  */
-const int ModulesToBundlesConnector::computeBundleTypeIndex(const bool isBarrel, const Category& bundleType, const int totalNumFlatRings, const bool isTilted, const bool isExtraFlatPart) const {
+const int ModulesToBundlesConnector::computeBundleTypeIndex(const Category& bundleType, const bool isBarrel, const bool isTilted) const {
   int bundleTypeIndex;
   // BARREL
   if (isBarrel) {
-    if (bundleType == Category::SS) bundleTypeIndex = 0;
-    else {
-      if (!isTilted) {
-	if (totalNumFlatRings <= outer_cabling_maxNumModulesPerBundle) bundleTypeIndex = 1;
-	else {
-	  if (!isExtraFlatPart) bundleTypeIndex = 1;
-	  else bundleTypeIndex = 2;
-	}
-      } 
-      else bundleTypeIndex = 0;
-    }
+    bundleTypeIndex = 0;
+    if (bundleType != Category::SS && !isTilted) { bundleTypeIndex = 1; }
   }
   // ENDCAPS
   else {
@@ -316,7 +274,7 @@ void ModulesToBundlesConnector::staggerModules(std::map<int, OuterBundle*>& bund
 	const int diskNumber = b.second->layerDiskNumber();
 
 	const Category& bundleType = b.second->type();
-	const int bundleTypeIndex = computeBundleTypeIndex(isBarrel, bundleType);
+	const int bundleTypeIndex = computeBundleTypeIndex(bundleType, isBarrel);
 
 	const PhiPosition& bundlePhiPosition = b.second->phiPosition();
 

@@ -1184,14 +1184,16 @@ ostream& RootWBinaryFileList::dump(ostream& output) {
 
   std::vector<std::string> cleanedUpFileNames;
   std::transform(originalFileNames_.begin(), originalFileNames_.end(), std::back_inserter(cleanedUpFileNames), [](const std::string& s) {
-      auto pos = s.find("stdinclude");
-      if (s.find("xml") != string::npos) pos = s.rfind("/") + 1;
-      return pos != string::npos ? s.substr(pos) : s;
+      auto pos = s.find("tkLayout");
+      //if (s.find("xml") != string::npos) pos = s.rfind("/") + 1;
+      return pos != string::npos ? s.substr(pos+9) : s;
     });
   output << "<b>" << description_ << ":</b>";
   auto dfn = fileNames_.begin();
   for (auto cfn : cleanedUpFileNames) {
-    output << (cleanedUpFileNames.size() > 1 ? "<br>&nbsp&nbsp&nbsp&nbsp" : "") << " <a href=\"" << *(dfn++) << "\">" << cfn << "</a></tt>" << " ";
+    output << (cleanedUpFileNames.size() > 1 ? "<br>&nbsp&nbsp&nbsp&nbsp" : "") 
+	   << " <a href=\"" << *(dfn++) << "\">" << cfn << "</a></tt>" 
+	   << " <a href=\"https://github.com/tkLayout/tkLayout/edit/dev/" << cfn << "\">" << "Edit on GitHub (PR to dev branch)" << "</a></tt>";
   }
   output << "<br/>";
   return output;

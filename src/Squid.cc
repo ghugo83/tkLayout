@@ -496,6 +496,13 @@ namespace insur {
       v.makeLogPage(site);
     }
 
+    const std::string sourceRepo = mainConfiguration.getLayoutDirectory() + "/" + baseName_ + "/";
+    const std::string targetRepo =  mainConfiguration.getWwwEosDirectory() + "/" + baseName_ + "/";
+    std::string console = "rsync -a " + sourceRepo +  " " + targetRepo + " --delete --remove-source-files && rm -fr " + sourceRepo;
+    std::cout << console << std::endl;
+    system(console.c_str());
+    std::cout << "rsync done" << std::endl;
+
     bool result = site.makeSite(false);
     stopTaskClock();
     return result;

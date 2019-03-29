@@ -32,6 +32,7 @@ mainConfigHandler::mainConfigHandler() {
   goodConfigurationRead_ = false;
   binDirectory_ = "";
   layoutDirectory_ = "";
+  wwwEosDirectory_ = "";
   standardDirectory_ = "";
 }
 
@@ -158,6 +159,7 @@ bool mainConfigHandler::createConfigurationFileFromQuestions(string& configFileN
   } else {
     configFile << BINDIRECTORYDEFINITION << "=\"" << binDirectory_ << "\"" << endl;
     configFile << LAYOUTDIRECTORYDEFINITION << "=\"" << layoutDirectory_ << "\"" << endl;
+    configFile << WWWEOSDIRECTORYDEFINITION << "=\"" << wwwEosDirectory_ << "\"" << endl;
     configFile << STANDARDDIRECTORYDEFINITION << "=\"" << standardDirectory_ << "\"" << endl;
 
     configFile << MOMENTADEFINITION << "=\"";
@@ -214,6 +216,7 @@ bool mainConfigHandler::readConfigurationFile(string& configFileName) {
   //bool styleFound=false;
   bool binFound=false;
   bool layoutFound=false;
+  //bool wwwEosFound=false;
   bool xmlFound=false;
   bool momentaFound=false;
   bool triggerMomentaFound=false;
@@ -232,10 +235,16 @@ bool mainConfigHandler::readConfigurationFile(string& configFileName) {
       if (parameter==BINDIRECTORYDEFINITION) {
         binDirectory_ = value;
         binFound = true;
-      } else if (parameter==LAYOUTDIRECTORYDEFINITION) {
+      } 
+      else if (parameter==LAYOUTDIRECTORYDEFINITION) {
         layoutDirectory_ = value;
         layoutFound = true;
-      } else if (parameter==STANDARDDIRECTORYDEFINITION) {
+      } 
+      else if (parameter== WWWEOSDIRECTORYDEFINITION) {
+        wwwEosDirectory_ = value;
+        //wwwEosFound = true;
+      }
+      else if (parameter==STANDARDDIRECTORYDEFINITION) {
         standardDirectory_ = value;
         xmlFound = true;
       } else if (parameter==MOMENTADEFINITION) {
@@ -320,6 +329,10 @@ bool mainConfigHandler::readConfiguration( bool checkDirExists ) {
           cout << "You probably need to edit or delete the configuration file " << CONFIGURATIONFILENAME << endl;
           return false;
         }
+	if (!wwwEosDirectory_.empty() && !checkDirectory(wwwEosDirectory_)) {
+          cout << "You probably need to edit or delete the configuration file " << CONFIGURATIONFILENAME << endl;
+          return false;
+        }
         if (!checkDirectory(standardDirectory_)) {
           cout << "You probably need to edit or delete the configuration file " << CONFIGURATIONFILENAME << endl;
           return false;
@@ -361,6 +374,11 @@ string mainConfigHandler::getBinDirectory() {
 string mainConfigHandler::getLayoutDirectory() {
   getConfiguration();
   return getLayoutDirectory_();
+}
+
+string mainConfigHandler::getWwwEosDirectory() {
+  getConfiguration();
+  return getWwwEosDirectory_();
 }
 
 string mainConfigHandler::getStandardDirectory() {
@@ -420,6 +438,7 @@ string mainConfigHandler::getGeometriesDirectory() {
 
 string mainConfigHandler::getBinDirectory_() { return binDirectory_; }
 string mainConfigHandler::getLayoutDirectory_() { return layoutDirectory_; }
+string mainConfigHandler::getWwwEosDirectory_() { return wwwEosDirectory_; }
 string mainConfigHandler::getStandardDirectory_() { return standardDirectory_; }
 string mainConfigHandler::getStyleDirectory_() { return layoutDirectory_+"/"+insur::default_styledir; }
 string mainConfigHandler::getXmlDirectory_() { return standardDirectory_+"/"+insur::default_xmlpath; }

@@ -22,6 +22,7 @@ using namespace std;
 #define CONFIGURATIONFILENAMEDEFINITION "TKGEOMETRYRC"
 #define BINDIRECTORYDEFINITION "TKG_BINDIRECTORY"
 #define LAYOUTDIRECTORYDEFINITION "TKG_LAYOUTDIRECTORY" 
+#define WWWEOSDIRECTORYDEFINITION "TKG_WWWEOSDIRECTORY" 
 #define STANDARDDIRECTORYDEFINITION "TKG_STANDARDDIRECTORY" 
 #define MOMENTADEFINITION "TKG_MOMENTA" 
 #define TRIGGERMOMENTADEFINITION "TKG_TRIGGERMOMENTA" 
@@ -56,6 +57,7 @@ public:
   bool getConfiguration(string& layoutDirectory);
   string getBinDirectory();
   string getLayoutDirectory();
+  string getWwwEosDirectory();
   string getStandardDirectory();
   string getStyleDirectory();
   string getXmlDirectory();
@@ -77,6 +79,7 @@ private:
   //string styleDirectory_;
   string binDirectory_;
   string layoutDirectory_;
+  string wwwEosDirectory_;
   //string xmlDirectory_;
   string standardDirectory_;
   vector<double> momenta_;
@@ -96,6 +99,7 @@ private:
   vector<double> parseDoubleList(string);
   string getBinDirectory_();
   string getLayoutDirectory_();
+  string getWwwEosDirectory_();
   string getStandardDirectory_();
   string getStyleDirectory_();
   string getXmlDirectory_();

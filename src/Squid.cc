@@ -498,11 +498,21 @@ namespace insur {
 
     bool result = site.makeSite(false);
 
-    const std::string sourceRepo = mainConfiguration.getLayoutDirectory() + "/" + baseName_ + "/";
-    const std::string targetRepo =  mainConfiguration.getWwwEosDirectory() + "/" + baseName_ + "/";
+    // If www eos repo specified, use dirty trick.
+    // Clean solution would be to solve the issue of I/O speed with eos!
+    if (!mainConfiguration.getWwwEosDirectory().empty()) {
 
-    std::string console = "rsync -a " + sourceRepo +  " " + targetRepo + " --delete --remove-source-files && rm -fr " + sourceRepo;
-    system(console.c_str());
+      if (mainConfiguration.getLayoutDirectory().empty()) { 
+	logERROR(any2str("Unexpected: could not find layout directory: ") + any2str(mainConfiguration.getLayoutDirectory()));
+      } 
+      else {
+	const std::string sourceRepo = mainConfiguration.getLayoutDirectory() + "/" + baseName_ + "/";
+	const std::string targetRepo =  mainConfiguration.getWwwEosDirectory() + "/" + baseName_ + "/";
+
+	const std::string console = "rsync -a " + sourceRepo +  " " + targetRepo + " --delete --remove-source-files && rm -fr " + sourceRepo;
+	system(console.c_str());
+      }
+    }
 
     stopTaskClock();
     return result;

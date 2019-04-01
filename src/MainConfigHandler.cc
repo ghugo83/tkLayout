@@ -216,7 +216,6 @@ bool mainConfigHandler::readConfigurationFile(string& configFileName) {
   //bool styleFound=false;
   bool binFound=false;
   bool layoutFound=false;
-  //bool wwwEosFound=false;
   bool xmlFound=false;
   bool momentaFound=false;
   bool triggerMomentaFound=false;
@@ -242,7 +241,6 @@ bool mainConfigHandler::readConfigurationFile(string& configFileName) {
       } 
       else if (parameter== WWWEOSDIRECTORYDEFINITION) {
         wwwEosDirectory_ = value;
-        //wwwEosFound = true;
       }
       else if (parameter==STANDARDDIRECTORYDEFINITION) {
         standardDirectory_ = value;

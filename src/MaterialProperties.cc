@@ -285,18 +285,20 @@ namespace insur {
   // Versions with new material tab definition
     void MaterialProperties::calculateRadiationLength(double offset) {
       //const material::MaterialTab& materialTab = material::MaterialTab::instance();
-      const material::MaterialsTable& materialsTable = material::MaterialsTable::instance();
+      //const material::MaterialsTable& materialsTable = material::MaterialsTable::instance();
  
         if (getSurface() > 0) {
             r_length = offset;
             if (msl_set) {
                 // local mass loop
-                for (std::map<std::string, double>::iterator it = localmasses.begin(); it != localmasses.end(); ++it) {
-                    r_length += it->second / (materialsTable.getRadiationLength(it->first) * getSurface() / 100.0);
+	      for (std::map<std::string, double>::iterator it = localmasses.begin(); it != localmasses.end(); ++it) {
+		//r_length += it->second / (materialsTable.getRadiationLength(it->first) * getSurface() / 100.0);
+		r_length += it->second / getSurface();
                 }
                 for (std::map<std::string, std::map<std::string, double> >::iterator cit = localCompMats.begin(); cit != localCompMats.end(); ++cit) {
                     for (std::map<std::string, double>::iterator mit = cit->second.begin(); mit != cit->second.end(); ++mit) {
-                        componentsRI[getSuperName(cit->first)].radiation += mit->second / (materialsTable.getRadiationLength(mit->first) * getSurface() / 100.0);
+		      //componentsRI[getSuperName(cit->first)].radiation += mit->second / (materialsTable.getRadiationLength(mit->first) * getSurface() / 100.0);
+			componentsRI[getSuperName(cit->first)].radiation += mit->second / getSurface();
                     }
                 }
             }
@@ -305,19 +307,21 @@ namespace insur {
     
     void MaterialProperties::calculateInteractionLength(double offset) {
       //const material::MaterialTab& materialTab =  material::MaterialTab::instance();
-      const material::MaterialsTable& materialsTable = material::MaterialsTable::instance();
+      //const material::MaterialsTable& materialsTable = material::MaterialsTable::instance();
 
         if (getSurface() > 0) {
             i_length = offset;
             if (msl_set) {
                 // local mass loop
                 for (std::map<std::string, double>::iterator it = localmasses.begin(); it != localmasses.end(); ++it) {
-                    i_length += it->second / (materialsTable.getInteractionLength(it->first) * getSurface() / 100.0);
+		  //i_length += it->second / (materialsTable.getInteractionLength(it->first) * getSurface() / 100.0);
+		    i_length += it->second / getSurface();
                 }
                     
                 for (std::map<std::string, std::map<std::string, double> >::iterator cit = localCompMats.begin(); cit != localCompMats.end(); ++cit) {
                     for (std::map<std::string, double>::iterator mit = cit->second.begin(); mit != cit->second.end(); ++mit) {
-                        componentsRI[getSuperName(cit->first)].interaction += mit->second / (materialsTable.getInteractionLength(mit->first) * getSurface() / 100.0);
+		      //componentsRI[getSuperName(cit->first)].interaction += mit->second / (materialsTable.getInteractionLength(mit->first) * getSurface() / 100.0);
+		      componentsRI[getSuperName(cit->first)].interaction += mit->second / getSurface();
                     }
                 }
             }

@@ -1,0 +1,19 @@
+// 1:1 conversion of Al_MV
+
+Conversion {
+  Input {
+    Element {
+      elementName Al_MV
+      quantity 1
+      unit g/m
+    }
+  }
+  Output {
+    Element {
+      elementName Al_MV
+      quantity 1
+      unit g/m
+      service true
+    }
+  }
+}

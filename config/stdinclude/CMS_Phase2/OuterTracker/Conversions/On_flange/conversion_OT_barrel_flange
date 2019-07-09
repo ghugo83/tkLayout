@@ -1,0 +1,71 @@
+// Conversion at the OT barrel flange (max Z of each OT barrel layer)
+
+  // Propagate optical fibers
+  @include-std CMS_Phase2/OuterTracker/Conversions/Components/propagate_PE
+  @include-std CMS_Phase2/OuterTracker/Conversions/Components/propagate_Glass
+  @include-std CMS_Phase2/OuterTracker/Conversions/Components/propagate_Acrylate
+  
+  // Propagate temperature sensors lines
+  @include-std CMS_Phase2/OuterTracker/Conversions/Components/propagate_Al
+  @include-std CMS_Phase2/OuterTracker/Conversions/Components/propagate_Cu
+  
+  // Propagate LV and HV power wires
+  @include-std CMS_Phase2/OuterTracker/Conversions/Components/propagate_Al_HV
+  @include-std CMS_Phase2/OuterTracker/Conversions/Components/propagate_Al_MV
+
+  // Convert cooling at OT barrel flange
+  // Include manifolds.
+  // TO DO: NOT CHEKED, HENCE SHOULD DEFINITELY BE UPDATED!!
+  Conversion {
+    Input {
+      Element {
+        elementName Steel
+        quantity 7.9
+        unit g/m
+      }
+    }
+    Output {
+      Element {
+        elementName Steel
+        quantity 17.2
+        unit g/m
+        service true
+      }
+      Element {
+        elementName Steel
+        quantity 4.2
+        unit g
+        service false
+      }
+      Element {
+        elementName Al
+        quantity 7.4
+        unit g
+        service false
+      }
+    }
+  }
+  Conversion {
+    Input {
+      Element {
+        elementName CO2
+        quantity 1.8
+        unit g/m
+      }
+    }
+    Output {
+      Element {
+        elementName CO2
+        quantity 1.4
+        unit g
+        service false
+      }
+      Element {
+        elementName CO2
+        quantity 3.7
+        unit g/m
+        service true
+      }
+    }
+  }
+

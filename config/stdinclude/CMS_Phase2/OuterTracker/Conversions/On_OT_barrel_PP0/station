@@ -1,0 +1,9 @@
+// OT second-conversion station (OT PP0)
+
+Station {
+  stationName PP0_OT
+  type second
+  minZ 1235
+  maxZ 1255
+  @include-std CMS_Phase2/OuterTracker/Conversions/On_OT_barrel_PP0/conversion_OT_barrel_PP0
+}

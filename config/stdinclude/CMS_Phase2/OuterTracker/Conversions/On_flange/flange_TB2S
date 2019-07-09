@@ -1,0 +1,12 @@
+// Generic services conversion rules
+// Services for the standard rods
+// (scales with respective material)
+// SERVICES
+// HV, MV, LV
+Station {
+  stationName flange_TB2S
+  type flange
+
+  @include-std CMS_Phase2/OuterTracker/Conversions/On_flange/conversion_OT_barrel_flange
+
+}

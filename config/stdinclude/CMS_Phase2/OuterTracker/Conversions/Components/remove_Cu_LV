@@ -1,0 +1,12 @@
+Conversion {
+  Input {
+    Element {
+      elementName Cu_LV
+      quantity 1
+      unit g/m
+    }
+  }
+  Output {
+  }
+}
+

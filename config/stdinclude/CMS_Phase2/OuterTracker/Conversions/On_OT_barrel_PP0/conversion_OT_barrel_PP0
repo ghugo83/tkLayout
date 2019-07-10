@@ -15,6 +15,11 @@
 
 
   // LV and HV power wires
+  @include-std CMS_Phase2/OuterTracker/Conversions/Components/remove_Cu_LV
+  @include-std CMS_Phase2/OuterTracker/Conversions/Components/remove_PE_LV
+  @include-std CMS_Phase2/OuterTracker/Conversions/Components/remove_Cu_HV
+  @include-std CMS_Phase2/OuterTracker/Conversions/Components/remove_PE_HV
+  
   // CONVERSION
   // As per Habia cables PP1-PP0 (700063813 Rev 03)
   // (10% of one cable per module)
@@ -24,7 +29,7 @@
     // One module's worth of Al_MV
     Input {
       Element {
-        elementName Al_MV
+        elementName Al_LV
         quantity 0.612
         unit g/m
       }

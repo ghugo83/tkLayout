@@ -11,17 +11,17 @@ Component {
   service true
   scaleOnSensor 1
   Element {
-    elementName Al_MV
+    elementName Al_LV
     quantity 0.612
     unit g/m
   }
   Element {
-    elementName Cu
+    elementName Cu_LV
     quantity 0.218
     unit g/m
   }
   Element {
-    elementName PE
+    elementName PE_LV
     quantity 0.880
     unit g/m
   }
@@ -39,12 +39,12 @@ Component {
     unit g/m
   }
   Element {
-    elementName Cu
+    elementName Cu_HV
     quantity 0.082
     unit g/m
   }
   Element {
-    elementName PE
+    elementName PE_HV
     quantity 0.825
     unit g/m
   }

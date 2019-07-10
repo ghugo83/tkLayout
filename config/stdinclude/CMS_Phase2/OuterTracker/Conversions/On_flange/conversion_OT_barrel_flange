@@ -10,8 +10,12 @@
   @include-std CMS_Phase2/OuterTracker/Conversions/Components/propagate_Cu
   
   // Propagate LV and HV power wires
+  @include-std CMS_Phase2/OuterTracker/Conversions/Components/propagate_Al_LV
+  @include-std CMS_Phase2/OuterTracker/Conversions/Components/propagate_Cu_LV
+  @include-std CMS_Phase2/OuterTracker/Conversions/Components/propagate_PE_LV
   @include-std CMS_Phase2/OuterTracker/Conversions/Components/propagate_Al_HV
-  @include-std CMS_Phase2/OuterTracker/Conversions/Components/propagate_Al_MV
+  @include-std CMS_Phase2/OuterTracker/Conversions/Components/propagate_Cu_HV
+  @include-std CMS_Phase2/OuterTracker/Conversions/Components/propagate_PE_HV
 
   // Convert cooling at OT barrel flange
   // Include manifolds.

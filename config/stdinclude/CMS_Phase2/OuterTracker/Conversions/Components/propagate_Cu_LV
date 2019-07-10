@@ -1,16 +1,16 @@
-// 1:1 conversion of Al_MV
+// 1:1 conversion of Cu_LV
 
 Conversion {
   Input {
     Element {
-      elementName Al_MV
+      elementName Cu_LV
       quantity 1
       unit g/m
     }
   }
   Output {
     Element {
-      elementName Al_MV
+      elementName Cu_LV
       quantity 1
       unit g/m
       service true

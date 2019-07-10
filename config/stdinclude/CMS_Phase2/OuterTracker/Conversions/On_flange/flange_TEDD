@@ -15,6 +15,11 @@ Station {
   @include-std CMS_Phase2/OuterTracker/Conversions/Components/propagate_Acrylate
 
   // Power cables conversions
+  @include-std CMS_Phase2/OuterTracker/Conversions/Components/remove_Cu_LV
+  @include-std CMS_Phase2/OuterTracker/Conversions/Components/remove_PE_LV
+  @include-std CMS_Phase2/OuterTracker/Conversions/Components/remove_Cu_HV
+  @include-std CMS_Phase2/OuterTracker/Conversions/Components/remove_PE_HV
+  
   // As per Habia cables PP1-PP0 (700063813 Rev 03)
   // (10% of one cable per module)
   // Connectors same as 1-rod connector from http://cern.ch/go/P9bG
@@ -23,7 +28,7 @@ Station {
     // One module's worth of Al_MV
     Input {
       Element {
-        elementName Al_MV
+        elementName Al_LV
         quantity 0.612
         unit g/m
       }

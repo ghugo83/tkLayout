@@ -1,0 +1,19 @@
+// 1:1 conversion of PE_HV
+
+Conversion {
+  Input {
+    Element {
+      elementName PE_HV
+      quantity 1
+      unit g/m
+    }
+  }
+  Output {
+    Element {
+      elementName PE_HV
+      quantity 1
+      unit g/m
+      service true
+    }
+  }
+}

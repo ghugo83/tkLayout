@@ -265,8 +265,6 @@ SenLYSO	                   7.40	             Scint:0.9981    Ce:0.0019
 
 
 # This are only for renaming purposes: they could (and sometimes should) be deleted.
-Al_MV	                   2.698	                  Al:1
-Al_HV	                   2.698	                  Al:1
 TEDD_Al	                 2.698	                  Al:1
 FPIX_Al	                 2.698	                  Al:1
 FPIX_Al_HV	             2.698	                  Al:1
@@ -304,6 +302,13 @@ TEDD_PE	                 0.95	                    PE:1
 FPIX_PE	                 0.95	                    PE:1
 # different density from PE!!
 TEDD_Steel	             7.8	                 Steel:1
+
+Al_LV	                   2.698	                  Al:1
+Cu_LV	                   8.96  	                  Cu:1
+PE_LV	                   0.89	                    PE:1
+Al_HV	                   2.698	                  Al:1
+Cu_HV	                   8.96  	                  Cu:1
+PE_HV	                   0.89	                    PE:1
 
 
 

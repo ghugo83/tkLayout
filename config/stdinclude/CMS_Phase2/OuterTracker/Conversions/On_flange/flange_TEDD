@@ -7,116 +7,30 @@ Station {
   stationName flange_TEDD
   type flange
 
-  // Cabling: Optical fibers and twp propagation
-  @include-std CMS_Phase2/OuterTracker/Conversions/Components/propagate_PE
-  @include-std CMS_Phase2/OuterTracker/Conversions/Components/propagate_Al
-  @include-std CMS_Phase2/OuterTracker/Conversions/Components/propagate_Cu
+  // Propagate optical fibers
   @include-std CMS_Phase2/OuterTracker/Conversions/Components/propagate_Glass
   @include-std CMS_Phase2/OuterTracker/Conversions/Components/propagate_Acrylate
-
-  // Power cables conversions
-  @include-std CMS_Phase2/OuterTracker/Conversions/Components/remove_Cu_LV
-  @include-std CMS_Phase2/OuterTracker/Conversions/Components/remove_PE_LV
+  @include-std CMS_Phase2/OuterTracker/Conversions/Components/propagate_PE
+  
+  // Convert modules HV power wires
+  @include-std CMS_Phase2/OuterTracker/Conversions/Components/convert_12_modules_Al_HV_to_1_PP0_connector_and_all_Cu_cables
   @include-std CMS_Phase2/OuterTracker/Conversions/Components/remove_Cu_HV
   @include-std CMS_Phase2/OuterTracker/Conversions/Components/remove_PE_HV
   
-  // As per Habia cables PP1-PP0 (700063813 Rev 03)
-  // (10% of one cable per module)
-  // Connectors same as 1-rod connector from http://cern.ch/go/P9bG
-  // Binder connectors: Micro-T connectors - series 910 
-  Conversion {
-    // One module's worth of Al_MV
-    Input {
-      Element {
-        elementName Al_LV
-        quantity 0.612
-        unit g/m
-      }
-    }
-    // Per module
-    Output {
-      Element {
-        elementName Al
-        quantity 2.91
-        unit g/m
-        service true
-      }
-      Element {
-        elementName Cu
-        quantity 1.16
-        unit g/m
-        service true
-      }
-      // Insulator (50% for the MV)
-      Element {
-        elementName PE
-        quantity 4.5 
-        unit g/m
-        service true
-      }
-      // Connector
-      Element {
-        elementName Cu
-        quantity 0.27
-        unit g
-        service false
-      }
-      Element {
-        elementName PE
-        quantity 0.22
-        unit g
-        service false
-      }
-    }
-  }
+  // Convert modules LV power wires
+  @include-std CMS_Phase2/OuterTracker/Conversions/Components/remove_Al_LV
+  @include-std CMS_Phase2/OuterTracker/Conversions/Components/remove_Cu_LV
+  @include-std CMS_Phase2/OuterTracker/Conversions/Components/remove_PE_LV
+  
+  // Convert temperature sensors lines
+  @include-std CMS_Phase2/OuterTracker/Conversions/Components/remove_Al_T
+  @include-std CMS_Phase2/OuterTracker/Conversions/Components/remove_Cu_T
+  @include-std CMS_Phase2/OuterTracker/Conversions/Components/remove_PE_T
+  
 
-  Conversion {
-    // One module's worth of Al_HV
-    Input {
-      Element {
-        elementName Al_HV
-        quantity 0.2295
-        unit g/m
-      }
-    }
-    // Per module
-    Output {
-      Element {
-        elementName Al
-        quantity 0.91 
-        unit g/m
-        service true
-      }
-      Element {
-        elementName Cu
-        quantity 0.32
-        unit g/m
-        service true
-      }
-      // Insulator (50% for the HV)
-      Element {
-        elementName PE
-        quantity 4.5
-        unit g/m
-        service true
-      }
-      // Connector
-      Element {
-        elementName Cu
-        quantity 0.18
-        unit g
-        service false
-      }
-      Element {
-        elementName PE
-        quantity 0.16
-        unit g
-        service false
-      }
-    }
-  }
-
-  // Manifolds + radial pipes + holders
+  // Convert cooling at TEDD flange
+  // Include manifolds.
+  // TO DO: NOT CHEKED, HENCE SHOULD DEFINITELY BE UPDATED!!
   Conversion {
     Input {
       Element {
@@ -153,57 +67,4 @@ Station {
     }
   }
 
-  Conversion {
-    Input {
-      Element {
-        elementName TEDD_Cu
-        quantity 1
-        unit g/m
-      }
-    }
-    Output {
-      Element {
-        elementName Cu
-        quantity 1000
-        unit g/m
-        service true
-      }
-    }
-  }
-
-  Conversion {
-    Input {
-      Element {
-        elementName TEDD_PE
-        quantity 1
-        unit g/m
-      }
-    }
-    Output {
-      Element {
-        elementName PE
-        quantity 1000
-        unit g/m
-        service true
-      }
-    }
-  }
-
-  Conversion {
-    Input {
-      Element {
-        elementName TEDD_Al
-        quantity 1
-        unit g/m
-      }
-    }
-    Output {
-      Element {
-        elementName Al
-        quantity 1000
-        unit g/m
-        service true
-      }
-    }
-  }
 }

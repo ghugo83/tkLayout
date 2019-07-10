@@ -48,46 +48,21 @@ Materials disk {
     scaleOnSensor 0
     // Two conductors and a drain
     Element {
-      elementName Cu
+      elementName Cu_T
       quantity 9.5
       unit g
     }
     // Two insulations
     Element {
-      elementName PE
+      elementName PE_T
       quantity 5.4
       unit g
     }
     // Aluminium polyester foil
     Element {
-      elementName Al
+      elementName Al_T
       quantity 9.3
       unit g
-    }
-  }
-
-  // fake numbers for calculating conversion with a factor of 1000
-  Component {
-    componentName "Cabling: Pipe thermistor twisted pairs"
-    service true
-    scaleOnSensor 0
-    // Two conductors and a drain
-    Element {
-      elementName TEDD_Cu
-      quantity 0.095
-      unit g/m
-    }
-    // Two insulations
-    Element {
-      elementName TEDD_PE
-      quantity 0.054
-      unit g/m
-    }
-    // Aluminium polyester foil
-    Element {
-      elementName TEDD_Al
-      quantity 0.093
-      unit g/m
     }
   }
 

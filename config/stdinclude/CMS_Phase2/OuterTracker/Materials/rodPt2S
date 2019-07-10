@@ -2,12 +2,14 @@
 // In rod service true means that exit from the rod
 //        service false means that stay in the rod (but in the service cylinder)
 
-//  #include <generic/CoolingBlocks> // TODO: check this - duplicate entry in ModuleMechanics
 
 Materials rodPt2S {
   type rod
 
   // Cooling for the module
+  // WARNING: NOOOO!
+  // THIS SHOULD BE PLACED AS A MODULE COMPONENT AT THE BOOTOM OF THE MODULE.
+  // HERE, THE MATERIALS END UP BEING PART OF A LAYER SURROUNDING ALL PLANKS, INSTEAD OF BEING IN-BETWEEN PLANKS.
   Component {
     componentName "Cooling"
     service true
@@ -23,36 +25,12 @@ Materials rodPt2S {
       unit g/m
     }
   }
-
-  // 1 TWP/rod for pipe thermistor
-  // (This is a bus line: service does not accumulate)
-  // Not transfered on flange for now.
-  Component {
-    componentName "Cabling: Pipe thermistor twisted pairs"
-    service true
-    scaleOnSensor 0
-    // Two conductors and a drain
-    Element {
-      elementName Cu
-      quantity 0.339
-      unit g/m
-    }
-    // Two insulations
-    Element {
-      elementName PE
-      quantity 0.194
-      unit g/m
-    }
-    // Aluminium polyester foil
-    Element {
-      elementName Al
-      quantity 0.330
-      unit g/m
-    }
-  }
+  
 
   // Supports Mechanics
-  //Mechanics
+  // WARNING: NOOOO!
+  // THIS SHOULD BE PLACED AS A MODULE COMPONENT AT THE BOOTOM OF THE MODULE.
+  // HERE, THE MATERIALS END UP BEING PART OF A LAYER SURROUNDING ALL PLANKS, INSTEAD OF BEING IN-BETWEEN PLANKS.
   Component {
     componentName "Supports Mechanics: TB2S Ladder"
     service false
@@ -68,4 +46,33 @@ Materials rodPt2S {
       unit g
     }
   }
+  
+
+// 1 TWP/rod for pipe thermistor
+// (This is a bus line: service does not accumulate)
+  Component {
+    componentName "Cabling: Pipe thermistor twisted pairs"
+    service true
+    scaleOnSensor 0
+    // Two conductors and a drain
+    Element {
+      elementName Cu_T
+      quantity 0.339
+      unit g/m
+    }
+    // Two insulations
+    Element {
+      elementName PE_T
+      quantity 0.194
+      unit g/m
+    }
+    // Aluminium polyester foil
+    Element {
+      elementName Al_T
+      quantity 0.330
+      unit g/m
+    }
+  }
+
+  
 }

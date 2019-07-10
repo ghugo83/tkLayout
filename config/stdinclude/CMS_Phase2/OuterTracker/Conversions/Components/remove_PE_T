@@ -1,0 +1,12 @@
+Conversion {
+  Input {
+    Element {
+      elementName PE_T
+      quantity 1
+      unit g/m
+    }
+  }
+  Output {
+  }
+}
+

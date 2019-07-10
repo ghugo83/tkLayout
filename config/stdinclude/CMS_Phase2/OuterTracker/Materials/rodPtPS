@@ -34,19 +34,19 @@ Materials rodPtPS {
     scaleOnSensor 0
     // Two conductors and a drain
     Element {
-      elementName Cu
+      elementName Cu_T
       quantity 0.339
       unit g/m
     }
     // Two insulations
     Element {
-      elementName PE
+      elementName PE_T
       quantity 0.194
       unit g/m
     }
     // Aluminium polyester foil
     Element {
-      elementName Al
+      elementName Al_T
       quantity 0.330
       unit g/m
     }
@@ -54,8 +54,7 @@ Materials rodPtPS {
 
 
 
- // Supports Mechanics
-  //Mechanics
+  // Supports Mechanics
   Component {
     componentName "Supports Mechanics: flat TBPS ladder"
     service false

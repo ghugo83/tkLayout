@@ -1,21 +1,25 @@
 // Conversion at the OT barrel flange (max Z of each OT barrel layer)
 
   // Propagate optical fibers
-  @include-std CMS_Phase2/OuterTracker/Conversions/Components/propagate_PE
   @include-std CMS_Phase2/OuterTracker/Conversions/Components/propagate_Glass
   @include-std CMS_Phase2/OuterTracker/Conversions/Components/propagate_Acrylate
-  
-  // Propagate temperature sensors lines
-  @include-std CMS_Phase2/OuterTracker/Conversions/Components/propagate_Al
-  @include-std CMS_Phase2/OuterTracker/Conversions/Components/propagate_Cu
-  
-  // Propagate LV and HV power wires
-  @include-std CMS_Phase2/OuterTracker/Conversions/Components/propagate_Al_LV
-  @include-std CMS_Phase2/OuterTracker/Conversions/Components/propagate_Cu_LV
-  @include-std CMS_Phase2/OuterTracker/Conversions/Components/propagate_PE_LV
+  @include-std CMS_Phase2/OuterTracker/Conversions/Components/propagate_PE
+    
+  // Propagate modules HV power wires
   @include-std CMS_Phase2/OuterTracker/Conversions/Components/propagate_Al_HV
   @include-std CMS_Phase2/OuterTracker/Conversions/Components/propagate_Cu_HV
   @include-std CMS_Phase2/OuterTracker/Conversions/Components/propagate_PE_HV
+  
+  // Propagate modules LV power wires
+  @include-std CMS_Phase2/OuterTracker/Conversions/Components/propagate_Al_LV
+  @include-std CMS_Phase2/OuterTracker/Conversions/Components/propagate_Cu_LV
+  @include-std CMS_Phase2/OuterTracker/Conversions/Components/propagate_PE_LV
+    
+  // Propagate temperature sensors lines
+  @include-std CMS_Phase2/OuterTracker/Conversions/Components/propagate_Al_T
+  @include-std CMS_Phase2/OuterTracker/Conversions/Components/propagate_Cu_T
+  @include-std CMS_Phase2/OuterTracker/Conversions/Components/propagate_PE_T
+
 
   // Convert cooling at OT barrel flange
   // Include manifolds.

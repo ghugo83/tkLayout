@@ -1,4 +1,4 @@
-   // WARNING: THIS FILE IS NOT CURRENTLY INCLUDED ANYWHERE!! 
+// WARNING: THIS FILE IS NOT CURRENTLY INCLUDED ANYWHERE!! 
 
    // Cooling for the module
   Component {
@@ -30,19 +30,19 @@
     targetVolume 0
     // Two conductors and a drain
     Element {
-      elementName Cu
+      elementName Cu_T
       quantity 0.0339
       unit g
     }
     // Two insulations
     Element {
-      elementName PE
+      elementName PE_T
       quantity 0.0194
       unit g
     }
     // Aluminium polyester foil
     Element {
-      elementName Al
+      elementName Al_T
       quantity 0.0330
       unit g
     }

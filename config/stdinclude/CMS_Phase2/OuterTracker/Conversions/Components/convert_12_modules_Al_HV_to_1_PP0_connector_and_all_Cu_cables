@@ -1,0 +1,65 @@
+// CONVERSION
+// Scaled on HV input.
+// THIS CORRESPONDS TO 1 PP0 CONNECTOR, AND ALL THE CU CABLES ROUTED TOWARDS PP1.
+
+
+  Conversion {
+    // 12 modules worth of Al_HV
+    Input {
+      Element {
+        elementName Al_HV
+        quantity 2.2290876
+        unit g/m
+      }
+    }
+    
+    
+    
+    // THIS GATHERS ALL THE CU CABLES ROUTED OUT OF A PP0 CONNECTOR, SERVING 12 MODULES.
+
+    // AWG22: 0.326 mm2 metal cross-section.    
+    // Number of AWG22 Cu cables : 2x12 (2 per module) + 2 (pre-heater) = 26 cables.
+
+    // AWG28: 0.081 mm2 metal cross-section.   
+    // Number of AWG28 Cu cables : 12 (1 per module) + 4 (temperature lines) + 4 (connected to PP0) = 20 cables.
+    Output {
+      Element {
+        componentName "Cabling: Cu Power cables from PP0 to PP1"
+        elementName Cu
+        quantity 90.46016   // = 8.96 g/cm3 (Cu density) x (26 (26 wires) x 0.326 mm2 (metal cross-section) + 20 (20 wires) x 0.081 mm2 (metal cross-section))
+        unit g/m
+        service true
+      }
+      // Isolant
+      // TO DO: assume ~50% of the metal cross-section for isolant, placed outside around the metals.
+      Element {
+        componentName "Cabling: Cu Power cables from PP0 to PP1"
+        elementName PE
+        quantity 4.7956    // = 0.95 g/cm3 (PE density) x (26 (26 wires) x 0.326 mm2 (metal cross-section) + 20 (20 wires) x 0.081 mm2 (metal cross-section))
+        unit g/m
+        service true
+      }
+      
+      
+      
+      // 2 connectors: 1 for LV + 1 for HV
+      // TO DO: NOT UPDATED!!! SHOULD DEFINITELY BE REVISED!!
+      // Connectors same as 1-rod connector from http://cern.ch/go/P9bG
+      // Binder connectors: Micro-T connectors - series 910 
+      Element {
+        componentName "Cabling: OT powering PP0 connector"
+        elementName Cu
+        quantity 4.5     // (2.7 g LV + 1.8 g HV)
+        unit g
+        service false
+      }
+      Element {
+        componentName "Cabling: OT powering PP0 connector"
+        elementName PE   // (2.2 g LV + 1.6 g HV)
+        quantity 3.8
+        unit g
+        service false
+      }
+    }
+    
+  }

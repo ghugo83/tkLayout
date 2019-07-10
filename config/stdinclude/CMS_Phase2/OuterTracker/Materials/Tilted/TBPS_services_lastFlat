@@ -32,19 +32,19 @@
     targetVolume 0
     // Two conductors and a drain
     Element {
-      elementName Cu
+      elementName Cu_T
       quantity 0.085
       unit g/m
     }
     // Two insulations
     Element {
-      elementName PE
+      elementName PE_T
       quantity 0.049
       unit g/m
     }
     // Aluminium polyester foil
     Element {
-      elementName Al
+      elementName Al_T
       quantity 0.083
       unit g/m
     }

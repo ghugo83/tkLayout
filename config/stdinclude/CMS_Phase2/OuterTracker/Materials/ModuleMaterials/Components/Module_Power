@@ -1,51 +1,56 @@
-// Power lines for the module
-// LV for the DC/DC and HV for the sensor
-// Habia April 2016 as per SharePoint site
+// Power wires FOR 1 OT MODULE.
+// LV for the hybrids, HV for the sensor.
 
-// Power for the converter (10V)
-// PP0-SEH-LV (700067232 Rev 01)
-// 2 wires
-// Diameter 0.19 Al, 0.20 Cu
+// LV
+// 2 wires, CCA15 AWG24
+// AWG24: 0.205 mm2 metal cross-section.
+// CCA15: 85% metal cross-section Al, 15% metal cross-section Cu.
 Component {
   componentName "Cabling: Hybrid power lines"
   service true
   scaleOnSensor 1
   Element {
     elementName Al_LV
-    quantity 0.612
+    quantity 0.940253     // = 2 (2 wires) x 2.698 g/cm3 (Al density) x 0.85 (Al surfacic ratio) x 0.205 mm2 (metal cross-section)
     unit g/m
   }
   Element {
     elementName Cu_LV
-    quantity 0.218
+    quantity 0.55104      // = 2 (2 wires) x 8.96 g/cm3 (Cu density) x 0.15 (Cu surfacic ratio) x 0.205 mm2 (metal cross-section)
     unit g/m
   }
+  // Isolant
+  // TO DO: assume ~50% of the metal cross-section for isolant, placed outside around the metals.
   Element {
-    elementName PE_LV
-    quantity 0.880
+    elementName PE_LV     
+    quantity 0.19475      // = 2 (2 wires) x 0.95 g/cm3 (PE density) x 0.5 (PE surfacic ratio) x 0.205 mm2 (metal cross-section)
     unit g/m
   }
 }
 
-// HV: 1 wire
-// PP0-SEH-HV (700067231 Rev 01)
+// HV
+// 1 wire, CCA15 AWG28
+// AWG28: 0.081 mm2 metal cross-section.
+// CCA15: 85% metal cross-section Al, 15% metal cross-section Cu.
 Component {
   componentName "Cabling: High voltage lines"
   service true
   scaleOnSensor 0
   Element {
-    elementName Al_HV
-    quantity 0.2295
+    elementName Al_HV    
+    quantity 0.1857573  // = 2.698 g/cm3 (Al density) x 0.85 (Al surfacic ratio) x 0.081 mm2 (metal cross-section)
     unit g/m
   }
   Element {
     elementName Cu_HV
-    quantity 0.082
+    quantity 0.108864  // = 8.96 g/cm3 (Cu density) x 0.15 (Cu surfacic ratio) x 0.081 mm2 (metal cross-section)
     unit g/m
   }
+  // Isolant
+  // TO DO: assume ~50% of the metal cross-section for isolant, placed outside around the metals.
   Element {
     elementName PE_HV
-    quantity 0.825
+    quantity 0.038475  // = 0.95 g/cm3 (PE density) x 0.5 (PE surfacic ratio) x 0.081 mm2 (metal cross-section)
     unit g/m
   }
 }

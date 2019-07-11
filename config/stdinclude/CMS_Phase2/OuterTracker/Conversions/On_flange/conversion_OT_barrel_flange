@@ -5,20 +5,20 @@
   @include-std CMS_Phase2/OuterTracker/Conversions/Components/propagate_Acrylate
   @include-std CMS_Phase2/OuterTracker/Conversions/Components/propagate_PE
     
-  // Propagate modules HV power wires
-  @include-std CMS_Phase2/OuterTracker/Conversions/Components/propagate_Al_HV
-  @include-std CMS_Phase2/OuterTracker/Conversions/Components/propagate_Cu_HV
-  @include-std CMS_Phase2/OuterTracker/Conversions/Components/propagate_PE_HV
+  // Convert modules HV power wires
+  @include-std CMS_Phase2/OuterTracker/Conversions/Components/convert_12_modules_Al_HV_to_1_PP0_connector_and_all_Cu_cables
+  @include-std CMS_Phase2/OuterTracker/Conversions/Components/remove_Cu_HV
+  @include-std CMS_Phase2/OuterTracker/Conversions/Components/remove_PE_HV
   
-  // Propagate modules LV power wires
-  @include-std CMS_Phase2/OuterTracker/Conversions/Components/propagate_Al_LV
-  @include-std CMS_Phase2/OuterTracker/Conversions/Components/propagate_Cu_LV
-  @include-std CMS_Phase2/OuterTracker/Conversions/Components/propagate_PE_LV
-    
-  // Propagate temperature sensors lines
-  @include-std CMS_Phase2/OuterTracker/Conversions/Components/propagate_Al_T
-  @include-std CMS_Phase2/OuterTracker/Conversions/Components/propagate_Cu_T
-  @include-std CMS_Phase2/OuterTracker/Conversions/Components/propagate_PE_T
+  // Convert modules LV power wires
+  @include-std CMS_Phase2/OuterTracker/Conversions/Components/remove_Al_LV
+  @include-std CMS_Phase2/OuterTracker/Conversions/Components/remove_Cu_LV
+  @include-std CMS_Phase2/OuterTracker/Conversions/Components/remove_PE_LV
+  
+  // Convert temperature sensors lines
+  @include-std CMS_Phase2/OuterTracker/Conversions/Components/remove_Al_T
+  @include-std CMS_Phase2/OuterTracker/Conversions/Components/remove_Cu_T
+  @include-std CMS_Phase2/OuterTracker/Conversions/Components/remove_PE_T
 
 
   // Convert cooling at OT barrel flange

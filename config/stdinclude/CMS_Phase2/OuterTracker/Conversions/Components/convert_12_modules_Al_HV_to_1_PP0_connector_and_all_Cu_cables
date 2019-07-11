@@ -18,15 +18,15 @@
     // THIS GATHERS ALL THE CU CABLES ROUTED OUT OF A PP0 CONNECTOR, SERVING 12 MODULES.
 
     // AWG22: 0.326 mm2 metal cross-section.    
-    // Number of AWG22 Cu cables : 2x12 (2 per module) + 2 (pre-heater) = 26 cables.
+    // Number of AWG22 Cu cables : 2x12 (2 per module) = 24 cables.
 
     // AWG28: 0.081 mm2 metal cross-section.   
-    // Number of AWG28 Cu cables : 12 (1 per module) + 4 (temperature lines) + 4 (connected to PP0) = 20 cables.
+    // Number of AWG28 Cu cables : 12 (1 per module) + 4 (temperature lines) = 16 cables.
     Output {
       Element {
         componentName "Cabling: Power cables from PP0 towards PP1"
         elementName Cu
-        quantity 90.46016   // = 8.96 g/cm3 (Cu density) x (26 (26 wires) x 0.326 mm2 (metal cross-section) + 20 (20 wires) x 0.081 mm2 (metal cross-section))
+        quantity 71.39904   // = 8.96 g/cm3 (Cu density) x (24 (24 wires) x 0.326 mm2 (metal cross-section) + 16 (16 wires) x 0.081 mm2 (metal cross-section))
         unit g/m
         service true
       }

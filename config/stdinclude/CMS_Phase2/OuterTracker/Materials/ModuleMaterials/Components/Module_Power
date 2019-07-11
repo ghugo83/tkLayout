@@ -20,10 +20,10 @@ Component {
     unit g/m
   }
   // Isolant
-  // TO DO: assume ~50% of the metal cross-section for isolant, placed outside around the metals.
+  // TO DO: this has not been updated. Unclear what the isolant thickness is.
   Element {
     elementName PE_LV     
-    quantity 0.19475      // = 2 (2 wires) x 0.95 g/cm3 (PE density) x 0.5 (PE surfacic ratio) x 0.205 mm2 (metal cross-section)
+    quantity 0.880
     unit g/m
   }
 }
@@ -47,10 +47,10 @@ Component {
     unit g/m
   }
   // Isolant
-  // TO DO: assume ~50% of the metal cross-section for isolant, placed outside around the metals.
+  // TO DO: this has not been updated. Unclear what the isolant thickness is.
   Element {
     elementName PE_HV
-    quantity 0.038475  // = 0.95 g/cm3 (PE density) x 0.5 (PE surfacic ratio) x 0.081 mm2 (metal cross-section)
+    quantity 0.825
     unit g/m
   }
 }

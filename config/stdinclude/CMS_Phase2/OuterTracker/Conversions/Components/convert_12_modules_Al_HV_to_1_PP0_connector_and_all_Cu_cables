@@ -18,20 +18,21 @@
     // THIS GATHERS ALL THE CU CABLES ROUTED OUT OF A PP0 CONNECTOR, SERVING 12 MODULES.
 
     // AWG22: 0.326 mm2 metal cross-section.    
-    // Number of AWG22 Cu cables : 2x12 (2 per module) = 24 cables.
+    // Number of AWG22 Cu cables : 2x10 (2 per module) = 20 cables.
 
     // AWG28: 0.081 mm2 metal cross-section.   
-    // Number of AWG28 Cu cables : 12 (1 per module) + 4 (temperature lines) = 16 cables.
+    // Number of AWG28 Cu cables : 10 (1 per module) + 4 (temperature lines) = 14 cables.
     Output {
       Element {
         componentName "Cabling: Power cables from PP0 towards PP1"
         elementName Cu
-        quantity 71.39904   // = 8.96 g/cm3 (Cu density) x (24 (24 wires) x 0.326 mm2 (metal cross-section) + 16 (16 wires) x 0.081 mm2 (metal cross-section))
+        quantity 68.57984   // = 8.96 g/cm3 (Cu density) x (20 (20 wires) x 0.326 mm2 (metal cross-section) + 14 (14 wires) x 0.081 mm2 (metal cross-section))
         unit g/m
         service true
       }
       // Isolant
       // TO DO: this has not been updated. Unclear what the isolant thickness is.
+      // To me, seems order of magnitude too much though!!
       Element {
         componentName "Cabling: Power cables from PP0 towards PP1"
         elementName PE

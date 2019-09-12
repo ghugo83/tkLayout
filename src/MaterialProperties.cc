@@ -295,14 +295,14 @@ namespace insur {
             if (msl_set) {
                 // local mass loop
                 for (std::map<std::string, double>::iterator it = localmasses.begin(); it != localmasses.end(); ++it) {
-                    r_length += it->second / (materialsTable.getRadiationLength(it->first) * getSurface() / 100.0);
+		  r_length += it->second / (getSurface() / 100.0);
                 }
                 for (const auto& myElementIt : localMassesDetails_) {
 		  const LocalElement& myElement = myElementIt.first;
 		  const double myElementMass = myElementIt.second;
 		  const std::string& myElementName = myElement.elementName();
 		  const double myElementRadiationLength = materialsTable.getRadiationLength(myElementName);
-		  componentsRI_[myElement].radiation += myElementMass / (myElementRadiationLength * getSurface() / 100.0);
+		  componentsRI_[myElement].radiation += myElementMass / (getSurface() / 100.0);
 
 		  const MechanicalCategory& myMechanicalCategory = myElement.mechanicalCategory();
 		  normalizedRIRatioPerMechanicalCategory_[myMechanicalCategory].first += myElementMass / myElementRadiationLength;
@@ -322,14 +322,14 @@ namespace insur {
             if (msl_set) {
 	      // local mass loop
 	      for (std::map<std::string, double>::iterator it = localmasses.begin(); it != localmasses.end(); ++it) {
-		i_length += it->second / (materialsTable.getInteractionLength(it->first) * getSurface() / 100.0);
+		i_length += it->second / (getSurface() / 100.0);
 	      }
 	      for (const auto& myElementIt : localMassesDetails_) {
 		const LocalElement& myElement = myElementIt.first;
 		const double myElementMass = myElementIt.second;
 		const std::string& myElementName = myElement.elementName();
 		const double myElementInteractionLength = materialsTable.getInteractionLength(myElementName);
-		componentsRI_[myElement].interaction += myElementMass / (myElementInteractionLength * getSurface() / 100.0);
+		componentsRI_[myElement].interaction += myElementMass / (getSurface() / 100.0);
 
 		const MechanicalCategory& myMechanicalCategory = myElement.mechanicalCategory();
 		normalizedRIRatioPerMechanicalCategory_[myMechanicalCategory].second += myElementMass / myElementInteractionLength;

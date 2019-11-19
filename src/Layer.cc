@@ -285,7 +285,7 @@ void Layer::cutAtEta(double eta) {
 void Layer::buildStraight() {
 
   // COMPUTES A ROD TEMPLATE
-  const double orientedSkewAngle = (!isSkewedForInstallation() ? 0 : bigParity() * skewAngle());
+  const double orientedSkewAngle = (!isSkewedUniformInPhi() ? 0 : bigParity() * skewAngle());
   RodTemplate rodTemplate = makeRodTemplate(orientedSkewAngle);
 
   // MID-RADIUS PLACEMENT AND NUMRODS

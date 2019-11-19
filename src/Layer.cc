@@ -294,7 +294,7 @@ void Layer::buildStraight() {
   // NON-SKEWED LAYER: compute shift in Phi between consecutive rods centers.
   const double rodCenterPhiShift = computeRodCenterPhiShift();
 
-  // SKEWED LAYER: compute parameters of interest.
+  // SKEWED INSTALLATION LAYER: compute parameters of interest.
   const SkewedLayerPhiShifts& phiShifts = (isSkewedForInstallation() ? buildSkewed() : SkewedLayerPhiShifts{ 0.,0.,0.} );
   const double installationMinusBigDeltaRodCenterPhiShift = phiShifts.installationMinusBigDeltaRodCenterPhiShift;
   const double commonRodCenterPhiShift = phiShifts.commonRodCenterPhiShift;
@@ -322,13 +322,13 @@ void Layer::buildStraight() {
 			 isFirstRodAtPlusBigDelta, firstRod->zPlusParity(), firstRodCenterPhi, 
 			 rodCenterPhiShift, commonRodCenterPhiShift);
 
-  // NON-SKEWED INSTALLATION MODE
+  // NON-SKEW MODE OR SKEW UNIFORM MODE
   if (!isSkewedForInstallation()) { 
     buildAndStoreClonedRodsInNonSkewedMode(firstRod, secondRod,
 					   rodCenterPhiShift);
   }
 
-  // SKEWED INSTALLATION MODE
+  // SKEW INSTALLATION MODE
   else {
     buildAndStoreClonedRodsInSkewedMode(firstRod, secondRod, skewedRod,
 					commonRodCenterPhiShift, skewedRodCenterPhiShift);

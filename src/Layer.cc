@@ -153,7 +153,7 @@ void Layer::check() {
   PropertyObject::check();
 
   // UNTILTED LAYER
-  if (!isTilted() && !isSkewedForInstallation()) {
+  if (!isTilted() && !isSkewedUniformInPhi() && !isSkewedForInstallation()) {
     if (buildNumModules() > 0 && maxZ.state()) throw PathfulException("Only one between numModules and maxZ can be specified");
     if (buildNumModules() == 0 && !maxZ.state()) throw PathfulException("At least one between numModules and maxZ must be specified");
     if (numRods.state() && (phiOverlap.state() || phiSegments.state())) throw PathfulException("Flat layer : Only one between numRods  and (phiOverlap + phiSegments) can be specified.");
@@ -188,15 +188,33 @@ void Layer::check() {
   }
 
   // SKEWED LAYER
-  if (isSkewedForInstallation()) {
-    if (!skewedModuleEdgeShift.state()) throw PathfulException("Skewed layer mode: skewedModuleEdgeShift must be specified.");
-    if (!numRods.state()) throw PathfulException("Skewed layer mode: numRods must be specified.");
-    if (radiusMode() != RadiusMode::FIXED) throw PathfulException("Skewed layer mode: the (average) radii of layers must be specified.");
+  // Mode A: all ladders are distributed uniformly in phi
+  if (isSkewedUniformInPhi()) {
+    if (fabs(skewAngle()) < insur::geom_zero) throw PathfulException("Skewed layer, uniform in phi mode: skewedAngle must be specified.");
+    if (!numRods.state()) throw PathfulException("Skewed layer, uniform in phi mode: numRods must be specified.");
+    if (radiusMode() != RadiusMode::FIXED) throw PathfulException("Skewed layer, uniform in phi mode: the (average) radii of layers must be specified.");
     if (isTilted()) throw PathfulException("A layer was set to both skewed and tilted: this is not presently supported.");
-    if (phiForbiddenRanges.state()) throw PathfulException("Skewed layer mode: phiForbiddenRange is not supported.");
-    if (rotateLayerByRodsDeltaPhiHalf()) throw PathfulException("Skewed layer mode: rotateLayerByRodsDeltaPhiHalf is not supported.");
-    if (phiOverlap.state()) throw PathfulException("Skewed layer mode: phiOverlap should not be specified.");
-    if (phiSegments.state()) throw PathfulException("Skewed layer mode: phiSegments should not be specified.");
+    if (isSkewedForInstallation()) throw PathfulException("A layer was set to both skewed uniform in phi, and skewed installation modes.");
+    if (skewedModuleEdgeShift.state()) throw PathfulException("Skewed layer, uniform in phi mode: skewedModuleEdgeShift should not be specified.");
+    if (installationOverlapRatio.state()) throw PathfulException("Skewed layer, uniform in phi mode: installationOverlapRatio should not be specified.");   
+    //if (phiForbiddenRanges.state()) throw PathfulException("Skewed layer, uniform in phi mode: phiForbiddenRange is not supported.");
+    //if (rotateLayerByRodsDeltaPhiHalf()) throw PathfulException("Skewed layer, uniform in phi mode: rotateLayerByRodsDeltaPhiHalf is not supported.");
+    if (phiOverlap.state()) throw PathfulException("Skewed layer, uniform in phi mode: phiOverlap should not be specified.");
+    if (phiSegments.state()) throw PathfulException("Skewed layer, uniform in phi mode: phiSegments should not be specified.");
+  }
+  // Mode B: Phase 2 Inner Tracker installation mode: only 2 ladders per layer are skewed.
+  if (isSkewedForInstallation()) {
+    if (!skewedModuleEdgeShift.state()) throw PathfulException("Skewed layer, installation mode: skewedModuleEdgeShift must be specified.");
+    if (!installationOverlapRatio.state()) throw PathfulException("Skewed layer, installation mode: installationOverlapRatio must be specified.");
+    if (!numRods.state()) throw PathfulException("Skewed layer, installation mode: numRods must be specified.");
+    if (radiusMode() != RadiusMode::FIXED) throw PathfulException("Skewed layer, installation mode: the (average) radii of layers must be specified.");
+    if (isTilted()) throw PathfulException("A layer was set to both skewed and tilted: this is not presently supported.");
+    if (isSkewedUniformInPhi()) throw PathfulException("A layer was set to both skewed uniform in phi, and skewed installation modes.");
+    if (fabs(skewAngle()) > insur::geom_zero) throw PathfulException("Skewed layer, installation mode: skewedAngle should not be specified.");
+    if (phiForbiddenRanges.state()) throw PathfulException("Skewed layer, installation mode: phiForbiddenRange is not supported.");
+    if (rotateLayerByRodsDeltaPhiHalf()) throw PathfulException("Skewed layer, installation mode: rotateLayerByRodsDeltaPhiHalf is not supported.");
+    if (phiOverlap.state()) throw PathfulException("Skewed layer, installation mode: phiOverlap should not be specified.");
+    if (phiSegments.state()) throw PathfulException("Skewed layer, installation mode: phiSegments should not be specified.");
   }
 }
 
@@ -267,7 +285,8 @@ void Layer::cutAtEta(double eta) {
 void Layer::buildStraight() {
 
   // COMPUTES A ROD TEMPLATE
-  RodTemplate rodTemplate = makeRodTemplate();
+  const double orientedSkewAngle = (!isSkewedForInstallation() ? 0 : bigParity() * skewAngle());
+  RodTemplate rodTemplate = makeRodTemplate(orientedSkewAngle);
 
   // MID-RADIUS PLACEMENT AND NUMRODS
   computePlaceRadiiAndNumRods(rodTemplate);  
@@ -330,7 +349,7 @@ RodTemplate Layer::makeRodTemplate(const double skewAngle) {
     rodTemplate[i] = std::move(unique_ptr<BarrelModule>(GeometryFactory::make<BarrelModule>(GeometryFactory::make<RectangularModule>(), subdetectorName())));
     rodTemplate[i]->store(propertyTree());
     if (ringNode.count(i+1) > 0) rodTemplate[i]->store(ringNode.at(i+1));
-    if (isSkewedForInstallation()) rodTemplate[i]->skewAngle(skewAngle);
+    if (isSkewedUniformInPhi() || isSkewedForInstallation()) rodTemplate[i]->skewAngle(skewAngle);
     rodTemplate[i]->build();
   }
   return rodTemplate;

@@ -50,6 +50,12 @@ Component {
   service false
   scaleOnSensor 0
   targetVolume 3
+  
+  Element {
+    elementName Sn
+    quantity 0.170
+    unit g
+  }
   //SEH CFRP support
   Element {
     elementName CFRP

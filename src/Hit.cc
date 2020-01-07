@@ -285,8 +285,8 @@ double Hit::getResolutionRphi(double trackRadius) {
       double A = 0;
       if (SimParms::getInstance().isMagFieldConst()) A = getRPos()/(2*trackRadius); // r_i / 2R
       double B         = A/sqrt(1-A*A);
-      double tiltAngle = m_hitModule->tiltAngle();
-      double skewAngle = m_hitModule->skewAngle();
+      double tiltAngle = fabs(m_hitModule->tiltAngle());
+      double skewAngle = fabs(m_hitModule->skewAngle());
       const double resLocalX = m_hitModule->resolutionLocalX(getTrackDirection());
       const double resLocalY = m_hitModule->resolutionLocalY(getTrackDirection());
 
@@ -337,8 +337,8 @@ double Hit::getResolutionZ(double trackRadius) {
         double A = 0;
         if (SimParms::getInstance().isMagFieldConst()) A = getRPos()/(2*trackRadius);
         double D         = m_track->getCotgTheta()/sqrt(1-A*A);
-        double tiltAngle = m_hitModule->tiltAngle();
-        double skewAngle = m_hitModule->skewAngle();
+        double tiltAngle = fabs(m_hitModule->tiltAngle());
+        double skewAngle = fabs(m_hitModule->skewAngle());
         const double resLocalX = m_hitModule->resolutionLocalX(getTrackDirection());
         const double resLocalY = m_hitModule->resolutionLocalY(getTrackDirection());
 

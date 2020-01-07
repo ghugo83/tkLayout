@@ -1247,7 +1247,6 @@ bool Track::computeCovarianceMatrixRPhi(double refPointRPos, bool propagOutIn) {
             double prec = m_hits.at(r)->getResolutionRphi(getRadius(m_hits.at(r)->getZPos()));
             //std::cout << ">>> " << sqrt(sum) << " " << prec << std::endl;
             sum = sum + prec * prec;
-
           }
           m_varMatrixRPhi(r, c) = sum;
           if (r != c) m_varMatrixRPhi(c, r) = sum;

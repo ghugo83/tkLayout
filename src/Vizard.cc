@@ -2381,6 +2381,10 @@ namespace insur {
       // modules' spatial resolution along the local X axis is parametrized
       else {
 	if (v.tagMapCountXResolution[(*tagMapIt).first] != 0) {
+	  std::cout << "table " << std::endl;
+	  std::cout << v.tagMapSumXResolution[(*tagMapIt).first] << std::endl;
+	  std::cout << v.tagMapCountXResolution[(*tagMapIt).first] << std::endl;
+	  std::cout << v.tagMapSumXResolution[(*tagMapIt).first] / v.tagMapCountXResolution[(*tagMapIt).first] << std::endl;
 	  anRphiResolution << std::dec << std::fixed << std::setprecision(rphiResolutionPrecision) << (v.tagMapSumXResolution[(*tagMapIt).first]) / (v.tagMapCountXResolution[(*tagMapIt).first]) / Units::um; // mm -> um
 	}
 	else {

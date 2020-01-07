@@ -2231,6 +2231,8 @@ void Analyzer::calculateGraphsConstP(const int& parameter,
       trackEtaEndcapsDistribution_[myTag].GetXaxis()->SetTitle("Track Eta");
       trackEtaEndcapsDistribution_[myTag].GetXaxis()->CenterTitle();
 
+      double totalReso = 0;
+      int totalCount = 0;
  
       for (const auto& tcmIt : myTrackCollection) {
 	//const int &parameter = tcmIt.first;
@@ -2259,6 +2261,12 @@ void Analyzer::calculateGraphsConstP(const int& parameter,
 		  double cotAlpha = 1./tan(hitModule->alpha(trackDirection));
 		  double resolutionLocalX = hitModule->resolutionLocalX(trackDirection)/Units::um; // um
 		  if ( hitModule->subdet() == BARREL ) {
+
+		    if (hitModule->is3DPixelModule()) {
+		      totalReso += resolutionLocalX;
+		      totalCount += 1;
+		    }
+
 		    trackPhiBarrelDistribution_[myTag].Fill(femod(trackPhi, 2.*M_PI));
 		    incidentAngleLocalXBarrelDistribution_[myTag].Fill(cotAlpha);
 		    parametrizedResolutionLocalXBarrelDistribution[myTag].Fill(resolutionLocalX);
@@ -2296,6 +2304,11 @@ void Analyzer::calculateGraphsConstP(const int& parameter,
 	  } // hit loop
 	} // track loop
       } // collection loop
+
+      std::cout << "plot" << std::endl;
+      std::cout << totalReso << std::endl;
+      std::cout << totalCount << std::endl;
+      std::cout << (totalReso / totalCount) << std::endl;
     } // tag loop
 }
 

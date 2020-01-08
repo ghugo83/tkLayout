@@ -434,7 +434,7 @@ const double DetectorModule::calculateParameterizedResolutionLocalX(const TVecto
   const bool isLocalXAxis = true;
   const double resolutionLocalX = calculateParameterizedResolutionLocalAxis(fabsTanDeepAngle, isLocalXAxis);
 
-  return ((is3DPixelModule() && fabs(tiltAngle()) < 0.01) ? (3.8 * 0.001 + 5.e-03 * cotanAlpha) : resolutionLocalX);
+  return ((is3DPixelModule() && fabs(tiltAngle()) < 0.01) ? ((4.1 + 0.5) * 0.001 - 5.e-03 * fabsTanDeepAngle) : resolutionLocalX);
 
   //return (((is3DPixelModule() && fabs(tiltAngle()) < 0.01) ? 1.1 : 1) * resolutionLocalX);
 

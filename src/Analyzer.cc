@@ -2119,6 +2119,8 @@ void Analyzer::calculateGraphsConstP(const int& parameter,
       const double incidentAngleYEndcapsMin = 0.;
       const double incidentAngleYEndcapsMax = 0.8;
 
+      std::map<std::string, TH1D> dis3D;
+
       // Modules' parametrized spatial resolution maps
       parametrizedResolutionLocalXBarrelMap[myTag].Reset();
       parametrizedResolutionLocalXBarrelMap[myTag].SetNameTitle("resoXBarMap","Resolution on local X coordinate vs cotg(alpha) (barrel modules)");
@@ -2162,6 +2164,16 @@ void Analyzer::calculateGraphsConstP(const int& parameter,
       parametrizedResolutionLocalXBarrelDistribution[myTag].SetBins(nBins, resoXMin, resoXMax);
       parametrizedResolutionLocalXBarrelDistribution[myTag].GetXaxis()->SetTitle("resolutionLocalX [um]");
       parametrizedResolutionLocalXBarrelDistribution[myTag].GetXaxis()->CenterTitle();
+
+
+
+      dis3D[myTag].Reset();
+      dis3D[myTag].SetNameTitle("distr3D","Distribution of resolutions on local X coordinate (3D barrel modules)");
+      dis3D[myTag].SetBins(nBins, resoXMin, resoXMax);
+      dis3D[myTag].GetXaxis()->SetTitle("resolutionLocalX [um]");
+      dis3D[myTag].GetXaxis()->CenterTitle();
+
+
 
       parametrizedResolutionLocalXEndcapsDistribution[myTag].Reset();
       parametrizedResolutionLocalXEndcapsDistribution[myTag].SetNameTitle("resoXEndDistr","Distribution of resolutions on local X coordinate (endcaps modules)");
@@ -2231,8 +2243,6 @@ void Analyzer::calculateGraphsConstP(const int& parameter,
       trackEtaEndcapsDistribution_[myTag].GetXaxis()->SetTitle("Track Eta");
       trackEtaEndcapsDistribution_[myTag].GetXaxis()->CenterTitle();
 
-      double totalReso = 0;
-      int totalCount = 0;
  
       for (const auto& tcmIt : myTrackCollection) {
 	//const int &parameter = tcmIt.first;
@@ -2261,14 +2271,14 @@ void Analyzer::calculateGraphsConstP(const int& parameter,
 		  double cotAlpha = 1./tan(hitModule->alpha(trackDirection));
 		  double resolutionLocalX = hitModule->resolutionLocalX(trackDirection)/Units::um; // um
 		  if ( hitModule->subdet() == BARREL ) {
-
-		    if (hitModule->is3DPixelModule()) {
-		      totalReso += resolutionLocalX;
-		      totalCount += 1;
-		    }
-
 		    trackPhiBarrelDistribution_[myTag].Fill(femod(trackPhi, 2.*M_PI));
 		    incidentAngleLocalXBarrelDistribution_[myTag].Fill(cotAlpha);
+
+
+		    if (hitModule->is3DPixelModule()) {
+		      dis3D[myTag].Fill(resolutionLocalX);
+		    }
+
 		    parametrizedResolutionLocalXBarrelDistribution[myTag].Fill(resolutionLocalX);
 		    parametrizedResolutionLocalXBarrelMap[myTag].Fill(cotAlpha, resolutionLocalX);		    
 		  }
@@ -2305,10 +2315,17 @@ void Analyzer::calculateGraphsConstP(const int& parameter,
 	} // track loop
       } // collection loop
 
-      std::cout << "plot" << std::endl;
-      std::cout << totalReso << std::endl;
-      std::cout << totalCount << std::endl;
-      std::cout << (totalReso / totalCount) << std::endl;
+
+      for (auto& [tag, h] : dis3D) {
+	Double_t x, q;
+	q = 0.5;
+	h.ComputeIntegral(); // just a precaution
+	h.GetQuantiles(1, &x, &q);
+	std::cout << "median = " << x << std::endl;
+      }
+
+
+
     } // tag loop
 }
 

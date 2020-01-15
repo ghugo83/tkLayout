@@ -186,6 +186,8 @@ void Analyzer::createTaggedTrackCollection(std::vector<MaterialBudget*> material
   else etaStep = getEtaMaxTrigger();
   nTracks = etaSteps;
 
+  etaStep*= 2;
+
   // prepareTriggerPerformanceHistograms(nTracks, getEtaMaxTrigger(), triggerMomenta, thresholdProbabilities);
 
   // reset the list of tracks
@@ -201,7 +203,14 @@ void Analyzer::createTaggedTrackCollection(std::vector<MaterialBudget*> material
     phi = myDice.Rndm() * M_PI * 2.0;
     RILength tmp;
     Track track;
-    eta = i_eta * etaStep;
+
+
+    //eta = i_eta * etaStep;
+    eta = 1.05;
+
+
+
+    //std::cout << "eta = " << eta << std::endl;
     theta = 2 * atan(exp(-eta)); 
     track.setThetaPhiPt(theta,phi,1*Units::TeV);
 

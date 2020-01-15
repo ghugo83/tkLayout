@@ -290,8 +290,45 @@ double Hit::getResolutionRphi(double trackRadius) {
       const double resLocalX = m_hitModule->resolutionLocalX(getTrackDirection());
       const double resLocalY = m_hitModule->resolutionLocalY(getTrackDirection());
 
+
+
       // All modules & its resolution propagated to the resolution of a virtual barrel module (endcap is a tilted module by 90 degrees, barrel is tilted by 0 degrees)
-      double resolutionRPhi = sqrt(pow((B*sin(skewAngle)*cos(tiltAngle) + cos(skewAngle)) * resLocalX,2) + pow(B*sin(tiltAngle) * resLocalY,2));
+      /*double resolutionRPhi = sqrt(
+				   pow((B*sin(skewAngle)*cos(tiltAngle) + cos(skewAngle)) * resLocalX, 2) 
+				   + pow(B*sin(tiltAngle) * resLocalY, 2)
+				   );*/
+
+      const double resPosY = 0.0001 * std::hypot( getRPos(), getZPos()) * cos(m_track->getTheta());
+      std::cout << "newwwwww resPosY = " << resPosY << std::endl;
+      const double resY = pow( 1/pow(resLocalY, 2) + 1/pow(resPosY , 2) , -0.5);
+      std::cout << "newwwwww resY = " << resY << std::endl;
+
+
+      double resolutionRPhi = sqrt(
+				   pow((B*sin(skewAngle)*cos(tiltAngle) + cos(skewAngle)) * resLocalX, 2) 
+				   + pow(B*sin(tiltAngle) * resY, 2)
+				   );
+
+
+
+
+      if (!m_hitModule->isPixelModule()) {
+	std::cout << m_hitModule->moduleType() << std::endl;
+	std::cout << "getRPos() = " << getRPos() << std::endl;
+	std::cout << "trackRadius = " << trackRadius << std::endl;
+	std::cout << "A = " << A << std::endl;
+	std::cout << "B = " << B << std::endl;
+	std::cout << "resLocalX = " << resLocalX << std::endl;
+	std::cout << "resLocalY = " << resLocalY << std::endl;
+	std::cout << "resolutionRPhi = " << resolutionRPhi << std::endl;
+
+
+
+	//std::cout << "getDeltaCtgTheta(rPos) = " << m_track->getDeltaCtgTheta(0.) << std::endl;
+      }
+
+
+
 
       return resolutionRPhi;
     }

@@ -247,6 +247,12 @@ double Track::getDeltaPtOverPt(double refPointRPos, bool propagOutIn/*=true*/) {
   double radius   = getRadius(refPointRPos*m_cotgTheta);       // Approximative transformation from rPos to zPos using tan(theta)
   if (deltaRho!=-1) deltaPtOverPt = deltaRho * radius; // dpT(z)/pT(z) = dRho(z) / Rho(z) = dRho(z) * R(z)
 
+  std::cout << "refPointRPos = " << refPointRPos << std::endl;
+  std::cout << "propagOutIn = " << propagOutIn << std::endl;
+  std::cout << "deltaRho = " << deltaRho << std::endl;
+  std::cout << "radius = " << radius << std::endl;
+  std::cout << "deltaPtOverPt = " << deltaPtOverPt << std::endl;
+
   return deltaPtOverPt;
 }
 
@@ -706,10 +712,14 @@ void Track::printErrors() {
 
   std::cout << "Overview of track errors:" << std::endl;
   std::cout << "Hit variance matrix: "  << std::endl;
-  m_varMatrixRPhi.Print();
+  if (m_varMatrixRPhi.GetNoElements() > 0) {
+    m_varMatrixRPhi.Print();
+  }
 
   std::cout << "Covariance matrix: " << std::endl;
-  m_covMatrixRPhi.Print();
+  if (m_covMatrixRPhi.GetNoElements() > 0) {
+    m_covMatrixRPhi.Print();
+  }
 
   // Print errors @ [r,z]=[0,0]
   double rPos = 0.0;
@@ -733,7 +743,7 @@ void Track::printSymMatrix(const TMatrixTSym<double>& matrix) const {
     std::cout << "(";
     for (int j=0; j<nCols;j++) {
 
-      std::cout << " " << std::scientific << std::setprecision(4) << matrix(i,j);
+      std::cout << " " << std::scientific << std::setprecision(10) << matrix(i,j);
     }
     std::cout << ")" << std::endl;
   }
@@ -754,7 +764,7 @@ void Track::printMatrix(const TMatrixT<double>& matrix) const {
     std::cout << "(";
     for (int j=0; j<nCols;j++) {
 
-      std::cout << " " << std::fixed << std::setprecision(5) << matrix(i,j);
+      std::cout << " " << std::scientific << std::setprecision(10) << matrix(i,j);
     }
     std::cout << ")" << std::endl;
   }
@@ -768,6 +778,8 @@ void Track::printHits() const {
 
   std::cout << "******************" << std::endl;
   std::cout << "Track eta=" << m_eta << std::endl;
+  std::cout << "Track phi=" << m_phi << std::endl;
+  std::cout << "Track pT=" << m_pt << std::endl;
 
   for (const auto& it : m_hits) {
     std::cout << "    Hit";
@@ -800,6 +812,8 @@ void Track::printActiveHits() const {
 
   std::cout << "******************" << std::endl;
   std::cout << "Track eta=" << m_eta << std::endl;
+  std::cout << "Track phi=" << m_phi << std::endl;
+  std::cout << "Track pT=" << m_pt << std::endl;
 
   for (const auto& it : m_hits) {
     if (it->isActive()) {
@@ -1244,9 +1258,14 @@ bool Track::computeCovarianceMatrixRPhi(double refPointRPos, bool propagOutIn) {
           }
           if (r == c) {
 
-            double prec = m_hits.at(r)->getResolutionRphi(getRadius(m_hits.at(r)->getZPos()));
-            //std::cout << ">>> " << sqrt(sum) << " " << prec << std::endl;
+            double prec = m_hits.at(r)->getResolutionRphi(getRadius(m_hits.at(r)->getZPos()));          
             sum = sum + prec * prec;
+
+	    std::cout << ">>>>>>>>>>>>>>>> " << std::endl;
+	    std::cout << "r = " << r << std::endl;
+	    std::cout << "addtional = " << prec << std::endl;
+	    std::cout <<  "m_varMatrixRPhi(r,r) = " << sqrt(sum) << std::endl;
+	    std::cout << ">>>>>>>>>>>>>>>> " << std::endl;
 
           }
           m_varMatrixRPhi(r, c) = sum;
@@ -1335,6 +1354,19 @@ bool Track::computeCovarianceMatrixRPhi(double refPointRPos, bool propagOutIn) {
   // Get covariance matrix using global chi2 fit: C = cov(i,j) = (D^T * V^-1 * D)^-1
   m_covMatrixRPhi = diffsT * V.Invert() * diffs;
   m_covMatrixRPhi.Invert();
+
+  std::cout << "Track active hits: " << std::endl;
+  printActiveHits();
+
+  std::cout << "Hit variance matrix in R-Phi: " << std::endl;
+  printSymMatrix(m_varMatrixRPhi);
+
+  std::cout << "Covariance matrix in R-Phi: " << std::endl;
+  printMatrix(m_covMatrixRPhi);
+
+  //std::cout << "Track::printErrors() :" << std::endl;
+  //printErrors();
+
 
   // Sort-back hits based on particle direction if they were resorted
   if (m_pt>=0 && !propagOutIn) sortHits(bySmallerR);

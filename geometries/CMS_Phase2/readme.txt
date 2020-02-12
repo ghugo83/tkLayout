@@ -486,6 +486,14 @@ OT614_200_IT613.cfg                  OT Version 6.1.4
 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>   
 
 
+============   ZEBRA STUDIES   ============                 
+OT616_200_IT620.cfg                  OT Version 6.1.6
+                                     Based from Inner Tracker version 6.1.3.
+                                     Alternation of layers with 25x100 and 50x50 pixel aspect ratios.
+                                     Layouts fully with 25x100 or 50x50 were studied, but not one that would include a mix of the 2!
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>                                  
+                                                                                           
+
 =================   INSTALLATION STUDIES   =================     
 OT616_IT614.cfg                      OT Version 6.1.6
                                      Based from Inner Tracker version 6.1.3.
@@ -500,7 +508,12 @@ OT616_IT615.cfg                      OT Version 6.1.6
                                      
 OT616_IT616.cfg                      OT Version 6.1.6
                                      Based from Inner Tracker version 6.1.5.
-                                     TFPX: Tested shift in Z of +25 mm on all double-disks.                                     
+                                     TFPX: Tested shift in Z of +25 mm on all double-disks.
+                                     
+OT616_IT630.cfg                      OT Version 6.1.6
+                                     Based from Inner Tracker version 6.1.5.
+                                     NOT IMPLEMENTED YET!! Waiting to see if the design is feasible first.
+                                     Cut Inner Tracker in 2 halves, which are shifted in Z. This allows to have no increase in TBPX-TFPX gap, while making the TFPX installation possible (dees end up at slightly different Z).                                    
 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>  
 
 
@@ -514,14 +527,6 @@ OT616_IT700.cfg                      OT Version 6.1.6
                                      Same geometry + materials, but 3D sensor type in TBPX L1 + TBPX L2 + TFPX R1 (+ slightly different inactive Si).
 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>  
 
-
-============   ZEBRA STUDIES   ============                 
-OT616_200_IT620.cfg                  OT Version 6.1.6
-                                     Based from Inner Tracker version 6.1.3.
-                                     Alternation of layers with 25x100 and 50x50 pixel aspect ratios.
-                                     Layouts fully with 25x100 or 50x50 were studied, but not one that would include a mix of the 2!
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>                                  
-                                                                                           
 
 ============   TIMING BARREL LAYER STUDIES   =============
 OT613_200_IT4025.cfg  Reference "standard" 78 ladders

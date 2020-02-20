@@ -8,6 +8,7 @@ Materials disk {
   // Cooling for the module
   Component {
     componentName Cooling
+    location dee
     service false
     scaleOnSensor 0
     Element {
@@ -95,11 +96,14 @@ Materials disk {
   //Mechanics
   Component {
     componentName "Supports Mechanics: TEDD disk"
+    location dee
     service false
     scaleOnSensor 0
     Element {
       elementName CF
-      quantity 1
+      quantity 0.5            // NB: Was 1 mm CF per double-disk, so put 0.5 mm per dee. 
+                              // For software developments debug purposes (dee model), must keep same MB amount as has been for years. 
+                              // OT MB in cfg should be reviewed though, as mentioned multiple times! But that is a different and independent task.
       unit mm
     }
   }

@@ -949,7 +949,7 @@ namespace material {
 	  // DEE VOLUMES (1 disk = 2 dees)
 	  // TO DO: move this to tuneable disk properties.
 	  const int deeZThickness = sectionWidth;
-	  const int deeRadialDistanceToEdge = discretize(0.); // = 2 mm
+	  const int deeRadialDistanceToEdge = discretize(3.); // = 2 mm
 
 	  // small |Z| disk
 	  const int smallAbsZDiskMinZ = discretize(disk.smallAbsZDeeCenterZ()) - deeZThickness / 2.;

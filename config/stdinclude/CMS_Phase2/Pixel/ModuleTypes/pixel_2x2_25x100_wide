@@ -30,3 +30,26 @@ Sensor 1 {
 }
 
 plotColor 10  // orange
+
+
+ContourPoint 0 {
+  pointX -18.825
+  pointY 22.425
+}
+
+ContourPoint 1 {
+  pointX 18.825
+  pointY 22.425
+}
+
+
+
+ContourPoint 2 {
+  pointX 18.825
+  pointY -22.425
+}
+
+ContourPoint 3 {
+  pointX -18.825
+  pointY -22.425
+}

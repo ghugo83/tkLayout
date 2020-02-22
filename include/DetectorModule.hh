@@ -649,30 +649,6 @@ public:
         min=minget2(basePoly().begin(), basePoly().end(), &XYZVector::Phi);
       }
 
-      else if (
-	       (basePoly().getVertex(0).Phi() < M_PI/2. &&
-		basePoly().getVertex(1).Phi() < M_PI/2.  && 
-		basePoly().getVertex(2).Phi() < M_PI/2.  &&
-		basePoly().getVertex(3).Phi() < M_PI/2. &&
-		basePoly().getVertex(0).Phi() > -M_PI/2. &&
-		basePoly().getVertex(1).Phi() > -M_PI/2. && 
-		basePoly().getVertex(2).Phi() > -M_PI/2. && 
-		basePoly().getVertex(3).Phi() > -M_PI/2. )
-	       ||
-	       (femod(basePoly().getVertex(0).Phi(), 2.*M_PI) < 3.*M_PI/2. &&
-		femod(basePoly().getVertex(1).Phi(), 2.*M_PI) < 3.*M_PI/2.  && 
-		femod(basePoly().getVertex(2).Phi(), 2.*M_PI) < 3.*M_PI/2.  &&
-		femod(basePoly().getVertex(3).Phi(), 2.*M_PI) < 3.*M_PI/2. &&
-		femod(basePoly().getVertex(0).Phi(), 2.*M_PI) > M_PI/2. &&
-		femod(basePoly().getVertex(1).Phi(), 2.*M_PI) > M_PI/2. && 
-		femod(basePoly().getVertex(2).Phi(), 2.*M_PI) > M_PI/2. && 
-		femod(basePoly().getVertex(3).Phi(), 2.*M_PI) > M_PI/2. )
-	       )
-	{
-
-	  min=minget2(basePoly().begin(), basePoly().end(), &XYZVector::Phi);
-	}
-
       // Module overlaps the crossline between -pi/2 & +pi/2 -> rotate by 180deg to calculate min
       else {
 
@@ -687,7 +663,10 @@ public:
           // Shift by extra 180deg to get back to its original position (i.e. +2*pi with respect to the nominal position)
           min += M_PI;
         }
-        else logERROR("Endcap module min calculation failed - algorithm problem. Check algorithm!");
+        else {
+	  //logERROR("Endcap module min calculation failed - algorithm problem. Check algorithm!");
+	  min=minget2(basePoly().begin(), basePoly().end(), &XYZVector::Phi);
+	}
 
       }
       // Return value in interval <-pi;+3*pi> instead of <-pi;+pi> to take into account the crossline at pi/2.
@@ -720,28 +699,6 @@ public:
 
         max=maxget2(basePoly().begin(), basePoly().end(), &XYZVector::Phi);
       }
-      else if ( 
-	       (basePoly().getVertex(0).Phi() < M_PI/2. &&
-		basePoly().getVertex(1).Phi() < M_PI/2.  && 
-		basePoly().getVertex(2).Phi() < M_PI/2.  &&
-		basePoly().getVertex(3).Phi() < M_PI/2. &&
-		basePoly().getVertex(0).Phi() > -M_PI/2. &&
-		basePoly().getVertex(1).Phi() > -M_PI/2. && 
-		basePoly().getVertex(2).Phi() > -M_PI/2. && 
-		basePoly().getVertex(3).Phi() > -M_PI/2. )
-	       ||
-	       (femod(basePoly().getVertex(0).Phi(), 2.*M_PI) < 3.*M_PI/2. &&
-		femod(basePoly().getVertex(1).Phi(), 2.*M_PI) < 3.*M_PI/2.  && 
-		femod(basePoly().getVertex(2).Phi(), 2.*M_PI) < 3.*M_PI/2.  &&
-		femod(basePoly().getVertex(3).Phi(), 2.*M_PI) < 3.*M_PI/2. &&
-		femod(basePoly().getVertex(0).Phi(), 2.*M_PI) > M_PI/2. &&
-		femod(basePoly().getVertex(1).Phi(), 2.*M_PI) > M_PI/2. && 
-		femod(basePoly().getVertex(2).Phi(), 2.*M_PI) > M_PI/2. && 
-		femod(basePoly().getVertex(3).Phi(), 2.*M_PI) > M_PI/2. )
-		)
-	{
-	  max=maxget2(basePoly().begin(), basePoly().end(), &XYZVector::Phi);
-	}
       // Module overlaps the crossline between -pi/2 & +pi/2 -> rotate by 180deg to calculate max.
       else {
 
@@ -756,7 +713,10 @@ public:
           // Shift by extra 180deg to get back to its original position (i.e. +2*pi with respect to the nominal position)
           max += M_PI;
         }
-        else logERROR("Endcap module max calculation failed - algorithm problem. Check algorithm!");
+        else {
+	  //logERROR("Endcap module max calculation failed - algorithm problem. Check algorithm!");
+	  max=maxget2(basePoly().begin(), basePoly().end(), &XYZVector::Phi);
+	}
       }
       // Return value in interval <-pi;+3*pi> instead of <-pi;+pi> to take into account the crossline at pi/2.
       return max;

@@ -893,11 +893,14 @@ void BarrelModule::build() {
 }
 
 
-void EndcapModule::build() {
+void EndcapModule::build(double rotZ) {
   try {
     DetectorModule::build();
     //myModuleCap_->setCategory(MaterialProperties::e_mod);
     rAxis_ = (basePoly().getVertex(0) + basePoly().getVertex(3)).Unit();
+
+    // skew
+    //decorated().rotateZ(rotZ);  
 
     // tilt
     tiltAngle_ = M_PI/2.;

@@ -64,8 +64,9 @@ namespace CoordinateOperations {
   }
 
   template<class Polygon> double computeMinR(const Polygon& polygon) {
-    auto distanceVectors = computeDistanceVectors(polygon);
-    return minget(distanceVectors.begin(), distanceVectors.end(), [](const XYZVector& v) { return v.Rho(); });
+    //auto distanceVectors = computeDistanceVectors(polygon);
+    return minget(polygon.begin(), polygon.end(), [](const XYZVector& v) { return v.Rho(); });
+    //return minget(distanceVectors.begin(), distanceVectors.end(), [](const XYZVector& v) { return v.Rho(); });
   }
 
   template<class Polygon> double computeMaxR(const Polygon& polygon) {

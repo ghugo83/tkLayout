@@ -79,13 +79,67 @@ std::pair<double, int> Ring::computeOptimalRingParametersRectangle(double module
 }
 
 
-void Ring::buildModules(EndcapModule* templ, int numMods, double smallDelta) {
+void Ring::buildModules(EndcapModule* templ, int numMods, double smallDelta, double halfLength) {
   double alignmentRotation = alignEdges() ? 0.5 : 0.;
   for (int i = 0, parity = smallParity(); i < numMods; i++, parity *= -1) {
+  
+
     EndcapModule* mod = GeometryFactory::clone(*templ);
     mod->myid(i+1);
+
+    //if ( isSmallerAbsZRingInDisk() ) { mod->rotateY(M_PI); }
+
+    //double myRad = buildStartRadius() - halfLength;
+    if (mod->moduleType().find("pixel_1x2") != std::string::npos) {
+
+      if (myid() == 1 && (i == 8 || i == 18)) {  
+	mod->rotateZ(13 * M_PI / 180.);
+      }
+      else if (myid() == 1 && (i == 1 || i == 11)) {  
+	mod->rotateZ(-13 * M_PI / 180.);
+      }
+      //mod->translate(XYZVector(buildStartRadius() - halfLength, 0, 0));
+      //mod->translateX( (i < 10 ? -1. : 1.) * myRad*sin(9. * M_PI / 180.));
+      //mod->translateY( (i < 10 ? -1. : 1.) * myRad*cos(9. * M_PI / 180.));
+      //mod->translateX(0.);
+      //mod->translateY(1.23);
+      //}
+
+      else if (myid() == 2 && (i == 14 || i == 30)) { 
+	mod->rotateZ(5 * M_PI / 180.);
+      }
+      else if (myid() == 2 && (i == 1 || i == 17)) { 
+	mod->rotateZ(-5 * M_PI / 180.);
+      }
+    }
+    // mod->translate(XYZVector(buildStartRadius() - halfLength, 0, 0));
+    //mod->translateX( (i < 15 ? -1. : 1.) * myRad*sin(5.625 * M_PI / 180.));
+    //mod->translateY( (i < 15 ? -1. : 1.) * myRad*cos(5.625 * M_PI / 180.));
+    //mod->translateX(1.);
+    //mod->translateY(0.);
+    //}
+
+   
+    mod->translate(XYZVector(buildStartRadius() - halfLength, 0, 0));
     mod->rotateZ(2.*M_PI*(i+alignmentRotation)/numMods); // CUIDADO had a rotation offset of PI/2
     mod->rotateZ(zRotation());
+
+
+    if (mod->moduleType().find("pixel_1x2") != std::string::npos) {
+      if (myid() == 1 && (i == 8 || i == 18 || i == 1 || i == 11 )) {  
+	mod->translateX(0.);
+	mod->translateY( ((  (i == 8 || i == 11) ? -1. : 1.) * 2.20)  );
+      }
+      else if (myid() == 2 && (i == 14 || i == 30 || i == 1 || i == 17 ) ) { 
+	//if (i == 30) { std::cout << mod->center().Phi() << std::endl; }
+	mod->translateX( ( (i == 14 || i == 1) ? -1. : 1.) * ( 1 + 5.3*fabs(cos(5 * M_PI / 180. + 1.27627))) );
+	mod->translateY( ( (i == 14 || i == 17) ? -1. : 1.) * 5.3*fabs(sin(5 * M_PI / 180. + 1.27627))   );
+      }
+    }
+
+
+
+
     mod->translateZ(parity*smallDelta);
     mod->setIsSmallerAbsZModuleInRing(parity < 0);
     const bool isFlipped = (!isRingOn4Dees() ? (parity < 0) // Case where ring modules are placed on both sides of a same dee.
@@ -149,6 +203,7 @@ void Ring::buildBottomUp() {
 
   emod->store(propertyTree());
   //emod->subdetectorName(subdetectorName());
+
   emod->build();
   emod->translate(XYZVector(buildStartRadius() + modLength/2, 0, 0));
 
@@ -182,15 +237,17 @@ void Ring::buildTopDown() {
 
   EndcapModule* emod = GeometryFactory::make<EndcapModule>(rmod, subdetectorName());
   emod->store(propertyTree());
+
   emod->build();
-  emod->translate(XYZVector(buildStartRadius() - rmod->length()/2, 0, 0));
+  //emod->translate(XYZVector(buildStartRadius() - rmod->length()/2, 0, 0));
+  double halfLength = rmod->length()/2;
 
   minRadius_ = buildStartRadius() - rmod->length();
   maxRadius_ = buildStartRadius();
 
   if (numModules.state()) numMods = numModules();
   else numModules(numMods);
-  buildModules(emod, numMods, smallDelta());
+  buildModules(emod, numMods, smallDelta(), halfLength);
 
   delete emod;
 }

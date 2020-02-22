@@ -108,7 +108,7 @@ public:
 
   void setup() {
     clearPolys();
-    minR.setup([&]() { return CoordinateOperations::computeMinR(envelopePoly()); });
+    minR.setup([&]() { return std::min(CoordinateOperations::computeMinR(envelopePoly()), CoordinateOperations::computeMinR(envelopeMidPoly())); });
     maxR.setup([&]() { return CoordinateOperations::computeMaxR(envelopePoly()); });
     minZ.setup([&]() { return CoordinateOperations::computeMinZ(envelopePoly()); });
     maxZ.setup([&]() { return CoordinateOperations::computeMaxZ(envelopePoly()); });

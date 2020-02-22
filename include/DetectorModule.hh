@@ -273,6 +273,8 @@ public:
   void translate(const XYZVector& vector) { decorated().translate(vector); clearSensorPolys(); }
   void mirror(const XYZVector& vector) { decorated().mirror(vector); clearSensorPolys(); }
   void translateZ(double z) { decorated().translate(XYZVector(0, 0, z)); clearSensorPolys(); }
+  void translateX(double x) { decorated().translate(XYZVector(x, 0, 0)); clearSensorPolys(); }
+  void translateY(double y) { decorated().translate(XYZVector(0, y, 0)); clearSensorPolys(); }
   void translateR(double radius) {
     XYZVector v = rAxis_.Unit()*radius;
     decorated().translate(v);
@@ -646,6 +648,31 @@ public:
 
         min=minget2(basePoly().begin(), basePoly().end(), &XYZVector::Phi);
       }
+
+      else if (
+	       (basePoly().getVertex(0).Phi() < M_PI/2. &&
+		basePoly().getVertex(1).Phi() < M_PI/2.  && 
+		basePoly().getVertex(2).Phi() < M_PI/2.  &&
+		basePoly().getVertex(3).Phi() < M_PI/2. &&
+		basePoly().getVertex(0).Phi() > -M_PI/2. &&
+		basePoly().getVertex(1).Phi() > -M_PI/2. && 
+		basePoly().getVertex(2).Phi() > -M_PI/2. && 
+		basePoly().getVertex(3).Phi() > -M_PI/2. )
+	       ||
+	       (femod(basePoly().getVertex(0).Phi(), 2.*M_PI) < 3.*M_PI/2. &&
+		femod(basePoly().getVertex(1).Phi(), 2.*M_PI) < 3.*M_PI/2.  && 
+		femod(basePoly().getVertex(2).Phi(), 2.*M_PI) < 3.*M_PI/2.  &&
+		femod(basePoly().getVertex(3).Phi(), 2.*M_PI) < 3.*M_PI/2. &&
+		femod(basePoly().getVertex(0).Phi(), 2.*M_PI) > M_PI/2. &&
+		femod(basePoly().getVertex(1).Phi(), 2.*M_PI) > M_PI/2. && 
+		femod(basePoly().getVertex(2).Phi(), 2.*M_PI) > M_PI/2. && 
+		femod(basePoly().getVertex(3).Phi(), 2.*M_PI) > M_PI/2. )
+	       )
+	{
+
+	  min=minget2(basePoly().begin(), basePoly().end(), &XYZVector::Phi);
+	}
+
       // Module overlaps the crossline between -pi/2 & +pi/2 -> rotate by 180deg to calculate min
       else {
 
@@ -693,6 +720,28 @@ public:
 
         max=maxget2(basePoly().begin(), basePoly().end(), &XYZVector::Phi);
       }
+      else if ( 
+	       (basePoly().getVertex(0).Phi() < M_PI/2. &&
+		basePoly().getVertex(1).Phi() < M_PI/2.  && 
+		basePoly().getVertex(2).Phi() < M_PI/2.  &&
+		basePoly().getVertex(3).Phi() < M_PI/2. &&
+		basePoly().getVertex(0).Phi() > -M_PI/2. &&
+		basePoly().getVertex(1).Phi() > -M_PI/2. && 
+		basePoly().getVertex(2).Phi() > -M_PI/2. && 
+		basePoly().getVertex(3).Phi() > -M_PI/2. )
+	       ||
+	       (femod(basePoly().getVertex(0).Phi(), 2.*M_PI) < 3.*M_PI/2. &&
+		femod(basePoly().getVertex(1).Phi(), 2.*M_PI) < 3.*M_PI/2.  && 
+		femod(basePoly().getVertex(2).Phi(), 2.*M_PI) < 3.*M_PI/2.  &&
+		femod(basePoly().getVertex(3).Phi(), 2.*M_PI) < 3.*M_PI/2. &&
+		femod(basePoly().getVertex(0).Phi(), 2.*M_PI) > M_PI/2. &&
+		femod(basePoly().getVertex(1).Phi(), 2.*M_PI) > M_PI/2. && 
+		femod(basePoly().getVertex(2).Phi(), 2.*M_PI) > M_PI/2. && 
+		femod(basePoly().getVertex(3).Phi(), 2.*M_PI) > M_PI/2. )
+		)
+	{
+	  max=maxget2(basePoly().begin(), basePoly().end(), &XYZVector::Phi);
+	}
       // Module overlaps the crossline between -pi/2 & +pi/2 -> rotate by 180deg to calculate max.
       else {
 
@@ -738,7 +787,7 @@ public:
       });
   }
 
-  void build();
+  void build(double rotZ = 0.);
 
   void accept(GeometryVisitor& v) {
     v.visit(*this); 

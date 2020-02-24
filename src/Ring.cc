@@ -127,13 +127,14 @@ void Ring::buildModules(EndcapModule* templ, int numMods, double smallDelta, dou
 
     if (mod->moduleType().find("pixel_1x2") != std::string::npos) {
       if (myid() == 1 && (i == 8 || i == 18 || i == 1 || i == 11 )) {  
-	mod->translateX(0.);
-	mod->translateY( ((  (i == 8 || i == 11) ? -1. : 1.) * 2.20)  );
+	mod->translateX( ( (i == 8 || i == 1) ? -1. : 1.) * ( -0.4 ) );
+	mod->translateY( ((  (i == 8 || i == 11) ? -1. : 1.) * (2.20 - 0.55 ))  );
+	std::cout << mod->minR() << std::endl;
       }
       else if (myid() == 2 && (i == 14 || i == 30 || i == 1 || i == 17 ) ) { 
 	//if (i == 30) { std::cout << mod->center().Phi() << std::endl; }
 	mod->translateX( ( (i == 14 || i == 1) ? -1. : 1.) * ( 1 + 5.3*fabs(cos(5 * M_PI / 180. + 1.27627))) );
-	mod->translateY( ( (i == 14 || i == 17) ? -1. : 1.) * 5.3*fabs(sin(5 * M_PI / 180. + 1.27627))   );
+	mod->translateY( ( (i == 14 || i == 17) ? -1. : 1.) * (5.3*fabs(sin(5 * M_PI / 180. + 1.27627)) ) -0.2  );
       }
     }
 

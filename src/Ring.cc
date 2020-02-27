@@ -93,12 +93,12 @@ void Ring::buildModules(EndcapModule* templ, int numMods, double smallDelta, dou
     
 
     const int numModulesPerXSide = numModules() / 2;
+    // (+X) side is same as (-X) side with rotation of M_PI around CMS (Z) axis
+    const int phiIndexPerXSide = phiIndex - (phiIndex > numModulesPerXSide ? 1 : 0) * numModulesPerXSide;
+
 
     if (isYawMode()) {
-
-      // (+X) side is same as (-X) side with rotation of M_PI around CMS (Z) axis
-      const int phiIndexPerXSide = phiIndex - (phiIndex > numModulesPerXSide ? 1 : 0) * numModulesPerXSide;
-
+     
       const double deeEdgeModuleYawAngleInRad = deeEdgeModuleYawAngle() * M_PI / 180.;
       const double yawAngle = (-1. + static_cast<double>(2 * (phiIndexPerXSide - 1)) / (numModulesPerXSide - 1)) * deeEdgeModuleYawAngleInRad;
       mod->yaw(yawAngle);
@@ -131,6 +131,21 @@ void Ring::buildModules(EndcapModule* templ, int numMods, double smallDelta, dou
     mod->translate(XYZVector(buildStartRadius() - halfLength, 0, 0));
     mod->rotateZ(2.*M_PI*(i+alignmentRotation)/numMods); // CUIDADO had a rotation offset of PI/2
     mod->rotateZ(zRotation());
+
+
+    if (isYawMode()) {
+      if (myid() == 1) {
+	if (phiIndexPerXSide == 1 || phiIndexPerXSide == (numModulesPerXSide - 1)) {
+	  mod->translateX( (phiIndex != phiIndexPerXSide ? -1. : 1.)    * 1.3 );
+	}
+	else {
+	  mod->rotateZ(  (-1. + static_cast<double>(2 * (phiIndexPerXSide - 1)) / (numModulesPerXSide - 1)) 
+			 *  atan(1.3 / (buildStartRadius() - halfLength))  
+			 );
+	}
+      }
+    }
+
 
 
     /*

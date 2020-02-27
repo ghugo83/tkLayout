@@ -899,7 +899,7 @@ void EndcapModule::build(double rotZ) {
     //myModuleCap_->setCategory(MaterialProperties::e_mod);
     rAxis_ = (basePoly().getVertex(0) + basePoly().getVertex(3)).Unit();
 
-    // skew
+    // yaw
     //decorated().rotateZ(rotZ);  
 
     // tilt

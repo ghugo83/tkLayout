@@ -180,6 +180,9 @@ public:
   Property<double, Default> ringOuterRadius;
   Property<double, Default> ringInnerRadius;
 
+  Property<bool,   Default> isYawMode;
+  Property<double, Default> deeEdgeModuleYawAngle;
+
   Property<double, AutoDefault> actualZError;
   Property<double, AutoDefault> actualPhiOverlap;
 
@@ -208,7 +211,9 @@ public:
       numModules            ("numModules"            , parsedOnly()),
       zRotation             ("zRotation"             , parsedOnly(), 0.),
       ringOuterRadius       ("ringOuterRadius"       , parsedOnly(), -1.),
-      ringInnerRadius       ("ringInnerRadius"       , parsedOnly(), -1.)
+      ringInnerRadius       ("ringInnerRadius"       , parsedOnly(), -1.),
+      isYawMode             ("isYawMode"             , parsedOnly(), false),
+    deeEdgeModuleYawAngle ("deeEdgeModuleYawAngle" , parsedOnly(), 0.)
   {}
 
   void setup() {

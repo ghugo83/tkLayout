@@ -75,6 +75,7 @@ public:
 
   Property<int16_t, AutoDefault> side;
   Property<double, AutoDefault> skewAngle;
+  Property<double, AutoDefault> yawAngle;
   
   Property<double, Computable> minPhi, maxPhi;
   
@@ -153,6 +154,7 @@ public:
   DetectorModule(Decorated* decorated, const std::string subdetectorName) : 
     Decorator<GeometricModule>(decorated),
       skewAngle                ("skewAngle"                , parsedOnly()),
+      yawAngle                 ("yawAngle"                 , parsedOnly()),
       moduleType               ("moduleType"               , parsedOnly() , string("notype")),
       numSensors               ("numSensors"               , parsedOnly()),
       sensorLayout             ("sensorLayout"             , parsedOnly() , NOSENSORS),
@@ -293,6 +295,10 @@ public:
   // void skew(double angle) { rotateY(-angle); skewAngle_ += angle; } // This works for endcap modules only !!
   // Skew is now defined at construction time instead, before the module has had a chance to be translated/rotated!
   const bool isSkewed() const { return (fabs(skewAngle()) > insur::geom_zero); }
+  void yaw(double angle) {
+    rotateZ(angle);
+    yawAngle(angle);
+  }
 
   bool flipped() const { return decorated().flipped(); } 
   bool flipped(bool newFlip) {

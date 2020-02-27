@@ -81,43 +81,50 @@ std::pair<double, int> Ring::computeOptimalRingParametersRectangle(double module
 
 void Ring::buildModules(EndcapModule* templ, int numMods, double smallDelta, double halfLength) {
   double alignmentRotation = alignEdges() ? 0.5 : 0.;
-  for (int i = 0, parity = smallParity(); i < numMods; i++, parity *= -1) {
   
+  for (int i = 0, parity = smallParity(); i < numMods; i++, parity *= -1) {
 
     EndcapModule* mod = GeometryFactory::clone(*templ);
-    mod->myid(i+1);
-
     //if ( isSmallerAbsZRingInDisk() ) { mod->rotateY(M_PI); }
 
-    //double myRad = buildStartRadius() - halfLength;
-    if (mod->moduleType().find("pixel_1x2") != std::string::npos) {
+    const int phiIndex = i + 1;
+    mod->myid(phiIndex);
 
+    
+
+    const int numModulesPerXSide = numModules() / 2;
+
+    if (isYawMode()) {
+
+      // (+X) side is same as (-X) side with rotation of M_PI around CMS (Z) axis
+      const int phiIndexPerXSide = phiIndex - (phiIndex > numModulesPerXSide ? 1 : 0) * numModulesPerXSide;
+
+      const double deeEdgeModuleYawAngleInRad = deeEdgeModuleYawAngle() * M_PI / 180.;
+      const double yawAngle = (-1. + static_cast<double>(2 * (phiIndexPerXSide - 1)) / (numModulesPerXSide - 1)) * deeEdgeModuleYawAngleInRad;
+      mod->yaw(yawAngle);
+
+      std::cout << "phiIndex = " << phiIndex << std::endl;
+      std::cout << "phiIndexPerXSide = " << phiIndexPerXSide << std::endl;
+      std::cout << "yawAngle = " << yawAngle << std::endl;
+
+      /*
+      // Ring 1
       if (myid() == 1 && (i == 8 || i == 18)) {  
-	mod->rotateZ(13 * M_PI / 180.);
+      mod->rotateZ(13 * M_PI / 180.);
       }
       else if (myid() == 1 && (i == 1 || i == 11)) {  
-	mod->rotateZ(-13 * M_PI / 180.);
+      mod->rotateZ(-13 * M_PI / 180.);
       }
-      //mod->translate(XYZVector(buildStartRadius() - halfLength, 0, 0));
-      //mod->translateX( (i < 10 ? -1. : 1.) * myRad*sin(9. * M_PI / 180.));
-      //mod->translateY( (i < 10 ? -1. : 1.) * myRad*cos(9. * M_PI / 180.));
-      //mod->translateX(0.);
-      //mod->translateY(1.23);
-      //}
-
+ 
+      // Ring 2
       else if (myid() == 2 && (i == 14 || i == 30)) { 
-	mod->rotateZ(5 * M_PI / 180.);
+      mod->rotateZ(5 * M_PI / 180.);
       }
       else if (myid() == 2 && (i == 1 || i == 17)) { 
-	mod->rotateZ(-5 * M_PI / 180.);
+      mod->rotateZ(-5 * M_PI / 180.);
       }
+      */
     }
-    // mod->translate(XYZVector(buildStartRadius() - halfLength, 0, 0));
-    //mod->translateX( (i < 15 ? -1. : 1.) * myRad*sin(5.625 * M_PI / 180.));
-    //mod->translateY( (i < 15 ? -1. : 1.) * myRad*cos(5.625 * M_PI / 180.));
-    //mod->translateX(1.);
-    //mod->translateY(0.);
-    //}
 
    
     mod->translate(XYZVector(buildStartRadius() - halfLength, 0, 0));
@@ -125,18 +132,18 @@ void Ring::buildModules(EndcapModule* templ, int numMods, double smallDelta, dou
     mod->rotateZ(zRotation());
 
 
-    if (mod->moduleType().find("pixel_1x2") != std::string::npos) {
+    /*
+      if (isYawMode()) {
       if (myid() == 1 && (i == 8 || i == 18 || i == 1 || i == 11 )) {  
-	mod->translateX( ( (i == 8 || i == 1) ? -1. : 1.) * ( -0.4 ) );
-	mod->translateY( ((  (i == 8 || i == 11) ? -1. : 1.) * (2.20 - 0.55 ))  );
-	std::cout << mod->minR() << std::endl;
+      mod->translateX( ( (i == 8 || i == 1) ? -1. : 1.) * ( -0.4 ) );
+      mod->translateY( ((  (i == 8 || i == 11) ? -1. : 1.) * (2.20 - 0.55 ))  );
+      std::cout << mod->minR() << std::endl;
       }
       else if (myid() == 2 && (i == 14 || i == 30 || i == 1 || i == 17 ) ) { 
-	//if (i == 30) { std::cout << mod->center().Phi() << std::endl; }
-	mod->translateX( ( (i == 14 || i == 1) ? -1. : 1.) * ( 1 + 5.3*fabs(cos(5 * M_PI / 180. + 1.27627))) );
-	mod->translateY( ( (i == 14 || i == 17) ? -1. : 1.) * (5.3*fabs(sin(5 * M_PI / 180. + 1.27627)) ) -0.2  );
+      mod->translateX( ( (i == 14 || i == 1) ? -1. : 1.) * ( 1 + 5.3*fabs(cos(5 * M_PI / 180. + 1.27627))) );
+      mod->translateY( ( (i == 14 || i == 17) ? -1. : 1.) * (5.3*fabs(sin(5 * M_PI / 180. + 1.27627)) ) -0.2  );
       }
-    }
+      }*/
 
 
 

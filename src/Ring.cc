@@ -103,9 +103,10 @@ void Ring::buildModules(EndcapModule* templ, int numMods, double smallDelta, dou
       const double yawAngle = (-1. + static_cast<double>(2 * (phiIndexPerXSide - 1)) / (numModulesPerXSide - 1)) * deeEdgeModuleYawAngleInRad;
       mod->yaw(yawAngle);
 
+      /*
       std::cout << "phiIndex = " << phiIndex << std::endl;
       std::cout << "phiIndexPerXSide = " << phiIndexPerXSide << std::endl;
-      std::cout << "yawAngle = " << yawAngle << std::endl;
+      std::cout << "yawAngle = " << yawAngle << std::endl;*/
 
       /*
       // Ring 1

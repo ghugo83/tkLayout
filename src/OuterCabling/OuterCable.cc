@@ -76,7 +76,15 @@ void OuterCable::assignPowerChannelSections() {
 				: outer_cabling_powerChannelsTeddPixelStripSemiNonantBoundaryShift);
       const double semiNonantBoundary = cablePhiSectorRef * outer_cabling_nonantWidth + outer_cabling_semiNonantWidth + phiShift;
       isLower = moduloComp(meanPhi, semiNonantBoundary, 2.*M_PI);
+
+      if (myBundle->subDetectorName() == outer_cabling_tedd1 
+	  && myBundle->layerDiskNumber() == 2
+	  && myBundle->type() == Category::PS10GB
+	  ) {
+	isLower = !isLower;
+      }
     }
+
 
     // COMPUTE AT WHICH SEMINONANT THE BUNDLE IS LOCATED.
     const int semiPhiRegionIndex = (isLower ? 0 : 1);

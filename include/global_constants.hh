@@ -81,7 +81,7 @@ namespace insur {
 
   static const int    vis_temperature_levels = 512;
 
-  static const double mat_budget_overall_scaling_factor = 1.;  // WARNING: DO NOT CHANGE THIS UNLESS YOU ARE OBSOLUTELY SURE OF WHAT YOU ARE DOING!!
+  static const double mat_budget_overall_scaling_factor = 0.000001;  // WARNING: DO NOT CHANGE THIS UNLESS YOU ARE OBSOLUTELY SURE OF WHAT YOU ARE DOING!!
                                                                // This will scale absolutely all weights by the mentioned factor (modules + cabling + supports).
                                                                // Was added for CMSSW Material Budget debug purposes.
 

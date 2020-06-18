@@ -1241,6 +1241,9 @@ bool Track::computeCovarianceMatrixRPhi(double refPointRPos, bool propagOutIn) {
 
 	    // Get the hit's Rphi resolution
 	    const double trackRadius = getRadius(myHit->getZPos());
+	    //std::cout << "m_pt = " << m_pt << std::endl;
+	    //std::cout << "m_pt in GeV= " << m_pt/Units::GeV << std::endl;
+	   
 	    const double resolutionRPhi = myHit->getResolutionRphi(trackRadius, deltaTheta);
 
 	    // Add resolutionRPhi to the correlation matrix

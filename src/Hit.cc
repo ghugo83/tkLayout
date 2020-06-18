@@ -277,9 +277,26 @@ double Hit::getResolutionRphi(const double trackRadius, const double deltaTheta)
     // ON A MODULE
     if (m_hitModule) {
 
+
+      //std::cout << "getRPos() = " << getRPos() << std::endl;
+      const double bendingAngle = getRPos() / trackRadius;  // in rads. WHY IS THERE A FACTOR 2 IN ZBYNEK VERSION?
+      //std::cout << "bendingAngle in deg = " << bendingAngle * 180./M_PI << std::endl;
+
+      TVector3 trackDirectionAtOrigin = getTrackDirection();
+      /*std::cout << "trackDirectionAtOrigin.X() = " << trackDirectionAtOrigin.X() 
+		<< "trackDirectionAtOrigin.Y() = " << trackDirectionAtOrigin.Y() 
+		<< "trackDirectionAtOrigin.Z() = " << trackDirectionAtOrigin.Z() 
+		<< std::endl;*/
+      TVector3 trackDirectionAtHit = trackDirectionAtOrigin;
+      trackDirectionAtHit.RotateZ(bendingAngle);
+      /*std::cout << "trackDirectionAtHit.X() = " << trackDirectionAtHit.X() 
+		<< "trackDirectionAtHit.Y() = " << trackDirectionAtHit.Y() 
+		<< "trackDirectionAtHit.Z() = " << trackDirectionAtHit.Z() 
+		<< std::endl;*/
+
       // Sensor local resolution
-      const double resoSensorLocalX = getHitModule()->resolutionLocalX(getTrackDirection());
-      const double resoSensorLocalY = getHitModule()->resolutionLocalY(getTrackDirection());
+      const double resoSensorLocalX = getHitModule()->resolutionLocalX(trackDirectionAtHit);
+      const double resoSensorLocalY = getHitModule()->resolutionLocalY(trackDirectionAtHit);
 
       // Also get hit position resolution in (RZ) plane
       // Simply project R * deltaTheta into the sensor plane.
@@ -287,7 +304,7 @@ double Hit::getResolutionRphi(const double trackRadius, const double deltaTheta)
       // * Barrel module: this is equivalent to: R * deltaTheta / sin(theta)
       // * Endcap module: this is equivalent to: R * deltaTheta / cos(theta)
       const double hitR = std::hypot(getZPos(), getRPos());
-      const double incidentAngleInRZPlane = fabs(getHitModule()->beta(getTrackDirection()));	    
+      const double incidentAngleInRZPlane = fabs(getHitModule()->beta(trackDirectionAtHit));	    
       const double resoPositionLocalY = hitR * deltaTheta / sin(incidentAngleInRZPlane);
 
       // Resolution localY: 
@@ -298,6 +315,7 @@ double Hit::getResolutionRphi(const double trackRadius, const double deltaTheta)
       // Very small correction factor, associated with the circular shape of particle track.
       const double A = (SimParms::getInstance().isMagFieldConst() ? getRPos() / ( 2 * trackRadius) : 0.); // r_i / 2R
       const double B         = A / sqrt(1. - pow(A, 2.));
+      //std::cout << "B = " << B << std::endl;
 
       // Sensor's orientation
       const double tiltAngle = fabs(getHitModule()->tiltAngle());
@@ -309,7 +327,6 @@ double Hit::getResolutionRphi(const double trackRadius, const double deltaTheta)
 					 pow( (B * sin(skewAngle) * cos(tiltAngle) + cos(skewAngle)) * resoSensorLocalX, 2.) 
 					 + pow(B * sin(tiltAngle) * resoLocalY, 2.)	
 					 );
-
       return resolutionRPhi;
     }
 
@@ -354,13 +371,18 @@ double Hit::getResolutionZ(const double trackRadius) const {
         // approach as for local resolutions)
         // TODO: Currently, correction mathematicaly derived only for use case of const magnetic field -> more complex mathematical expression expected in non-const B field
         // (hence correction not applied in such case)
+	const double bendingAngle = getRPos() / trackRadius;  // in rads. WHY IS THERE A FACTOR 2 IN ZBYNEK VERSION?
+	TVector3 trackDirectionAtOrigin = getTrackDirection();
+	TVector3 trackDirectionAtHit = trackDirectionAtOrigin;
+	trackDirectionAtHit.RotateZ(bendingAngle);
+
         double A = 0;
         if (SimParms::getInstance().isMagFieldConst()) A = getRPos()/(2*trackRadius);
         double D         = m_track->getCotgTheta()/sqrt(1-A*A);
         double tiltAngle = m_hitModule->tiltAngle();
         double skewAngle = m_hitModule->skewAngle();
-        const double resLocalX = m_hitModule->resolutionLocalX(getTrackDirection());
-        const double resLocalY = m_hitModule->resolutionLocalY(getTrackDirection());
+        const double resLocalX = m_hitModule->resolutionLocalX(trackDirectionAtHit);
+        const double resLocalY = m_hitModule->resolutionLocalY(trackDirectionAtHit);
 
         // All modules & its resolution propagated to the resolution of a virtual barrel module (endcap is a tilted module by 90 degrees, barrel is tilted by 0 degrees)
         double resolutionZ = sqrt(pow(((D*cos(tiltAngle) + sin(tiltAngle))*sin(skewAngle)) * resLocalX,2) + pow((D*sin(tiltAngle) + cos(tiltAngle)) * resLocalY,2));

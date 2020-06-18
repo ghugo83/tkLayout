@@ -258,7 +258,7 @@ namespace insur {
     std::map<std::string, TH1D>& getParametrizedResolutionLocalXEndcapsDistribution() { return parametrizedResolutionLocalXEndcapsDistribution; }
     std::map<std::string, TH1D>& getParametrizedResolutionLocalYBarrelDistribution() { return parametrizedResolutionLocalYBarrelDistribution; }
     std::map<std::string, TH1D>& getParametrizedResolutionLocalYEndcapsDistribution() { return parametrizedResolutionLocalYEndcapsDistribution; }
-    std::map<std::string, TH1D>& getIncidentAngleLocalXBarrelDistribution() {return incidentAngleLocalXBarrelDistribution_; }
+    std::map<std::string, TProfile>& getIncidentAngleLocalXBarrelDistribution() {return incidentAngleLocalXBarrelDistribution_; }
     std::map<std::string, TH1D>& getIncidentAngleLocalXEndcapsDistribution() { return incidentAngleLocalXEndcapsDistribution_; }
     std::map<std::string, TH1D>& getIncidentAngleLocalYBarrelDistribution() { return incidentAngleLocalYBarrelDistribution_; }
     std::map<std::string, TH1D>& getIncidentAngleLocalYEndcapsDistribution() { return incidentAngleLocalYEndcapsDistribution_; }
@@ -355,7 +355,7 @@ namespace insur {
     std::map<std::string, TH1D> parametrizedResolutionLocalXEndcapsDistribution;
     std::map<std::string, TH1D> parametrizedResolutionLocalYBarrelDistribution;
     std::map<std::string, TH1D> parametrizedResolutionLocalYEndcapsDistribution;
-    std::map<std::string, TH1D> incidentAngleLocalXBarrelDistribution_;
+    std::map<std::string, TProfile> incidentAngleLocalXBarrelDistribution_;
     std::map<std::string, TH1D> incidentAngleLocalXEndcapsDistribution_;
     std::map<std::string, TH1D> incidentAngleLocalYBarrelDistribution_;
     std::map<std::string, TH1D> incidentAngleLocalYEndcapsDistribution_;

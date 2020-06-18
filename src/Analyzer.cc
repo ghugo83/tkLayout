@@ -2121,10 +2121,10 @@ void Analyzer::calculateGraphsConstP(const int& parameter,
 
       // Modules' parametrized spatial resolution maps
       parametrizedResolutionLocalXBarrelMap[myTag].Reset();
-      parametrizedResolutionLocalXBarrelMap[myTag].SetNameTitle("resoXBarMap","Resolution on local X coordinate vs cotg(alpha) (barrel modules)");
-      parametrizedResolutionLocalXBarrelMap[myTag].SetBins(nBins, incidentAngleXBarrelMin, incidentAngleXBarrelMax, nBins, resoXMin, resoXMax);
-      parametrizedResolutionLocalXBarrelMap[myTag].GetXaxis()->SetTitle("cotg(alpha)");
-      parametrizedResolutionLocalXBarrelMap[myTag].GetYaxis()->SetTitle("resolutionLocalX [um]");
+      parametrizedResolutionLocalXBarrelMap[myTag].SetNameTitle("resoXBarMap","TBPX Layer 2 modules: Incident angles over eta");
+      parametrizedResolutionLocalXBarrelMap[myTag].SetBins(nBins, 0., 4., nBins, incidentAngleXBarrelMin, incidentAngleXBarrelMax);
+      parametrizedResolutionLocalXBarrelMap[myTag].GetXaxis()->SetTitle("track Eta");
+      parametrizedResolutionLocalXBarrelMap[myTag].GetYaxis()->SetTitle("cotg(alpha)");
       parametrizedResolutionLocalXBarrelMap[myTag].GetXaxis()->CenterTitle();
       parametrizedResolutionLocalXBarrelMap[myTag].GetYaxis()->CenterTitle();
       parametrizedResolutionLocalXBarrelMap[myTag].SetMarkerColor(kBlue + 2);
@@ -2183,10 +2183,13 @@ void Analyzer::calculateGraphsConstP(const int& parameter,
 
       // Incident angles distributions (view from modules)
       incidentAngleLocalXBarrelDistribution_[myTag].Reset();
-      incidentAngleLocalXBarrelDistribution_[myTag].SetNameTitle("angleXBarDistr","Distribution of incident angles alpha (barrel modules)");
-      incidentAngleLocalXBarrelDistribution_[myTag].SetBins(nBinsDistr, incidentAngleXBarrelMin, incidentAngleXBarrelMax);
-      incidentAngleLocalXBarrelDistribution_[myTag].GetXaxis()->SetTitle("cotg(alpha)");
+      incidentAngleLocalXBarrelDistribution_[myTag].SetNameTitle("angleXBarDistr","TBPX Layer 2 modules: ResolutionLocalX over eta");
+      incidentAngleLocalXBarrelDistribution_[myTag].SetBins(nBins, 0., 4.);
+      incidentAngleLocalXBarrelDistribution_[myTag].SetMaximum(8.);
+      incidentAngleLocalXBarrelDistribution_[myTag].GetXaxis()->SetTitle("track Eta");
       incidentAngleLocalXBarrelDistribution_[myTag].GetXaxis()->CenterTitle();
+      incidentAngleLocalXBarrelDistribution_[myTag].GetYaxis()->SetTitle("resolutionLocalX [um]");
+      incidentAngleLocalXBarrelDistribution_[myTag].GetYaxis()->CenterTitle();
 
       incidentAngleLocalXEndcapsDistribution_[myTag].Reset();
       incidentAngleLocalXEndcapsDistribution_[myTag].SetNameTitle("angleXEndDistr","Distribution of incident angles alpha (endcaps modules)");
@@ -2231,9 +2234,10 @@ void Analyzer::calculateGraphsConstP(const int& parameter,
       trackEtaEndcapsDistribution_[myTag].GetXaxis()->SetTitle("Track Eta");
       trackEtaEndcapsDistribution_[myTag].GetXaxis()->CenterTitle();
 
- 
+      	
       for (const auto& tcmIt : myTrackCollection) {
-	//const int &parameter = tcmIt.first;
+	//const int pT = tcmIt.first;
+	//if (pT == 1000) {
 	const TrackCollection& myCollection = tcmIt.second;
 
  	// track loop
@@ -2250,19 +2254,34 @@ void Analyzer::calculateGraphsConstP(const int& parameter,
 		
 		const auto& hitModule = (*iHit)->getHitModule();
 
-		const TVector3& trackDirection = myTrack->getDirection();
+
+		//const double bendingAngle = (*iHit)->getRPos() / myTrack->getRadius((*iHit)->getZPos());
+		const TVector3& trackDirectionAtOrigin = myTrack->getDirection();
+		//TVector3 trackDirectionAtHit = trackDirectionAtOrigin;
+		//trackDirectionAtHit.RotateZ(bendingAngle);
 
 		// If any parameter for resolution on local X coordinate specified for hitModule, fill maps and distributions
 		if (hitModule->hasAnyResolutionLocalXParam()) {
 		  // trackPhi is misleading, as actually the dependency is also in eta (in the forward).
 		  double trackPhi = myTrack->getPhi();		  
-		  double cotAlpha = 1./tan(hitModule->alpha(trackDirection));
-		  double resolutionLocalX = hitModule->resolutionLocalX(trackDirection)/Units::um; // um
+		  double cotAlpha = 1./tan(hitModule->alpha(trackDirectionAtOrigin));
+		  double resolutionLocalX = hitModule->resolutionLocalX(trackDirectionAtOrigin)/Units::um; // um
 		  if ( hitModule->subdet() == BARREL ) {
-		    trackPhiBarrelDistribution_[myTag].Fill(femod(trackPhi, 2.*M_PI));
-		    incidentAngleLocalXBarrelDistribution_[myTag].Fill(cotAlpha);
-		    parametrizedResolutionLocalXBarrelDistribution[myTag].Fill(resolutionLocalX);
-		    parametrizedResolutionLocalXBarrelMap[myTag].Fill(cotAlpha, resolutionLocalX);		    
+		    //if (hitModule->uniRef().layer == 1 || hitModule->uniRef().layer == 2) {
+		    if (hitModule->uniRef().layer == 2) {
+		      trackPhiBarrelDistribution_[myTag].Fill(femod(trackPhi, 2.*M_PI));
+
+
+		      //incidentAngleLocalXBarrelDistribution_[myTag].Fill(cotAlpha);
+		      double trackEta = myTrack->getEta();
+		      incidentAngleLocalXBarrelDistribution_[myTag].Fill(trackEta, resolutionLocalX);
+
+
+		      parametrizedResolutionLocalXBarrelDistribution[myTag].Fill(resolutionLocalX);
+
+		      //parametrizedResolutionLocalXBarrelMap[myTag].Fill(cotAlpha, resolutionLocalX);	     
+		      parametrizedResolutionLocalXBarrelMap[myTag].Fill(trackEta, cotAlpha);
+		    }		    
 		  }
 		  if ( hitModule->subdet() == ENDCAP ) {
 		    trackPhiEndcapsDistribution_[myTag].Fill(femod(trackPhi, 2.*M_PI));
@@ -2275,8 +2294,8 @@ void Analyzer::calculateGraphsConstP(const int& parameter,
 		if (hitModule->hasAnyResolutionLocalYParam()) {
 		  // trackEta is misleading, as actually the dependency is also in track vector's phi (in both barrel and forward).
 		  double trackEta = myTrack->getEta();
-		  double absCotBeta = fabs(1./tan(hitModule->beta(trackDirection)));
-		  double resolutionLocalY = hitModule->resolutionLocalY(trackDirection)/Units::um; // um
+		  double absCotBeta = fabs(1./tan(hitModule->beta(trackDirectionAtOrigin)));
+		  double resolutionLocalY = hitModule->resolutionLocalY(trackDirectionAtOrigin)/Units::um; // um
 		  if ( hitModule->subdet() == BARREL ) {
 		    trackEtaBarrelDistribution_[myTag].Fill(trackEta);
 		    incidentAngleLocalYBarrelDistribution_[myTag].Fill(absCotBeta);
@@ -2295,6 +2314,7 @@ void Analyzer::calculateGraphsConstP(const int& parameter,
 
 	  } // hit loop
 	} // track loop
+	//}
       } // collection loop
     } // tag loop
 }

@@ -2690,7 +2690,7 @@ namespace insur {
       std::map<std::string, TH1D>& parametrizedResolutionLocalYEndcapsDistribution = analyzer.getParametrizedResolutionLocalYEndcapsDistribution();
 
       // Modules' incident angles distributions (view from modules)
-      std::map<std::string, TH1D>& incidentAngleLocalXBarrelDistribution = analyzer.getIncidentAngleLocalXBarrelDistribution();
+      std::map<std::string, TProfile>& incidentAngleLocalXBarrelDistribution = analyzer.getIncidentAngleLocalXBarrelDistribution();
       std::map<std::string, TH1D>& incidentAngleLocalYBarrelDistribution = analyzer.getIncidentAngleLocalYBarrelDistribution();
       std::map<std::string, TH1D>& incidentAngleLocalXEndcapsDistribution = analyzer.getIncidentAngleLocalXEndcapsDistribution();
       std::map<std::string, TH1D>& incidentAngleLocalYEndcapsDistribution = analyzer.getIncidentAngleLocalYEndcapsDistribution();
@@ -2734,8 +2734,8 @@ namespace insur {
 	  myPad = resoXBarCanvas->GetPad(3);
 	  myPad->cd();
 	  incidentAngleLocalXBarrelDistribution[tag].SetStats(1);
-	  const double normB = 1. / incidentAngleLocalXBarrelDistribution[tag].Integral();
-	  incidentAngleLocalXBarrelDistribution[tag].Scale(normB, "width");
+	  //const double normB = 1. / incidentAngleLocalXBarrelDistribution[tag].Integral();
+	  //incidentAngleLocalXBarrelDistribution[tag].Scale(normB, "width");
 	  incidentAngleLocalXBarrelDistribution[tag].Draw();
 	  myPad = resoXBarCanvas->GetPad(4);
 	  myPad->cd();
